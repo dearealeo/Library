@@ -129,7 +129,7 @@ const newsToMarkdown = ({ news }) => {
     })
     .join("");
 
-  return `- 更新时间: ${formattedDate}\n\n${mdNews}`
+  return `- 更新时间：${formattedDate}\n\n${mdNews}`
     .replace(/##### 新闻摘要\n\n/g, "##### 新闻摘要\n")
     .replace(/##### 详细新闻\n\n/g, "##### 详细新闻\n");
 };
