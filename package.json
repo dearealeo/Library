@@ -1,0 +1,39 @@
+{
+  "name": "xinwen-lianbo",
+  "version": "1.1.0",
+  "description": "新闻联播",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "start": "node --expose-gc --max-old-space-size=2048 index.js",
+    "dev": "NODE_ENV=development node --expose-gc --max-old-space-size=2048 index.js",
+    "lint": "markdownlint \"news/*.md\"",
+    "lint:fix": "markdownlint --fix \"news/*.md\"",
+    "test": "node --test",
+    "analyze": "node --trace-warnings --trace-gc index.js",
+    "prepare": "husky"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsdom": "^22.1.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.24.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "markdownlint-cli": "^0.37.0"
+  },
+  "optionalDependencies": {
+    "fast-xml-parser": "^4.3.2"
+  },
+  "lint-staged": {
+    "news/*.md": [
+      "markdownlint --fix"
+    ]
+  }
+}
