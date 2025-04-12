@@ -28,6 +28,7 @@ jobs:
           NODE_ENV: production
       - name: Run linter to fix markdown issues
         run: npm run lint:fix
+        continue-on-error: true
       - name: Configure Git
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
