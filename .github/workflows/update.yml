@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "30 12 * * *"
 
+permissions:
+  contents: write
+
 jobs:
   update:
     name: Update today Xinwen Lianbo
