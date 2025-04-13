@@ -1,5 +1,9 @@
 # 新闻联播
 
+## Credits
+
+- [DuckBurnIncense/xin-wen-lian-bo](https://github.com/DuckBurnIncense/xin-wen-lian-bo) (MIT)
+
 ## 目录
 <!-- INSERT -->
 - [20250412](./news/20250412.md)
