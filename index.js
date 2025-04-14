@@ -8,7 +8,7 @@ const { JSDOM } = jsdom;
 
 const currentDirPath = path.dirname(fileURLToPath(import.meta.url));
 
-const getDate = () => {
+const formatCurrentDate = () => {
   const date = new Date();
   return (
     date.getFullYear() +
@@ -17,36 +17,36 @@ const getDate = () => {
   );
 };
 
-const DATE = getDate();
-const NEWS_PATH = path.join(currentDirPath, "news");
-const NEWS_MD_PATH = path.join(NEWS_PATH, `${DATE}.md`);
+const CURRENT_DATE = formatCurrentDate();
+const NEWS_DIR_PATH = path.join(currentDirPath, "news");
+const NEWS_FILE_PATH = path.join(NEWS_DIR_PATH, `${CURRENT_DATE}.md`);
 const README_PATH = path.join(currentDirPath, "README.md");
-const CATALOGUE_JSON_PATH = path.join(NEWS_PATH, "catalogue.json");
+const CATALOGUE_PATH = path.join(NEWS_DIR_PATH, "catalogue.json");
 
-const getNewsList = async (date) => {
+const fetchNewsLinks = async (date) => {
   const html = await fetch(`http://tv.cctv.com/lm/xwlb/day/${date}.shtml`);
   const dom = new JSDOM(
     `<!DOCTYPE html><html lang=""><body>${html}</body></html>`
   );
   const nodes = dom.window.document.querySelectorAll("a");
   const links = [...new Set([...nodes].map((node) => node.href))];
-  const abstract = links.shift();
+  const abstractLink = links.shift();
   console.log("Successfully retrieved news list");
-  return { abstract, news: links };
+  return { abstractLink, newsLinks: links };
 };
 
-const getAbstract = async (link) => {
+const fetchAbstract = async (link) => {
   const html = await fetch(link);
   const dom = new JSDOM(html);
-  let abstract =
+  let abstractText =
     dom.window.document.querySelector(
       "#page_body > div.allcontent > div.video18847 > div.playingCon > div.nrjianjie_shadow > div > ul > li:nth-child(1) > p"
     )?.innerHTML || "";
 
-  return cleanAbstractText(abstract);
+  return formatAbstractText(abstractText);
 };
 
-const cleanAbstractText = (text) => {
+const formatAbstractText = (text) => {
   return text
     .replace(/<\/?p>|<\/?strong>/g, "")
     .replace(/^央视网消息（新闻联播）：/, "")
@@ -79,7 +79,7 @@ const fetchNewsItem = async (url) => {
   }
 };
 
-const getNews = async (links) => {
+const fetchNewsItems = async (links) => {
   console.log(`Fetching ${links.length} news items`);
 
   const batchSize = 5;
@@ -100,7 +100,7 @@ const getNews = async (links) => {
   return results;
 };
 
-const cleanNewsContent = (content) => {
+const formatNewsContent = (content) => {
   return content
     ? content
         .replace(/<\/?p>|<\/?strong>/g, "")
@@ -119,22 +119,22 @@ const getFormattedDateTime = () => {
     .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
 };
 
-const newsToMarkdown = ({ news }) => {
-  const formattedDate = getFormattedDateTime();
+const convertNewsToMarkdown = ({ news }) => {
+  const formattedDateTime = getFormattedDateTime();
 
-  const mdNews = news
+  const newsMarkdown = news
     .map(({ title, content, url }) => {
-      const cleanContent = cleanNewsContent(content);
-      return `\n###### ${title}\n\n${cleanContent}\n- [链接](${url})\n`;
+      const formattedContent = formatNewsContent(content);
+      return `\n###### ${title}\n\n${formattedContent}\n- [链接](${url})\n`;
     })
     .join("");
 
-  return `- 更新时间：${formattedDate}\n\n${mdNews}`
+  return `- 更新时间：${formattedDateTime}\n\n${newsMarkdown}`
     .replace(/##### 新闻摘要\n\n/g, "##### 新闻摘要\n")
     .replace(/##### 详细新闻\n\n/g, "##### 详细新闻\n");
 };
 
-const runMarkdownLinter = async () => {
+const applyMarkdownLinting = async () => {
   try {
     console.log("Applying markdown linting fixes...");
     console.log("Markdown linting fixes applied.");
@@ -148,28 +148,28 @@ const runMarkdownLinter = async () => {
   }
 };
 
-const updateCatalogue = async ({
-  catalogueJsonPath,
-  readmeMdPath,
+const updateCatalogueAndReadme = async ({
+  cataloguePath,
+  readmePath,
   date,
   abstract,
 }) => {
-  const [catalogueData, readmeData] = await Promise.all([
-    fs.readFile(catalogueJsonPath).catch(() => "[]"),
-    fs.readFile(readmeMdPath, "utf8"),
+  const [catalogueData, readmeContent] = await Promise.all([
+    fs.readFile(cataloguePath).catch(() => "[]"),
+    fs.readFile(readmePath, "utf8"),
   ]);
 
-  let catalogueJson = JSON.parse(catalogueData.toString() || "[]");
-  catalogueJson.unshift({ date, abstract });
+  let catalogueEntries = JSON.parse(catalogueData.toString() || "[]");
+  catalogueEntries.unshift({ date, abstract });
 
-  const updatedReadme = readmeData.replace(
+  const updatedReadme = readmeContent.replace(
     "<!-- INSERT -->",
     `<!-- INSERT -->\n- [${date}](./news/${date}.md)`
   );
 
   await Promise.all([
-    fs.writeFile(catalogueJsonPath, JSON.stringify(catalogueJson)),
-    fs.writeFile(readmeMdPath, updatedReadme),
+    fs.writeFile(cataloguePath, JSON.stringify(catalogueEntries)),
+    fs.writeFile(readmePath, updatedReadme),
   ]);
 
   console.log("Updated catalogue and README");
@@ -177,31 +177,31 @@ const updateCatalogue = async ({
 
 const main = async () => {
   try {
-    console.log({ DATE, NEWS_PATH, README_PATH, CATALOGUE_JSON_PATH });
+    console.log({ CURRENT_DATE, NEWS_DIR_PATH, README_PATH, CATALOGUE_PATH });
 
-    await fs.mkdir(NEWS_PATH, { recursive: true });
+    await fs.mkdir(NEWS_DIR_PATH, { recursive: true });
 
-    const newsList = await getNewsList(DATE);
+    const { abstractLink, newsLinks } = await fetchNewsLinks(CURRENT_DATE);
 
     const [abstract, newsItems] = await Promise.all([
-      getAbstract(newsList.abstract),
-      getNews(newsList.news),
+      fetchAbstract(abstractLink),
+      fetchNewsItems(newsLinks),
     ]);
 
-    const md = newsToMarkdown({
-      date: DATE,
+    const markdown = convertNewsToMarkdown({
+      date: CURRENT_DATE,
       abstract,
       news: newsItems,
     });
 
-    await fs.writeFile(NEWS_MD_PATH, md);
+    await fs.writeFile(NEWS_FILE_PATH, markdown);
 
     await Promise.all([
-      runMarkdownLinter(),
-      updateCatalogue({
-        catalogueJsonPath: CATALOGUE_JSON_PATH,
-        readmeMdPath: README_PATH,
-        date: DATE,
+      applyMarkdownLinting(),
+      updateCatalogueAndReadme({
+        cataloguePath: CATALOGUE_PATH,
+        readmePath: README_PATH,
+        date: CURRENT_DATE,
         abstract,
       }),
     ]);
