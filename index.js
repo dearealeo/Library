@@ -30,34 +30,8 @@ const fetchNewsLinks = async (date) => {
   );
   const nodes = dom.window.document.querySelectorAll("a");
   const links = [...new Set([...nodes].map((node) => node.href))];
-  const abstractLink = links.shift();
   console.log("Successfully retrieved news list");
-  return { abstractLink, newsLinks: links };
-};
-
-const fetchAbstract = async (link) => {
-  const html = await fetch(link);
-  const dom = new JSDOM(html);
-  let abstractText =
-    dom.window.document.querySelector(
-      "#page_body > div.allcontent > div.video18847 > div.playingCon > div.nrjianjie_shadow > div > ul > li:nth-child(1) > p"
-    )?.innerHTML || "";
-
-  return formatAbstractText(abstractText);
-};
-
-const formatAbstractText = (text) => {
-  return text
-    .replace(/<[^>]*>/g, "")
-    .replace(/^央视网消息（新闻联播）：/, "")
-    .replace(/（《新闻联播》\s+\d+\s+\d+:\d+）$/, "")
-    .replace("本期节目主要内容：", "")
-    .replace(/(\d+)\.\s*/g, "- ")
-    .replace(/^(\d+)\.\s+(?=\D)/gm, "- ")
-    .replace(/；/g, "；\n")
-    .replace(/：/g, "：\n")
-    .replace(/\n\s*\n/g, "\n")
-    .trim();
+  return { newsLinks: links };
 };
 
 const fetchNewsItem = async (url) => {
@@ -103,8 +77,7 @@ const fetchNewsItems = async (links) => {
 const formatNewsContent = (content) => {
   return content
     ? content
-        .replace(/<[^>]*>/g, "")
-        .replace(/^央视网消息（新闻联播）：/g, "")
+        .replace(/<strong>央视网消息<\/strong>（新闻联播）：/g, "")
         .replace(/^(\s{2})-/gm, "    -")
     : "";
 };
@@ -136,9 +109,7 @@ const convertNewsToMarkdown = ({ news }) => {
     })
     .join("");
 
-  return `- 更新时间：${formattedDateTime}\n\n${newsMarkdown}`
-    .replace(/##### 新闻摘要\n\n/g, "##### 新闻摘要\n")
-    .replace(/##### 详细新闻\n\n/g, "##### 详细新闻\n");
+  return `- 更新时间：${formattedDateTime}\n\n${newsMarkdown}`;
 };
 
 const applyMarkdownLinting = async () => {
@@ -159,7 +130,6 @@ const updateCatalogueAndReadme = async ({
   cataloguePath,
   readmePath,
   date,
-  abstract,
 }) => {
   const [catalogueData, readmeContent] = await Promise.all([
     fs.readFile(cataloguePath).catch(() => "[]"),
@@ -167,7 +137,7 @@ const updateCatalogueAndReadme = async ({
   ]);
 
   let catalogueEntries = JSON.parse(catalogueData.toString() || "[]");
-  catalogueEntries.unshift({ date, abstract });
+  catalogueEntries.unshift({ date });
 
   const updatedReadme = readmeContent.replace(
     "<!-- INSERT -->",
@@ -188,16 +158,11 @@ const main = async () => {
 
     await fs.mkdir(NEWS_DIR_PATH, { recursive: true });
 
-    const { abstractLink, newsLinks } = await fetchNewsLinks(CURRENT_DATE);
-
-    const [abstract, newsItems] = await Promise.all([
-      fetchAbstract(abstractLink),
-      fetchNewsItems(newsLinks),
-    ]);
+    const { newsLinks } = await fetchNewsLinks(CURRENT_DATE);
+    const newsItems = await fetchNewsItems(newsLinks);
 
     const markdown = convertNewsToMarkdown({
       date: CURRENT_DATE,
-      abstract,
       news: newsItems,
     });
 
@@ -209,7 +174,6 @@ const main = async () => {
         cataloguePath: CATALOGUE_PATH,
         readmePath: README_PATH,
         date: CURRENT_DATE,
-        abstract,
       }),
     ]);
 
