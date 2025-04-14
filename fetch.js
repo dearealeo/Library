@@ -2,7 +2,7 @@
 import fetch from "node-fetch";
 import { setTimeout } from "timers/promises";
 
-export default async function Fetch(url, options = {}) {
+export default async function fetchWithRetry(url, options = {}) {
   const {
     retries = 3,
     retryDelay = 1000,
@@ -10,7 +10,7 @@ export default async function Fetch(url, options = {}) {
     ...fetchOptions
   } = options;
 
-  const headers = {
+  const defaultHeaders = {
     accept: "text/html, */*; q=0.01",
     "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
     "cache-control": "no-cache",
@@ -31,16 +31,16 @@ export default async function Fetch(url, options = {}) {
   };
 
   let lastError;
-  for (let attempt = 0; attempt < retries; attempt++) {
+  for (let attemptCount = 0; attemptCount < retries; attemptCount++) {
     try {
       /* global AbortController */
-      const controller = new AbortController();
-      const timeoutId = setTimeout(timeout, () => controller.abort());
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(timeout, () => abortController.abort());
 
       const response = await fetch(url, {
         method: "GET",
-        headers,
-        signal: controller.signal,
+        headers: defaultHeaders,
+        signal: abortController.signal,
         ...fetchOptions,
         body: null,
       });
@@ -54,22 +54,24 @@ export default async function Fetch(url, options = {}) {
       }
 
       return await response.text();
-    } catch (err) {
-      lastError = err;
+    } catch (error) {
+      lastError = error;
 
-      if (err.name === "AbortError") {
+      if (error.name === "AbortError") {
         throw new Error(`Request timed out after ${timeout}ms`);
       }
 
-      if (attempt === retries - 1) {
-        throw new Error(`Failed after ${retries} attempts: ${err.message}`);
+      if (attemptCount === retries - 1) {
+        throw new Error(`Failed after ${retries} attempts: ${error.message}`);
       }
 
-      const delay = retryDelay * Math.pow(2, attempt);
+      const backoffDelay = retryDelay * Math.pow(2, attemptCount);
       console.warn(
-        `Attempt ${attempt + 1} failed, retrying in ${delay}ms: ${err.message}`
+        `Attempt ${attemptCount + 1} failed, retrying in ${backoffDelay}ms: ${
+          error.message
+        }`
       );
-      await setTimeout(delay);
+      await setTimeout(backoffDelay);
     }
   }
 
