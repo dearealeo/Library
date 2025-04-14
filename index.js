@@ -48,7 +48,7 @@ const fetchAbstract = async (link) => {
 
 const formatAbstractText = (text) => {
   return text
-    .replace(/<\/?p>|<\/?strong>/g, "")
+    .replace(/<[^>]*>/g, "")
     .replace(/^央视网消息（新闻联播）：/, "")
     .replace(/（《新闻联播》\s+\d+\s+\d+:\d+）$/, "")
     .replace("本期节目主要内容：", "")
@@ -103,7 +103,7 @@ const fetchNewsItems = async (links) => {
 const formatNewsContent = (content) => {
   return content
     ? content
-        .replace(/<\/?p>|<\/?strong>/g, "")
+        .replace(/<[^>]*>/g, "")
         .replace(/^央视网消息（新闻联播）：/g, "")
         .replace(/^(\s{2})-/gm, "    -")
     : "";
@@ -111,12 +111,19 @@ const formatNewsContent = (content) => {
 
 const getFormattedDateTime = () => {
   const now = new Date();
-  return `${now.getFullYear()}-${(now.getMonth() + 1)
+  const chinaTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+  return `${chinaTime.getUTCFullYear()}-${(chinaTime.getUTCMonth() + 1)
     .toString()
-    .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
-    .getHours()
+    .padStart(2, "0")}-${chinaTime
+    .getUTCDate()
     .toString()
-    .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+    .padStart(2, "0")} ${chinaTime
+    .getUTCHours()
+    .toString()
+    .padStart(2, "0")}:${chinaTime
+    .getUTCMinutes()
+    .toString()
+    .padStart(2, "0")}`;
 };
 
 const convertNewsToMarkdown = ({ news }) => {
