@@ -105,7 +105,7 @@ const convertNewsToMarkdown = ({ news }) => {
   const newsMarkdown = news
     .map(({ title, content, url }) => {
       const formattedContent = formatNewsContent(content);
-      return `\n###### ${title}\n\n${formattedContent}\n- [链接](${url})\n`;
+      return `\n###### ${title}\n\n${formattedContent}\n\n- [链接](${url})\n`;
     })
     .join("");
 
