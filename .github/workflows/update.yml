@@ -39,7 +39,7 @@ jobs:
       - name: Commit changes
         run: |
           git add -A
-          git diff --staged --quiet || git commit -m "feat: update [$(date +'%Y-%m-%d %H:%M:%S')]"
+          git diff --staged --quiet || git commit -m "feat: update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
