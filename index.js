@@ -103,6 +103,12 @@ const convertNewsToMarkdown = ({ news }) => {
   const formattedDateTime = getFormattedDateTime();
 
   const newsMarkdown = news
+    .filter(
+      (item) =>
+        item.title &&
+        item.title.trim() !== "" &&
+        !item.title.includes("《新闻联播》")
+    )
     .map(({ title, content, url }) => {
       const formattedContent = formatNewsContent(content);
       return `\n## ${title}\n\n${formattedContent}\n\n- [链接](${url})\n`;
