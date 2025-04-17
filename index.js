@@ -79,6 +79,7 @@ const formatNewsContent = (content) => {
     ? content
         .replace(/<strong>央视网消息<\/strong>（新闻联播）：/g, "")
         .replace(/^(\s{2})-/gm, "    -")
+        .replace(/<p><br><\/p><p><strong>/g, "<p></p><p><strong>")
     : "";
 };
 
