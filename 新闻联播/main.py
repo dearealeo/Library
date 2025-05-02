@@ -18,7 +18,7 @@ Constants
 """
 BASE_DIR: Final[Path] = Path(__file__).resolve().parent
 LOG_PATH: Final[Path] = BASE_DIR / "main.log"
-NEWS_DIR: Final[Path] = BASE_DIR / "Xinwen Lianbo"
+NEWS_DIR: Final[Path] = BASE_DIR / "新闻联播"
 README_PATH: Final[Path] = BASE_DIR / "README.md"
 CATALOGUE_PATH: Final[Path] = BASE_DIR / "catalogue.json"
 
