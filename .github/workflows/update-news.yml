@@ -33,7 +33,7 @@ jobs:
         with:
           globs: "**/*.md"
           fix: true
-          config: '{"MD013":false,"MD024":false,"MD041":false,"MD001":false,"MD007":false,"MD028":true,"MD003":false,"MD033":false}'
+          config: "新闻联播/markdownlint.json"
         continue-on-error: true
       - name: Commit and push changes
         run: |
