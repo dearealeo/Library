@@ -28,25 +28,14 @@ jobs:
         run: pip install -r 新闻联播/requirements.txt
       - name: Generate content
         run: python 新闻联播/main.py
-      - name: Check for changes
-        id: changed-files
-        uses: tj-actions/changed-files@v46.0.5
-        with:
-          files: |
-            **/*.md
-            新闻联播/catalogue.json
-          sha: ${{ github.sha }}
-          since_last_remote_commit: true
       - name: Lint Markdown files
-        if: steps.changed-files.outputs.any_changed == 'true'
         uses: DavidAnson/markdownlint-cli2-action@v19.1.0
         with:
-          globs: ${{ steps.changed-files.outputs.all_changed_files }}
+          globs: "**/*.md"
           fix: true
           config: '{"MD013":false,"MD024":false,"MD041":false,"MD001":false,"MD007":false,"MD028":true,"MD003":false,"MD033":false}'
         continue-on-error: true
       - name: Commit and push changes
-        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
