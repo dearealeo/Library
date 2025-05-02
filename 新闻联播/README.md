@@ -12,6 +12,7 @@ This software is licensed under the [MIT License](./LICENSE) by the author [@dea
 
 ## Schedule
 <!-- INSERT -->
+- [20250502](./2025/20250502.md)
 - [20250501](./2025/20250501.md)
 - [20250430](./2025/20250430.md)
 - [20250429](./2025/20250429.md)
