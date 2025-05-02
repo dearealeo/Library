@@ -1,8 +1,10 @@
 # Xinwen Lianbo (新闻联播)
 
-## Source
+## Disclaimer
 
-This project references publicly available textual content from CCTV.com (央视网) for non-commercial use. All copyrights remain with China Media Group (中央广播电视总台). Please visit CCTV.com for the official source.
+This project utilizes publicly available textual content from CCTV.com (央视网) solely for non-commercial use. All rights for materials referenced or linked herein are the property of China Media Group (中央广播电视总台). For the official source, please refer to CCTV.com.
+
+This software is licensed under the [MIT License](./LICENSE) by the author [@dearealeo](https://github.com/dearealeo).
 
 ## Credits
 
