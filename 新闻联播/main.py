@@ -17,8 +17,6 @@ from bs4 import BeautifulSoup, Tag
 Constants
 """
 BASE_DIR: Final[Path] = Path(__file__).resolve().parent
-LOG_PATH: Final[Path] = BASE_DIR / "main.log"
-NEWS_DIR: Final[Path] = BASE_DIR / "新闻联播"
 README_PATH: Final[Path] = BASE_DIR / "README.md"
 CATALOGUE_PATH: Final[Path] = BASE_DIR / "catalogue.json"
 
@@ -48,9 +46,7 @@ formatter: logging.Formatter = logging.Formatter(
     "%(asctime)s | %(process)d - %(processName)s | %(thread)d - %(threadName)s | %(taskName)s | %(levelname)-8s | %(name)s:%(funcName)s:%(lineno)d | %(pathname)s | %(message)s",
     "%Y-%m-%d %H:%M:%S,%f %z",
 )
-handler: RotatingFileHandler = RotatingFileHandler(
-    LOG_PATH, maxBytes=1024 * 1024, backupCount=1, encoding="utf-8", delay=True
-)
+handler: logging.StreamHandler = logging.StreamHandler()
 handler.setFormatter(formatter)
 logger: logging.Logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -169,7 +165,7 @@ async def fetch_news_links(date_str: str) -> List[str]:
     try:
         html_content: str = await fetch_url_with_retry(url)
         soup: BeautifulSoup = BeautifulSoup(
-            f"<body>{html_content}</body>", "html.parser", features="lxml"
+            f"<body>{html_content}</body>", "html.parser"
         )
         links: Set[str] = {a["href"] for a in soup.find_all("a", href=True)}
         logger.info(f"Retrieved {len(links)} unique news links for date: {date_str}")
@@ -186,10 +182,13 @@ async def fetch_news_item(url: str) -> News:
     try:
         html_content: str = await fetch_url_with_retry(url)
         soup: BeautifulSoup = BeautifulSoup(
-            html_content, "html.parser", features="lxml"
+            html_content, "html.parser"
         )
 
-        title_element: Optional[Tag] = soup.select_one(".cnt_nav h3")
+        title_element: Optional[Tag] = soup.select_one(".video18847 .playingVideo .tit")
+        if not title_element or not title_element.text.strip():
+            title_element = soup.select_one(".tit")
+        
         title: str = (
             title_element.text.strip().replace("[视频]", "") if title_element else ""
         )
@@ -262,7 +261,7 @@ def convert_news_to_markdown(news_items: List[News]) -> str:
     markdown_parts.extend(
         f"\n## {item['title'].strip()}\n"
         f"{clean_news_content(item['content'])}\n"
-        f"- [链接]({item['url']})\n"
+        f"\n- [链接]({item['url']})\n"
         for item in valid_items
     )
 
@@ -326,7 +325,7 @@ Main
 async def main() -> None:
     current_date: str = get_current_date_formatted()
     year: str = current_date[:4]
-    year_dir: Path = NEWS_DIR / year
+    year_dir: Path = BASE_DIR / year
     news_file_path: Path = year_dir / f"{current_date}.md"
 
     logger.info(f"Starting news collection process for date: {current_date}")
