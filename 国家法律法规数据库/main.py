@@ -947,7 +947,7 @@ def parse_doc_to_md(
 
     try:
         with open(output_path, "w", encoding="utf-8") as f:
-            f.write("\n".join(markdown_lines))
+            f.write("\\n\\n".join(markdown_lines))
         logger.info("Successfully parsed and saved: %s", output_path.name)
         return legal_id
     except (IOError, OSError) as e:
@@ -959,7 +959,7 @@ def parse_doc_to_md(
         simple_output_path = parent_dir / f"{legal_id}.md"
         try:
             with open(simple_output_path, "w", encoding="utf-8") as f:
-                f.write("\n".join(markdown_lines))
+                f.write("\\n\\n".join(markdown_lines))
             logger.info(
                 "Successfully parsed and saved with simplified name: %s",
                 simple_output_path.name,
