@@ -1,4 +1,4 @@
-name: Update today Xinwen Lianbo
+name: Update today National Database of Laws and Regulations
 
 on:
   workflow_dispatch:
@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  update-news:
-    name: Update today Xinwen Lianbo
+  update-laws:
+    name: Update today National Database of Laws and Regulations
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,9 +25,9 @@ jobs:
           python-version: "3.13"
           cache: "pip"
       - name: Install dependencies
-        run: pip install -r 新闻联播/requirements.txt
+        run: pip install -r 国家法律法规数据库/requirements.txt
       - name: Generate content
-        run: python 新闻联播/main.py
+        run: python 国家法律法规数据库/main.py -c
       - name: Lint Markdown files
         uses: DavidAnson/markdownlint-cli2-action@v19.1.0
         with:
@@ -40,4 +40,4 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A
-          git diff --staged --quiet || git commit -m "feat(news): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]" && git push origin ${{ github.ref_name }}
+          git diff --staged --quiet || git commit -m "feat(laws): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]" && git push origin ${{ github.ref_name }}

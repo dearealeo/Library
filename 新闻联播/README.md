@@ -2,9 +2,9 @@
 
 ## Disclaimer
 
-This project utilizes publicly available textual content from CCTV.com (央视网) solely for non-commercial use. All rights for materials referenced or linked herein are the property of China Media Group (中央广播电视总台). For the official source, please refer to CCTV.com.
+This project employs publicly accessible textual content from the CCTV.com (央视网) solely for non-commercial purposes, with all rights thereto reserved by the China Media Group (中央广播电视总台), and the authoritative source for verification remains [tv.cctv.com](https://tv.cctv.com/).
 
-This software is licensed under the [MIT License](./LICENSE) by the author [@dearealeo](https://github.com/dearealeo).
+The software herein is licensed under the [MIT License](./LICENSE) by [@dearealeo](https://github.com/dearealeo).
 
 ## Credits
 

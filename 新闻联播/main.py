@@ -16,6 +16,8 @@ from bs4 import BeautifulSoup, Tag
 """
 Constants
 """
+
+
 BASE_DIR: Final[Path] = Path(__file__).resolve().parent
 README_PATH: Final[Path] = BASE_DIR / "README.md"
 CATALOGUE_PATH: Final[Path] = BASE_DIR / "catalogue.json"
@@ -38,9 +40,11 @@ DEFAULT_HEADERS: Final[Dict[str, str]] = {
 
 CST: Final[timezone] = timezone(timedelta(hours=8))
 
+
 """
 Logging
 """
+
 
 formatter: logging.Formatter = logging.Formatter(
     "%(asctime)s | %(process)d - %(processName)s | %(thread)d - %(threadName)s | %(taskName)s | %(levelname)-8s | %(name)s:%(funcName)s:%(lineno)d | %(pathname)s | %(message)s",
@@ -181,14 +185,12 @@ async def fetch_news_item(url: str) -> News:
     logger.debug(f"Fetching news item: {url}")
     try:
         html_content: str = await fetch_url_with_retry(url)
-        soup: BeautifulSoup = BeautifulSoup(
-            html_content, "html.parser"
-        )
+        soup: BeautifulSoup = BeautifulSoup(html_content, "html.parser")
 
         title_element: Optional[Tag] = soup.select_one(".video18847 .playingVideo .tit")
         if not title_element or not title_element.text.strip():
             title_element = soup.select_one(".tit")
-        
+
         title: str = (
             title_element.text.strip().replace("[视频]", "") if title_element else ""
         )
