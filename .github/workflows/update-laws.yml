@@ -33,7 +33,7 @@ jobs:
         with:
           globs: "**/*.md"
           fix: true
-          config: "markdownlint.json"
+          config: ".markdownlint.json"
         continue-on-error: true
       - name: Commit and push changes
         run: |
