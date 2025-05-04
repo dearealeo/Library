@@ -35,7 +35,8 @@ jobs:
 
       - name: Update Submodule
         run: |
-          git submodule update --remote --merge "Sukka Ruleset/upstream"
+          git submodule sync --recursive
+          git submodule update --init --recursive --remote --force "Sukka Ruleset/upstream"
 
       - uses: pnpm/action-setup@v4
         with:
@@ -128,7 +129,7 @@ jobs:
           else
             echo "Changes detected. Committing..."
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
-            git commit -m "feat(ruleset): update $UPSTREAM_COMMIT_SHA [${{ steps.date.outputs.cst_time }}]" -m "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            git commit -m "feat(ruleset): update [${{ steps.date.outputs.cst_time }}]" -m "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} (Upstream commit: $UPSTREAM_COMMIT_SHA)"
           fi
 
       - name: Push changes
@@ -148,6 +149,7 @@ jobs:
       #   uses: actions/upload-pages-artifact@v3
       #   with:
       #     path: ${{ steps.paths.outputs.output_dir }}
+
 # deploy_pages:
 #   name: Deploy to GitHub Pages
 #   needs: build_and_commit
