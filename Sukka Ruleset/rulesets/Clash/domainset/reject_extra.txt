@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Extra
-# Last Updated: 2025-05-04T12:32:06.853Z
-# Size: 56472
+# Last Updated: 2025-05-04T16:33:01.981Z
+# Size: 56468
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -1370,7 +1370,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.popup.money
 +.bloc.money
 +.illicium.web.money
-+.cf-unstable.media
 +.tradecore.tradehouse.media
 +.readywind.media
 +.andbeyond.media
@@ -8449,7 +8448,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.lymckensecuryren.org
 +.lucksignpost0804.org
 +.liticismoverneme.org
-+.linkvilleplayers.org
 +.kmspico-official.org
 +.kitchentablegang.org
 +.keanangelsaidthe.org
@@ -8781,6 +8779,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.media-fire.org
 +.lovestrive.org
 +.lemonparty.org
++.campaign.khetkhamar.org
 +.kaspa-pool.org
 +.installads.org
 +.humanscoin.org
@@ -9381,13 +9380,11 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.1pool.org
 +.botnet.0x503.org
 +.0cash.org
-+.solve.zexd.org
 +.cny.yoyo.org
 +.tests.yjzj.org
 +.code.xidx.org
 +.treehouse.wwoz.org
 +.static.wwoz.org
-+.solve.waqj.org
 +.botnet.voct.org
 +.cache.ussc.org
 +.public-check3-at.test.tiaa.org
@@ -9398,7 +9395,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.pwnz.org
 +.ads.pruc.org
 +.ppoi.org
-+.solve.nohz.org
 +.nimp.org
 +.content.nhrs.org
 +.ltfn.org
@@ -9409,7 +9405,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.refer.itcu.org
 +.lxd.host.org
 +.gteh.org
-+.solve.gesz.org
 +.download.cudo.org
 +.cmix.org
 +.buxp.org
@@ -10223,6 +10218,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.theclickers.net
 +.the-counter.net
 +.textbanners.net
++.quovadisholidays.testingdemo.net
 +.telusplanet.net
 +.techhelping.net
 +.teasermedia.net
@@ -11464,7 +11460,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.darkcoin.kicks-ass.net
 +.keymetric.net
 +.karisimbi.net
-+.quanly.jxmienphi.net
 +.jtqqzvqrd.net
 +.jsfactory.net
 +.ads.its-newid.net
@@ -12003,7 +11998,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.ad-space.net
 +.acussoft.net
 +.aceadsys.net
-+.abissnet.net
 +.888media.net
 +.zoosnet.net
 +.zellabs.net
@@ -14838,7 +14832,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.bladessweepunprofessional.com
 +.biaseddocumentationacross.com
 +.benefactorstoppedfeedback.com
-+.authentications-safeguard.com
 +.applicationplasticoverlap.com
 +.apologiesneedleworkrising.com
 +.apatheticdrawerscolourful.com
@@ -17976,7 +17969,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.xtremelivesupport.com
 +.xtramannchinhhang.com
 +.xn--s-4z5e652a53k.com
-+.xn--on3b15m2lco2u.com
 +.xityonatallcolumn.com
 +.xacnhankhoanvay86.com
 +.wretchedclearance.com
@@ -18654,6 +18646,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.crowdstrikeoutage.com
 +.crossroadsubquery.com
 +.crispentirelynavy.com
++.crimefreesoftware.com
 +.crestislelocation.com
 +.creeksettingbates.com
 +.crayoncompetition.com
@@ -24959,7 +24952,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.ambientlagoon.com
 +.alwhichhereal.com
 +.alwayshashing.com
-+.forchettacafe.altawakalcomp.com
 +.altairaquilae.com
 +.aloudhardware.com
 +.almightysnail.com
@@ -25034,6 +25026,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.zprofuqkssny.com
 +.zoologyfibre.com
 +.zombyfairfax.com
++.files-accl.zohoexternal.com
 +.zohar-trends.com
 +.zodiacdinner.com
 +.zodertracker.com
@@ -25166,7 +25159,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.vongquayngoc.com
 +.volumesundue.com
 +.voiplanparty.com
-+.voiceworldbd.com
 +.vnpxxrqlhpre.com
 +.vn-sacombank.com
 +.vmcsatellite.com
@@ -30564,6 +30556,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.s-iwantyou.com
 +.rzneekilff.com
 +.rzgiyhpbit.com
++.rxquickpay.com
 +.rwvqbxjsop.com
 +.static.rvndigital.com
 +.ruscontext.com
@@ -32049,7 +32042,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.refer.delloutlet.com
 +.p.delivercdn.com
 +.delikatsov.com
-+.delihuerto.com
 +.defigroups.com
 +.deepintent.com
 +.deechtebol.com
@@ -34084,6 +34076,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.tadamatch.com
 +.syntetech.com
 +.synergy-e.com
++.symbietic.com
 +.sybutrprd.com
 +.swpfatbmu.com
 +.delivery.swid.switchads.com
@@ -34177,7 +34170,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.solvusoft.com
 +.solveseek.com
 +.widget.solvemate.com
-+.solutelco.com
 +.id.solidgate.com
 +.sokmil-ad.com
 +.soil5hear.com
@@ -34407,6 +34399,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.rottenray.com
 +.rote8mino.com
 +.shared.roofnrack.com
++.ronnin-v2.com
 +.r7.romeflirt.com
 +.r6.romeflirt.com
 +.r5.romeflirt.com
@@ -35965,7 +35958,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.coup7cold.com
 +.countomat.com
 +.adp.sbx.couchhost.com
-+.alert.corsazone.com
++.corsazone.com
 +.corruptcy.com
 +.core-pool.com
 +.copy9loom.com
@@ -36679,7 +36672,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.o.xofilmes.com
 +.xmlheads.com
 +.xlovecam.com
-+.ximonite.com
 +.cnt1.xhamster.com
 +.ads.xhamster.com
 +.xdagmine.com
@@ -39511,7 +39503,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.123plays.com
 +.123count.com
 +.121media.com
-+.soft.110route.com
 +.10adspay.com
 +.xml-eu-v4.a1.0network.com
 +.login.a1.0network.com
@@ -40844,6 +40835,7 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.istrack.com
 +.istat24.com
 +.isdarot.com
++.isaac00.com
 +.ads.ireport.com
 +.iredirr.com
 +.share.iqfiber.com
@@ -41377,7 +41369,6 @@ this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 +.camgeil.com
 +.camduty.com
 +.calcpol.com
-+.download.caihong.com
 +.cafecoc.com
 +.cadsans.com
 +.cadreon.com
@@ -44668,7 +44659,6 @@ mpush-api.aliyun.com
 +.g12se.com
 +.fznpq.com
 +.helpdesk.fxnxs.com
-+.down.fwqlt.com
 +.fuelx.com
 +.frzss.com
 +.frtyo.com
@@ -45448,6 +45438,7 @@ mpush-api.aliyun.com
 +.pool.4i7i.com
 +.3fns.com
 +.tracking.3com.com
++.wz.3911.com
 +.367p.com
 +.360i.com
 +.adm.265g.com
@@ -47828,6 +47819,7 @@ kma.biz
 +.pool.so
 +.lg.hyr.so
 +.secure.jumia.sn
++.oknoplastik.sk
 +.eduthermas.sk
 +.pocitadlo.sk
 +.bitcoins.sk
@@ -47985,7 +47977,6 @@ kma.biz
 +.tracking.moratidning.se
 +.tracking.etidning.moratidning.se
 +.moneroseeds.se
-+.mobsterljud.se
 +.kundvisaren.se
 +.kryptokrona.se
 +.stats.helsingborg.se
@@ -48249,6 +48240,7 @@ kma.biz
 +.vyborexperta.ru
 +.vologda-info.ru
 +.ulogin-stats.ru
++.temirtau-adm.ru
 +.ad.tehno-rating.ru
 +.technosoft35.ru
 +.teaser-goods.ru
@@ -49567,6 +49559,7 @@ jhf.ru
 +.evepool.pw
 +.1024mzs.pw
 +.vinlex.pw
++.asq.r77vh0.pw
 +.pyrite.pw
 +.pirata.pw
 +.minero.pw
@@ -49677,7 +49670,6 @@ jhf.ru
 +.ale-gratka.pl
 +.adkontekst.pl
 +.adcarousel.pl
-+.skateroom.pl
 +.refericon.pl
 +.rads.realadmin.pl
 +.voto.provident.pl
@@ -50530,6 +50522,7 @@ jhf.ru
 +.planmix.co.kr
 +.neoebiz.co.kr
 +.ck.ncclick.co.kr
++.medises.co.kr
 +.cmpv2.itworld.co.kr
 +.simg.imadrep.co.kr
 +.adv.imadrep.co.kr
@@ -51807,6 +51800,7 @@ jhf.ru
 +.parity.io
 +.p2pool.io
 +.sentry.outbid.io
++.opolis.io
 +.notebc.io
 +.win-rtb2-uswest.n-data.io
 +.click-rtb2-eu.n-data.io
@@ -52002,7 +51996,6 @@ jhf.ru
 +.faridabadrepair.in
 +.oscaranimation.in
 +.jyothishmathi.in
-+.gaenterprises.in
 +.xjpakmdcfuqe.in
 +.static.massmediaent.in
 +.filter.massmediaent.in
@@ -52013,6 +52006,7 @@ jhf.ru
 +.r.yabancidizi.in
 +.site24x7rum.in
 +.tracking.mailtracker.in
++.ideaplusjal.in
 +.aromadecore.in
 +.winstar365.in
 +.upload.venomtools.in
@@ -52095,6 +52089,7 @@ jhf.ru
 +.s4d.in
 +.mail.tropmet.res.in
 +.shopee.org.in
++.continentalgroup.net.in
 +.ramanujan.edu.in
 +.anydesk.com.in
 +.enhanceconnection.co.in
@@ -52122,6 +52117,7 @@ jhf.ru
 +.tbudz.co.in
 +.inuxu.co.in
 +.cdntm.hsbc.co.in
++.library.arihantmbainstitute.ac.in
 +.analytics.praetor.im
 +.fullnode.bp.lambda.im
 +.recirculation.spot.im
@@ -53016,7 +53012,6 @@ jhf.ru
 +.75esession.fr
 +.20mlinutes.fr
 +.vinoscout.fr
-+.support.viewpoint.fr
 +.unme-asso.fr
 +.univ-murs.fr
 +.ubuntu-fr.fr
@@ -54997,7 +54992,6 @@ jhf.ru
 +.system-live-media.cz
 +.semnicneposilejte.cz
 +.impressionmedia.cz
-+.petrjanicek.savana-hosting.cz
 +.contentproxy10.cz
 +.onlinetanecni.cz
 +.monkeytracker.cz
@@ -55438,6 +55432,7 @@ jhf.ru
 +.shilian168.cn
 +.cms.grandcloud.cn
 +.download.doumaibiji.cn
++.disk.accord1key.cn
 +.8jrc564wtf.cn
 +.7daystodie.cn
 +.tongbaimi.cn
@@ -55555,7 +55550,6 @@ jhf.ru
 +.m.gongzhilian.com.cn
 +.datamaster.com.cn
 +.daliantong.com.cn
-+.down.qqfarmer.com.cn
 +.synad2.nuffnang.com.cn
 +.helloeos.com.cn
 +.ipinyou.com.cn
@@ -55608,6 +55602,7 @@ jhf.ru
 +.philippschoch.ch
 +.jonasschnelli.ch
 +.businessclick.ch
++.autodepannage.ch
 +.burstcoin.internet-box.ch
 +.bumskontakte.ch
 +.admanagement.ch
@@ -55846,6 +55841,7 @@ jhf.ru
 +.veitgov.cc
 +.titki55.cc
 +.ottpremium.shoters.cc
++.enigma2.shoters.cc
 +.kodi1.shoters.cc
 +.app.senaobz.cc
 +.widget.replain.cc
@@ -55902,7 +55898,6 @@ jhf.ru
 +.hsdps.cc
 +.hk668.cc
 +.down.ftp21.cc
-+.ssl.ftp21.cc
 +.epayu.cc
 +.easyx.cc
 +.dpool.cc
@@ -56072,6 +56067,7 @@ jhf.ru
 +.providence.net.br
 +.treinamento.convenio.to.gov.br
 +.farmax.far.br
++.vbccorretoradeseguros.com.br
 +.paulomatosconsultores.com.br
 +.turismosaofrancisco.com.br
 +.palharesinformatica.com.br
@@ -56105,7 +56101,6 @@ jhf.ru
 +.apicorporativops.portoseguro.com.br
 +.share.openenglish.com.br
 +.maispremium.com.br
-+.grupobramam.com.br
 +.fazendachia.com.br
 +.navegador.telefonica.com.br
 +.shoptarget.com.br
@@ -56414,6 +56409,7 @@ jhf.ru
 +.flechabusretiro.com.ar
 +.worldsport.com.ar
 +.publi.elliberal.com.ar
++.cdaonline.com.ar
 +.img2.adelantos.com.ar
 +.advansys.com.ar
 +.cbango.com.ar

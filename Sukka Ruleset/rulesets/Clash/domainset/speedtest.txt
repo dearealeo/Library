@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-05-04T12:32:06.854Z
-# Size: 917
+# Last Updated: 2025-05-04T16:33:01.982Z
+# Size: 975
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -69,6 +69,7 @@ miami-speedtest.reliablesite.net
 speedtest.singapore.globalxtreme.net
 speedtest.webdiscount.net
 speedtest.ufinetlatam.net
+speedtest.packetworks.net
 +.ooklaserver.net
 speedtest.nftctelecom.net
 +.speed.googlefiber.net
@@ -128,6 +129,7 @@ speedtest.sea1.nitelusa.net
 speedtest1.nyc1.nitelusa.net
 speedtest.lax1.nitelusa.net
 speedtest.dal1.nitelusa.net
+speedtest.netflash.net
 speedtest-sin.melbicom.net
 speedtest-msk.melbicom.net
 speedtest-lax.melbicom.net
@@ -176,6 +178,7 @@ speedtest1-sttlwawb.as20055.net
 spt-nyc.as13786.net
 spdtst.xenyth.net
 +.speedtest.warian.net
+speedtest.quadro.net
 st02.mtnsat.net
 speedtest.maryno.net
 netservice01.ber01.lwlcom.net
@@ -260,6 +263,7 @@ speedtest2.pacificinternet.com
 speedtest.naturalwireless.com
 ookla-london.briantbroadband.com
 speedtest.unlimitedfiber.com
+speedtest.systemlifeline.com
 +.speedtestkorea.com
 speedtest1.indosatooredoo.com
 speedtest.hytekcomputers.com
@@ -338,6 +342,7 @@ hkspeedtest.netvigator.com
 speedtest.lamasatpro.com
 speedlon.hyperoptic.com
 speedtest.hizhosting.com
+sp1.hcetelecom.com
 speed12.gonetspeed.com
 speed09.gonetspeed.com
 speed08.gonetspeed.com
@@ -407,6 +412,7 @@ la-ookla.geolinks.com
 speedtest01.wowrack.com
 +.wifiman.com
 +.speedtest.waicore.com
+speedtest.tushino.com
 speed.turbodc.com
 speedtestmiabr.telxius.com
 +.speedtest.starhub.com
@@ -439,14 +445,24 @@ speedtest.tngnet.com
 speedtest-server-nyc.starry.com
 speedtest-server-lax.starry.com
 dalspeedtest.rtatel.com
+stwellandpelhamwireless.rogers.com
 stsaultstemariewireless.rogers.com
+ststcatharineswireless.rogers.com
+storangevillewireless.rogers.com
+stmississaugawireless.rogers.com
 stthunderbaywireless.rogers.com
 stlethbridgewireless.rogers.com
 stleamingtonwireless.rogers.com
+stgeorgetownwireless.rogers.com
+stwoodstockwireless.rogers.com
 stvancouverwireless.rogers.com
+ststratfordwireless.rogers.com
+stkitchenerwireless.rogers.com
+stbrantfordwireless.rogers.com
 stwinnipegwireless.rogers.com
 stvictoriawireless.rogers.com
 ststthomaswireless.rogers.com
+sthamiltonwireless.rogers.com
 stedmontonwireless.rogers.com
 stwindsorwireless.rogers.com
 sttorontowireless.rogers.com
@@ -457,10 +473,25 @@ stchathamwireless.rogers.com
 stcalgarywireless.rogers.com
 stsurreywireless.rogers.com
 stsarniawireless.rogers.com
+stmiltonwireless.rogers.com
 stlondonwireless.rogers.com
+stguelphwireless.rogers.com
+storangeville.rogers.com
+stmississauga.rogers.com
+stwoodstock.rogers.com
+ststratford.rogers.com
+stkitchener.rogers.com
+stetobicoke.rogers.com
+stbrantford.rogers.com
+stwaterloo.rogers.com
 ststthomas.rogers.com
+stoakville.rogers.com
+sthamilton.rogers.com
+stbrampton.rogers.com
 sttoronto.rogers.com
+stmilton.rogers.com
 stlondon.rogers.com
+stguelph.rogers.com
 speedtest2.rhitcr.com
 speedtest3.dal.nxlink.com
 mirror.nforce.com
@@ -502,6 +533,7 @@ speedtestsgp.fpt.vn
 speedtesthkg.fpt.vn
 speedtest.w-net.us
 speedtest.hyperwave.uk
+speedtest.octaplus.uk
 speedtest-thn.krystal.uk
 speedtest2.lightningfibre.net.uk
 speedtest.cadence.net.uk
@@ -523,6 +555,7 @@ speedtest.imcloud.tw
 +.speedtest.pni.tw
 sky-speedtest.homeplus.net.tw
 ntp-speedtest.homeplus.net.tw
+wd-speedtest.homeplus.net.tw
 tp-speedtest.homeplus.net.tw
 tn-speedtest.homeplus.net.tw
 sc-speedtest.homeplus.net.tw
@@ -543,6 +576,7 @@ speedtest.taifo.com.tw
 speedtest.twds.com.tw
 speedtest.host.com.tw
 +.speedtest.aptg.com.tw
+speedtest.pulse.web.tr
 speedtest.sarnettelekom.net.tr
 +.speednet.net.tr
 speedtest.sunucum.net.tr
@@ -600,6 +634,7 @@ speedtest.kapteyan.com.tr
 hiztesti.hiperbox.com.tr
 speedtest.didimnet.com.tr
 hs14.aratwifi.com.tr
+iskendurum.veganet.com.tr
 speed.tepenet.com.tr
 speedtest2.plusnet.com.tr
 speedtest-ist-34-node.netzone.com.tr
@@ -609,6 +644,7 @@ hizbalikesir.durunet.com.tr
 hizaydin.durunet.com.tr
 speedtest.datafex.com.tr
 izmit-speed.tbtnet.com.tr
+balikesirspeedtest.fixnet.com.tr
 afyonspeedtest.fixnet.com.tr
 speedtest.fixnet.com.tr
 +.speedtest.comnet.com.tr
@@ -623,6 +659,7 @@ speedtest.myrepublic.com.sg
 +.speedtest.com.sg
 speedtest.axclusive.com.sg
 speedtest.singnet.com.sg
+m1speedtest1.m1net.com.sg
 lon-ix1-tptest1.31173.se
 fra-eq5-tptest1.31173.se
 ams-eq6-tptest1.31173.se
@@ -699,6 +736,7 @@ speedtest.three.com.hk
 sosimhk.datapath.three.com.hk
 ookla-speedtest-central.hgconair.hgc.com.hk
 +.speed.pfm.gg
+speedtest.hep.gg
 montsouris3.d2m.c2d.liveservices.fr
 +.speedtest.orange.fr
 speedperf.axione.fr
@@ -736,12 +774,23 @@ sp1.basinbroadband.ca
 speedtest2.valleyfiber.ca
 speedtest1.valleyfiber.ca
 speedtest.gosfieldtel.ca
+speedtest.fibernetics.ca
+stmississauga.netcrawler.ca
+stetobicoke.netcrawler.ca
+stwaterloo.netcrawler.ca
 stmontreal.netcrawler.ca
+sthamilton.netcrawler.ca
+stbrampton.netcrawler.ca
 speedtest.netcrawler.ca
 stlondon.netcrawler.ca
+stguelph.netcrawler.ca
+speedtest.mornington.ca
 speedtest.45networks.ca
 speedtest.techminds.ca
+speedtest.execulink.ca
+speedtest.cloudwifi.ca
 speedtest.beyondair.ca
+383-2speedtest.wightman.ca
 falcon.its.utoronto.ca
 speed1.myascend.ca
 speedtest.myaccess.ca
@@ -755,9 +804,12 @@ yyc-speedtest.xplore.ca
 speedtest.switch.ca
 speedtest-engine.primus.ca
 speedtest1.innsys.ca
+speedtest.cogeco.ca
 speedtest-london.start.ca
 speedtest01.o-net.ca
+speedtest01.ehtel.ca
 speedtest.wwfn.ca
+speedtest.nrbn.ca
 hv1.juce.ca
 +.srvr.bell.ca
 speedtest.ubc.ca
@@ -769,6 +821,7 @@ speedtest.seaside.ns.ca
 speedtest.merlin.mb.ca
 speedtest.syscom.manaus.br
 teste.jsnet.manaus.br
+ookla-ita.asanet.tec.br
 velocimetro.esolution.srv.br
 +.linknetspeedtest.net.br
 ookla.playmaisreverso.net.br
@@ -833,6 +886,7 @@ teste.diotelecom.com.br
 speedtest.connectbv8.com.br
 teste.xtremenet.com.br
 spetstmns01.timbrasil.com.br
+servidor.speedplay.com.br
 speedtest.routinger.com.br
 teste.routinger.com.br
 velocimetro.govistabr.com.br
@@ -847,6 +901,7 @@ lifitelecom.brsserver.com.br
 lvconnect.brsserver.com.br
 glconnect.brsserver.com.br
 speednet.brsserver.com.br
+asanet.brsserver.com.br
 speed.amazonett.com.br
 speedtest.actelecom.com.br
 speedtest.uplinkrr.com.br
@@ -862,6 +917,7 @@ velocimetro-rbo.virtua.com.br
 velocimetro-mns.virtua.com.br
 speed.sdmnet.com.br
 speedtest.inforr.com.br
+speedtest.mixam.com.br
 spd49.claro.com.br
 spd33.claro.com.br
 velocidade.4wnet.com.br
@@ -901,6 +957,7 @@ brindb2speed1.wireline.com.au
 sydgs2speed4.wireline.com.au
 +.speedtest.vodafone.com.au
 speedtest-tdc3.tasmanet.com.au
+speedtest-limestonecoast.optusnet.com.au
 speedtest-eastburwood.optusnet.com.au
 speedtest-townsville.optusnet.com.au
 speedtest-newcastle.optusnet.com.au
@@ -910,6 +967,7 @@ speedtest-blacktown.optusnet.com.au
 speedtest-sunshine.optusnet.com.au
 speedtest-moorooka.optusnet.com.au
 speedtest-brisbane.optusnet.com.au
+speedtest-geelong.optusnet.com.au
 speedtest-sydney.optusnet.com.au
 speedtest-hobart.optusnet.com.au
 speedtest.yless4u.com.au
