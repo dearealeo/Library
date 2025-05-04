@@ -1,4 +1,5 @@
-# Byte-compiled / optimized / DLL files
+# ----- Python Specific Ignore Rules -----
+# Byte-compiled and cached Python files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -6,7 +7,7 @@ __pycache__/
 # C extensions
 *.so
 
-# Distribution / packaging
+# Python packaging and distribution
 .Python
 build/
 develop-eggs/
@@ -26,89 +27,18 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
+# Python Installer and dependency files
 pip-log.txt
 pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
 Pipfile.lock
-
-# UV
-uv.lock
-
-# poetry
 poetry.lock
-
-# pdm
 pdm.lock
 .pdm.toml
 .pdm-python
 .pdm-build/
+uv.lock
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
+# Python environment directories
 .env
 .venv
 env/
@@ -117,42 +47,116 @@ ENV/
 env.bak/
 venv.bak/
 
-# Spyder project settings
-.spyderproject
-.spyproject
+# ----- Testing and Coverage -----
+# Unit test and coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
 
-# Rope project settings
-.ropeproject
+# ----- Development Tools -----
+# PyCharm IDE
+.idea/
 
-# mkdocs documentation
-/site
-
-# mypy
+# Type checking and static analysis
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
-# Pyre type checker
 .pyre/
-
-# pytype static type analyzer
 .pytype/
 
-# Cython debug symbols
+# Jupyter/IPython
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# Python version management
+.python-version
+
+# ----- Framework Specific -----
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# ----- Documentation -----
+# Sphinx
+docs/_build/
+
+# MkDocs
+/site
+
+# ----- Build Systems -----
+# PyBuilder
+.pybuilder/
+target/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# ----- Node.js/NPM -----
+node_modules/
+.clinic
+.wireit
+
+# ----- Temporary Files -----
+.cache
+tmp.*
+.BUILD_FINISHED
+public/
+
+# ----- PEP 582 -----
+__pypackages__/
+
+# ----- Translations -----
+*.mo
+*.pot
+
+# ----- Cython Debug -----
 cython_debug/
 
-# PyCharm
-.idea/
+# ----- Project Settings -----
+# Spyder
+.spyderproject
+.spyproject
 
-# Ruff stuff:
-.ruff_cache/
+# Rope
+.ropeproject
 
-# PyPI configuration file
-.pypirc
-
-# Miscellaneous OS / Desktop
+# ----- Miscellaneous -----
+# OS-specific files
 .DS_Store
 Thumbs.db
 ehthumbs.db
 desktop.ini
 $RECYCLE.BIN/
+
+# PyPI config
+.pypirc
+
+# Ruff cache
+.ruff_cache/
+
+# SageMath
+*.sage.py
