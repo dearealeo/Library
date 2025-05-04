@@ -1,4 +1,4 @@
-name: Check Domain Availability
+name: Check Sukka Rulesets Domain Availability
 
 on:
   workflow_dispatch:

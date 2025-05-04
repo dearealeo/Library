@@ -1,4 +1,4 @@
-name: Build and Commit Upstream Rulesets
+name: Update Sukka Rulesets
 
 on:
   schedule:
