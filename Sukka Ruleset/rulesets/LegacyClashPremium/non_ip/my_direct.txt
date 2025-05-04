@@ -1,0 +1,17 @@
+#########################################
+# Sukka's Ruleset - Direct
+# Last Updated: 2025-05-04T07:15:18.709Z
+# Size: 8
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#########################################
+DOMAIN,this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
+DOMAIN,mirrorbits.lineageos.org
+DOMAIN-SUFFIX,torrentmac.net
+DOMAIN-SUFFIX,engage.cloudflareclient.com
+DOMAIN-SUFFIX,download.555mac.com
+DOMAIN-KEYWORD,mac-torrent-download
+PROCESS-NAME,AdGuardHome
+PROCESS-NAME,nmap
+################## EOF ##################

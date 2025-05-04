@@ -1,0 +1,18 @@
+#########################################
+# Sukka's Ruleset - Telegram ASN
+# Last Updated: 2025-05-04T07:15:18.685Z
+# Size: 6
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This file contains ASN owned/used by Telegram Messenger.
+# Note that unlike "ip/telegram" file which is based on officially released list by Telegram themselves. Use this file at your own risk.
+#########################################
+DOMAIN,this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
+IP-ASN,62041
+IP-ASN,62014
+IP-ASN,59930
+IP-ASN,44907
+IP-ASN,211157
+################## EOF ##################

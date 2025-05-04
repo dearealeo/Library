@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": ["this_ruleset_is_made_by_sukkaw.ruleset.skk.moe"],
+      "domain_suffix": [
+        "this_ruleset_is_made_by_sukkaw.ruleset.skk.moe",
+        "undefined",
+        "null",
+        "in.applicationinsights.azure.com",
+        "geo2.adobe.com"
+      ]
+    }
+  ]
+}

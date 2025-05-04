@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "this_ruleset_is_made_by_sukkaw.ruleset.skk.moe",
+        "copymanga.site",
+        "jav.guru",
+        "www.coinbase.com",
+        "javdb.com",
+        "cableav.tv",
+        "hanime1.me"
+      ],
+      "domain_suffix": [
+        "this_ruleset_is_made_by_sukkaw.ruleset.skk.moe",
+        "crunchyroll.com",
+        "mandaom.com",
+        "mangafox.me"
+      ]
+    }
+  ]
+}

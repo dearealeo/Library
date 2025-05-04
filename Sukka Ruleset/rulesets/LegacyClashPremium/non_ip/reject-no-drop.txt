@@ -1,0 +1,15 @@
+#########################################
+# Sukka's Ruleset - Reject No Drop
+# Last Updated: 2025-05-04T07:15:18.716Z
+# Size: 4
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This file This file contains rules for domain should be used with REJECT-NO-DROP policy.
+#########################################
+DOMAIN,this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
+DOMAIN-SUFFIX,szbdyd.com
+DOMAIN-SUFFIX,p2p.huya.com
+DOMAIN-SUFFIX,mcdn.bilivideo.cn
+################## EOF ##################

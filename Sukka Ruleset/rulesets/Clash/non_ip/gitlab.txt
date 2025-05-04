@@ -1,0 +1,13 @@
+#########################################
+# Sukka's Ruleset - GitLab
+# Last Updated: 2025-05-04T07:15:18.690Z
+# Size: 2
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# GitLab forbids usage from CN, HK, MO. This file contains ruleset for GitLab.
+#########################################
+DOMAIN,this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
+DOMAIN-SUFFIX,gitlab.com
+################## EOF ##################

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "this_ruleset_is_made_by_sukkaw.ruleset.skk.moe",
+        "itvpnpmobile-a.akamaihd.net"
+      ],
+      "domain_suffix": [
+        "this_ruleset_is_made_by_sukkaw.ruleset.skk.moe",
+        "itv.com",
+        "tvlicensing.co.uk",
+        "bbci.co.uk",
+        "bbc.co.uk"
+      ],
+      "domain_keyword": ["bbcfmt", "uk-live"]
+    }
+  ]
+}
