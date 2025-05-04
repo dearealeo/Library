@@ -233,6 +233,7 @@ async def fetch_news_items(links: List[str]) -> List[News]:
 CCTV_PATTERN: re.Pattern = re.compile(r"<strong>央视网消息</strong>（新闻联播）：")
 INDENT_PATTERN: re.Pattern = re.compile(r"^(\s{2})-", re.MULTILINE)
 EMPTY_P_PATTERN: re.Pattern = re.compile(r"<p><br></p><p><strong>")
+EMPTY_P_BR_PATTERN: re.Pattern = re.compile(r"<p><br/></p><p><strong>")
 
 
 def clean_news_content(content: str) -> str:
@@ -241,6 +242,7 @@ def clean_news_content(content: str) -> str:
     content = CCTV_PATTERN.sub("", content)
     content = INDENT_PATTERN.sub(r"    -", content)
     content = EMPTY_P_PATTERN.sub("<p></p><p><strong>", content)
+    content = EMPTY_P_BR_PATTERN.sub("<p></p><p><strong>", content)
     return content.strip()
 
 

@@ -1737,44 +1737,52 @@ def crawl_all_types(
     logger.info("Completed crawl of all law types.")
 
 
-def fetch_list_page_items() -> List[LawData]:
-    logger.info("Fetching items from list page API: %s", LIST_PAGE_URL)
+# def fetch_list_page_items() -> List[LawData]:
+#     logger.info("Fetching items from list page API: %s", LIST_PAGE_URL)
 
-    try:
-        response: requests.Response = perform_request("GET", LIST_PAGE_URL)
+#     try:
+#         response: requests.Response = perform_request("GET", LIST_PAGE_URL)
 
-        try:
-            result: ApiResult = orjson.loads(response.content)
-            items: List[LawData] = result.get("result", {}).get("data", [])
-            logger.info(
-                "Successfully extracted %d items from list page API.", len(items)
-            )
-            return items
-        except (orjson.JSONDecodeError, KeyError) as e:
-            logger.error(
-                "Failed to parse JSON from list page API response: %s. Raw response snippet: %s",
-                e,
-                response.text[:500],
-                exc_info=True,
-            )
-            return []
+#         try:
+#             result: ApiResult = orjson.loads(response.content)
+#             items: List[LawData] = result.get("result", {}).get("data", [])
+#             logger.info(
+#                 "Successfully extracted %d items from list page API.", len(items)
+#             )
+#             return items
+#         except (orjson.JSONDecodeError, KeyError) as e:
+#             logger.error(
+#                 "Failed to parse JSON from list page API response: %s. Raw response snippet: %s",
+#                 e,
+#                 response.text[:500],
+#                 exc_info=True,
+#             )
+#             return []
 
-    except (ConnectionError, requests.exceptions.RequestException) as e:
-        logger.error("Failed to fetch list page API: %s", e, exc_info=True)
-        return []
+#     except (ConnectionError, requests.exceptions.RequestException) as e:
+#         logger.error("Failed to fetch list page API: %s", e, exc_info=True)
+#         return []
 
 
 def get_type_id_from_code(type_code: str) -> Optional[int]:
     type_id = API_TYPE_TO_ID_MAP.get(type_code)
     if type_id:
         return type_id
+    type_code_lower = type_code.lower()
     return next(
-        (tid for tid, (_, name) in LAW_TYPES.items() if name == type_code), None
+        (
+            tid
+            for tid, (_, name) in LAW_TYPES.items()
+            if name.lower() == type_code_lower
+        ),
+        None,
     )
 
 
 def check_for_new_items() -> Dict[int, List[LawData]]:
-    logger.info("Checking for new items from the list page (first page only).")
+    logger.info(
+        "Checking for new items from the list page API, paginating if necessary."
+    )
 
     existing_ids: Set[str] = set()
     try:
@@ -1784,10 +1792,7 @@ def check_for_new_items() -> Dict[int, List[LawData]]:
             )
             return {}
 
-        union_query = " UNION ALL ".join(
-            f'SELECT id FROM "{category}"' for category in LAW_CATEGORIES
-        )
-
+        valid_categories = []
         with closing(
             sqlite3.connect(
                 f"file:{DB_PATH}?mode=ro",
@@ -1795,108 +1800,179 @@ def check_for_new_items() -> Dict[int, List[LawData]]:
                 timeout=10.0,
                 check_same_thread=False,
             )
-        ) as conn:
-            cursor = conn.cursor()
-            logger.debug("Executing query to fetch all existing IDs.")
-            existing_ids = {row[0] for row in cursor.execute(union_query) if row[0]}
-            logger.info(
-                "Found %d existing item IDs across %d table(s).",
-                len(existing_ids),
-                len(LAW_CATEGORIES),
+        ) as conn_check:
+            cursor_check = conn_check.cursor()
+            cursor_check.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            existing_tables = {row[0] for row in cursor_check.fetchall()}
+            valid_categories = [cat for cat in LAW_CATEGORIES if cat in existing_tables]
+
+        if not valid_categories:
+            logger.warning(
+                "No valid/existing law category tables found. Assuming no existing items."
+            )
+        else:
+            union_query = " UNION ALL ".join(
+                f'SELECT id FROM "{category}"' for category in valid_categories
             )
 
+            with closing(
+                sqlite3.connect(
+                    f"file:{DB_PATH}?mode=ro",
+                    uri=True,
+                    timeout=10.0,
+                    check_same_thread=False,
+                )
+            ) as conn:
+                conn.execute("PRAGMA temp_store = MEMORY;")
+                conn.execute("PRAGMA cache_size = -10000;")
+                cursor = conn.cursor()
+                logger.debug(
+                    "Executing query to fetch all existing IDs from tables: %s",
+                    valid_categories,
+                )
+                existing_ids = {row[0] for row in cursor.execute(union_query) if row[0]}
+                logger.info(
+                    "Found %d existing item IDs across %d table(s).",
+                    len(existing_ids),
+                    len(valid_categories),
+                )
+
     except sqlite3.OperationalError as e:
-        if "no such table" in str(e) or "unable to open" in str(e):
+        if "unable to open" in str(e):
             logger.warning(
-                "Database or tables might not exist yet. Assuming no existing items: %s",
-                e,
+                "Database file might not exist yet. Assuming no existing items: %s", e
             )
-            existing_ids = set()
         else:
             logger.error(
-                "Database error checking for existing items: %s", e, exc_info=True
+                "Database operational error checking for existing items: %s",
+                e,
+                exc_info=True,
             )
             return {}
     except sqlite3.Error as e:
-        logger.error("Database error checking for existing items: %s", e, exc_info=True)
-        return {}
-
-    list_items: List[LawData] = fetch_list_page_items()
-    if not list_items:
-        logger.info("No items fetched from the list page API. No new items to process.")
+        logger.error(
+            "General database error checking for existing items: %s", e, exc_info=True
+        )
         return {}
 
     new_items_by_type: Dict[int, List[LawData]] = defaultdict(list)
+    page: int = 1
     processed_count: int = 0
-    skipped_existing: int = 0
-    skipped_missing_type: int = 0
+    skipped_existing_total: int = 0
+    skipped_missing_type_total: int = 0
 
-    for item in list_items:
-        processed_count += 1
-        item_id: Optional[str] = item.get("id")
+    list_base_url: str = LIST_PAGE_URL.split("&page=")[0]
 
-        if not item_id:
-            logger.debug(
-                "Skipping item without ID: title='%s'", item.get("title", "N/A")
+    while True:
+        logger.info("Fetching list page %d...", page)
+
+        try:
+            page_response = fetch_api_data(list_base_url, page)
+            list_items: List[LawData] = page_response.get("result", {}).get("data", [])
+            if "error" in page_response or not page_response.get("result"):
+                logger.error(
+                    "Failed to fetch or parse list page %d: %s. Stopping check.",
+                    page,
+                    page_response.get("error", "Unknown API error/structure"),
+                )
+                break
+
+        except (ConnectionError, requests.exceptions.RequestException) as e:
+            logger.error(
+                "Failed to fetch list page %d: %s. Stopping check.",
+                page,
+                e,
+                exc_info=True,
             )
-            continue
-        if item_id in existing_ids:
-            skipped_existing += 1
-            logger.debug(
-                "Skipping existing item ID %s ('%s').",
+            break
+
+        if not list_items:
+            logger.info("Reached end of list results at page %d.", page)
+            break
+
+        logger.debug("Processing %d items from page %d.", len(list_items), page)
+        found_existing_on_page = False
+        found_new_on_page = False
+
+        for item in list_items:
+            processed_count += 1
+            item_id: Optional[str] = item.get("id")
+
+            if not item_id:
+                logger.debug(
+                    "Skipping item without ID on page %d: title='%s'",
+                    page,
+                    item.get("title", "N/A"),
+                )
+                continue
+
+            if item_id in existing_ids:
+                skipped_existing_total += 1
+                found_existing_on_page = True
+                continue
+
+            found_new_on_page = True
+            api_type_identifier: Optional[str] = item.get("type")
+
+            if not api_type_identifier:
+                logger.warning(
+                    "Skipping new item ID %s ('%s') on page %d: Missing 'type' identifier.",
+                    item_id,
+                    item.get("title", "N/A")[:50],
+                    page,
+                )
+                skipped_missing_type_total += 1
+                continue
+
+            type_id: Optional[int] = get_type_id_from_code(api_type_identifier)
+
+            if type_id is None:
+                logger.warning(
+                    "Skipping new item ID %s ('%s') on page %d: Cannot map API type '%s' to internal type ID.",
+                    item_id,
+                    item.get("title", "N/A")[:50],
+                    page,
+                    api_type_identifier,
+                )
+                skipped_missing_type_total += 1
+                continue
+
+            logger.info(
+                "Found new item ID %s ('%s'), Type: %d on page %d",
                 item_id,
                 item.get("title", "N/A")[:50],
+                type_id,
+                page,
             )
-            continue
+            new_items_by_type[type_id].append(item)
+            existing_ids.add(item_id)
 
-        api_type_identifier: Optional[str] = item.get("type")
-        if not api_type_identifier:
-            logger.warning(
-                "Skipping new item ID %s ('%s'): Missing 'type' identifier.",
-                item_id,
-                item.get("title", "N/A")[:50],
+        if found_existing_on_page and not found_new_on_page:
+            logger.info(
+                "Page %d contains only existing items. Stopping pagination check.", page
             )
-            skipped_missing_type += 1
-            continue
+            break
 
-        type_id: Optional[int] = API_TYPE_TO_ID_MAP.get(api_type_identifier)
-
-        if type_id is None:
-            logger.warning(
-                "Skipping new item ID %s ('%s'): Cannot map API type '%s' to internal type ID.",
-                item_id,
-                item.get("title", "N/A")[:50],
-                api_type_identifier,
-            )
-            skipped_missing_type += 1
-            continue
-
-        logger.info(
-            "Found new item ID %s ('%s'), Type: %d",
-            item_id,
-            item.get("title", "N/A")[:50],
-            type_id,
-        )
-        new_items_by_type[type_id].append(item)
+        page += 1
 
     result: Dict[int, List[LawData]] = dict(new_items_by_type)
     total_new = sum(len(items) for items in result.values())
 
     logger.info(
-        "List page check complete. Processed: %d, Skipped (existing): %d, Skipped (no/invalid type): %d, New items found: %d across %d types.",
+        "List page check complete. Total items processed (across pages): %d, Skipped (existing): %d, Skipped (no/invalid type): %d, New items found: %d across %d types.",
         processed_count,
-        skipped_existing,
-        skipped_missing_type,
+        skipped_existing_total,
+        skipped_missing_type_total,
         total_new,
         len(result),
     )
 
-    if not result and processed_count > 0 and processed_count == skipped_existing:
-        logger.info("All items on the first page already exist in the database.")
-    elif not result and skipped_missing_type > 0:
+    if not result and processed_count > 0 and processed_count == skipped_existing_total:
+        logger.info("All items found on checked page(s) already exist in the database.")
+    elif not result and skipped_missing_type_total > 0:
         logger.warning(
             "No new items identified for processing, but %d item(s) were skipped due to missing/invalid type information.",
-            skipped_missing_type,
+            skipped_missing_type_total,
         )
 
     return result

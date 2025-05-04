@@ -160,3 +160,8 @@ $RECYCLE.BIN/
 
 # SageMath
 *.sage.py
+
+# SQLite
+database.db-shm
+database.db-wal
+database.db-journal
