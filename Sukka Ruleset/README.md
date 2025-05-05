@@ -10,3 +10,5 @@ The software herein is licensed under the [AGPL-3.0](./LICENSE) by [@dearealeo](
 
 - [SukkaW/Surge](https://github.com/SukkaW/Surge) (AGPL-3.0; `List/ip/china_ip.conf` *excluded*: CC BY-SA 2.0)
 - [SukkaLab/ruleset.skk.moe](https://github.com/SukkaLab/ruleset.skk.moe) (AGPL-3.0)
+- [SukkaW/nodelistparser](https://github.com/SukkaW/nodelistparser) (MIT)
+- [SukkaW/chnroutes2-optimized](https://github.com/SukkaW/chnroutes2-optimized) (MIT)
