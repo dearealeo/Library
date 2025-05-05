@@ -1,0 +1,53 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+    reviewers:
+      - "dearealeo"
+    assignees:
+      - "dearealeo"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(ci)"
+      include: "scope"
+
+  - package-ecosystem: "gitsubmodule"
+    directory: "/Sukka Ruleset/upstream"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(ruleset-upstream)"
+      include: "scope"
+
+  - package-ecosystem: "pip"
+    directory: "/国家法律法规数据库"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(laws)"
+      include: "scope"
+
+  - package-ecosystem: "pip"
+    directory: "/新闻联播"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(news)"
+      include: "scope"
