@@ -4,7 +4,7 @@
 
 This project employs publicly accessible textual content from the CCTV.com (央视网) solely for non-commercial purposes, with all rights thereto reserved by the China Media Group (中央广播电视总台), and the authoritative source for verification remains [tv.cctv.com](https://tv.cctv.com/).
 
-The software herein is licensed under the [MIT License](./LICENSE) by [@dearealeo](https://github.com/dearealeo).
+The software herein is licensed under the [MIT](./LICENSE) by [@dearealeo](https://github.com/dearealeo).
 
 ## Credits
 
