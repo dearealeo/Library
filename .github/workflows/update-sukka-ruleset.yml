@@ -137,6 +137,8 @@ jobs:
       - name: Push changes
         if: env.HAS_CHANGES == 'true'
         run: |
+          echo "Pulling latest changes with rebase..."
+          git pull --rebase origin ${{ github.ref_name }}
           echo "Pushing changes..."
           git push origin HEAD:${{ github.ref_name }}
 
