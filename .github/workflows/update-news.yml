@@ -33,7 +33,7 @@ jobs:
       - name: Lint Markdown files
         uses: DavidAnson/markdownlint-cli2-action@v19.1.0
         with:
-          globs: "**/*.md"
+          globs: "新闻联播/**/*.md"
           fix: true
           config: ".markdownlint.json"
         continue-on-error: true
