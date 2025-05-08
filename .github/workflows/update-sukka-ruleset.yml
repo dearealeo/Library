@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Enable long paths
-        run: git config --system core.longpaths true
+        run: git config --global core.longpaths true
       - name: Checkout own repository
         uses: actions/checkout@v4
         with:
