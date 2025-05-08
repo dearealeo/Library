@@ -1,4 +1,4 @@
-name: Update Sukka Rulesets
+name: Update today Sukka Rulesets
 
 on:
   schedule:
@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-24.04-arm
 
     steps:
+      - name: Enable long paths
+        run: git config --system core.longpaths true
       - name: Checkout own repository
         uses: actions/checkout@v4
         with:
@@ -33,7 +35,7 @@ jobs:
       #     path: Sukka Ruleset/upstream
       #     persist-credentials: false
 
-      - name: Update Submodule
+      - name: Update submodule
         run: |
           git submodule sync --recursive
           git submodule update --init --recursive --remote --force "Sukka Ruleset/upstream"
