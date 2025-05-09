@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-05-07T12:37:20.891Z
-# Size: 3552
+# Last Updated: 2025-05-09T12:35:00.802Z
+# Size: 3554
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -1012,6 +1012,7 @@ sbl.onfastspring.com
 +.olemovienews.com
 static.observablehq.com
 +.neweggimages.com
+meteorclient.com
 +.meetupstatic.com
 +.media-amazon.com
 cdn.manageengine.com
@@ -2165,6 +2166,7 @@ i.imgflip.com
 +.hugebil.com
 +.static2cdn.hubspot.com
 no-cache.hubspot.com
+static.hubspot.com
 +.js-eu1.hubspot.com
 +.js.hubspot.com
 +.hgimg00.com
