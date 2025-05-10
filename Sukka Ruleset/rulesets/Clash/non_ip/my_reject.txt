@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject (REJECT-DROP)
-# Last Updated: 2025-05-04T07:15:18.711Z
-# Size: 42
+# Last Updated: 2025-05-10T12:31:55.389Z
+# Size: 43
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -21,6 +21,7 @@ DOMAIN-SUFFIX,yfcloud.com
 DOMAIN-SUFFIX,saxysec.com
 DOMAIN-SUFFIX,pcdn.yximgs.com
 DOMAIN-SUFFIX,szbdyd.com
+DOMAIN-SUFFIX,cool3c.com
 DOMAIN-SUFFIX,xycdn.com
 DOMAIN-SUFFIX,uhabo.com
 DOMAIN-SUFFIX,p2cdn.com

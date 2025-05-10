@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-05-08T14:30:58.914Z
-# Size: 1025
+# Last Updated: 2025-05-10T12:31:55.138Z
+# Size: 1035
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -118,6 +118,7 @@ speedtest-utc.northland.net
 speedtest-syr.northland.net
 speedtest.jbarbieri.net
 speedtest-eqx-sg1.ixtelecom.net
+sp-sea-01.ezeefiber.net
 speedtest1.mia.fl.us.convergia.net
 sp3.contilnet.net
 +.speedtest.clouvider.net
@@ -148,6 +149,7 @@ open.cachefly.net
 sp7.atcc-gns.net
 sp3.atcc-gns.net
 speedtest.as214199.net
+speedtest.as203446.net
 speedtest.thn.lon.network.as201838.net
 speedtest.pa5.as198831.net
 ab-thn-ookla01.air-band.net
@@ -230,6 +232,7 @@ speedtest21.hkbn.net
 speedtest.moscow.gldn.net
 spdfra.cndd.net
 spd.cndd.net
+lg-ffm.aeza.net
 speedtest.par1.adky.net
 speedtest.ams.wd6.net
 speedtest.uia.net
@@ -500,8 +503,10 @@ stbrantford.rogers.com
 stwaterloo.rogers.com
 ststthomas.rogers.com
 stoakville.rogers.com
+stkingcity.rogers.com
 sthamilton.rogers.com
 stbrampton.rogers.com
+stvaughan.rogers.com
 sttoronto.rogers.com
 stmilton.rogers.com
 stlondon.rogers.com
@@ -635,9 +640,11 @@ cnk1speedtest.turktelekom.com.tr
 bur1speedtest.turktelekom.com.tr
 ant1speedtest.turktelekom.com.tr
 adn1speedtest.turktelekom.com.tr
+speedtest1.atlantisnet.com.tr
 test.turuncunet.com.tr
 sp.merkurnet.com.tr
 zdt-iptv.highspeed.com.tr
+bozyazi.binbirnet.com.tr
 speedtest9.vodafone.com.tr
 speedtest8.vodafone.com.tr
 speedtest7.vodafone.com.tr
@@ -785,6 +792,7 @@ speedtest.dukekunshan.edu.cn
 speedtest-net.xjtlu.edu.cn
 cesu-nb.zjtelecom.com.cn
 cesu-hz.zjtelecom.com.cn
+speedtest.bmcc.com.cn
 speedtest.asymptote.cc
 o-uk-1.flwc.cc
 speedtest.redbirdcommunications.ca
@@ -803,8 +811,10 @@ stnorthyork.netcrawler.ca
 stetobicoke.netcrawler.ca
 stwaterloo.netcrawler.ca
 stmontreal.netcrawler.ca
+stkingcity.netcrawler.ca
 sthamilton.netcrawler.ca
 stbrampton.netcrawler.ca
+stvaughan.netcrawler.ca
 speedtest.netcrawler.ca
 stlondon.netcrawler.ca
 stguelph.netcrawler.ca
