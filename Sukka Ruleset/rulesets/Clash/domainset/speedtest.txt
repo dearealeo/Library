@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-05-10T12:31:55.138Z
-# Size: 1035
+# Last Updated: 2025-05-11T12:31:57.303Z
+# Size: 1036
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -71,6 +71,7 @@ miami-speedtest.reliablesite.net
 speedtest.singapore.globalxtreme.net
 speedtest.webdiscount.net
 speedtest.ufinetlatam.net
+speedtest-tr-bursa.servosphere.net
 speedtest.packetworks.net
 +.ooklaserver.net
 speedtest.nftctelecom.net
