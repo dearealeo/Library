@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-05-11T12:31:58.608Z
-# Size: 3565
+# Last Updated: 2025-05-12T12:36:52.127Z
+# Size: 3567
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -260,6 +260,7 @@ s6.maxstream.org
 s5.maxstream.org
 s4.maxstream.org
 s1.maxstream.org
+cdn.freesound.org
 cdn.fosstodon.org
 +.doppiocdn.org
 +.cdn.cookielaw.org
@@ -1755,6 +1756,7 @@ embed.typeform.com
 bundle.trysavvy.com
 flows.trysavvy.com
 +.tpdfiles.com
+static.touhoudb.com
 cdn.tinypass.com
 +.tildacdn.com
 platform.theverge.com
