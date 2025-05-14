@@ -3,7 +3,7 @@
   "rules": [
     {
       "domain": [
-        "this_ruleset_is_made_by_sukkaw.ruleset.skk.moe",
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
         "nyc01.screenshot.download",
         "mia01.screenshot.download",
         "lax01.screenshot.download",
@@ -163,6 +163,7 @@
         "speedtest1-sttlwawb.as20055.net",
         "spt-nyc.as13786.net",
         "spdtst.xenyth.net",
+        "speed.sparcs.net",
         "speedtest.quadro.net",
         "st02.mtnsat.net",
         "speedtest.maryno.net",
@@ -377,6 +378,7 @@
         "speedtest.micron21.com",
         "speedcumra.lodosnet.com",
         "speedtest-1.litfibre.com",
+        "hkg.02.speedtest.kansuiun.com",
         "speedtest.us-mi2.kamatera.com",
         "speedtest.us-tx.kamatera.com",
         "speedtest.us-se.kamatera.com",
@@ -979,7 +981,7 @@
         "speedtest.58243.as"
       ],
       "domain_suffix": [
-        "this_ruleset_is_made_by_sukkaw.ruleset.skk.moe",
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
         "measurement-lab.org",
         "backend.librespeed.org",
         "speed.misaka.one",
