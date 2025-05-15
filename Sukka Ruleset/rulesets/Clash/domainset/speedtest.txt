@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-05-14T12:35:52.884Z
-# Size: 1045
+# Last Updated: 2025-05-15T12:36:15.321Z
+# Size: 1050
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -149,6 +149,7 @@ mtcspeedtest.catskill.net
 open.cachefly.net
 sp7.atcc-gns.net
 sp3.atcc-gns.net
+speedtest.as214243.net
 speedtest.as214199.net
 speedtest.as203446.net
 speedtest.thn.lon.network.as201838.net
@@ -247,6 +248,7 @@ ipl3pt.syd.ops.aspac.uu.net
 ipl3pt.fft.ops.eu.uu.net
 speedtest-cbr.cdn.on.net
 srv3.vncv1.bc.net
+th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe
 this_ruleset_is_made_by_sukkaw.ruleset.skk.moe
 speedtest1.net.rochester.edu
 speedtest.clarkson.edu
@@ -400,6 +402,7 @@ tsdvuspeedtest01p.allstream.com
 speedtest-1.london.network.youfibre.com
 sp-thn2.wildanet.com
 speedtest.wilcasji.com
+tdc01-speedtest.whipcord.com
 +.wifiman-stability-test.ubncloud.com
 +.wifiman.ubncloud.com
 speedtest-jp.tgb-host.com
@@ -416,6 +419,7 @@ speed.navegalo.com
 speedtest.micron21.com
 speedcumra.lodosnet.com
 speedtest-1.litfibre.com
+speedtest.keiminem.com
 hkg.02.speedtest.kansuiun.com
 speedtest.us-mi2.kamatera.com
 speedtest.us-tx.kamatera.com
@@ -779,6 +783,7 @@ speedtest.verycloud.fr
 +.speedtest.orange.fr
 speedperf.axione.fr
 speedtest.sewan.fr
+ookla.moji.fr
 speedtest1-qupra-ams-nl.ebgp.fi
 speedtest.battern.eu
 ffm.wsqm.telekom-dienste.de
