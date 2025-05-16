@@ -31,7 +31,7 @@ jobs:
       - name: Generate content
         run: python 新闻联播/main.py
       - name: Lint Markdown files
-        uses: DavidAnson/markdownlint-cli2-action@v19.1.0
+        uses: DavidAnson/markdownlint-cli2-action@v20.0.0
         with:
           globs: "新闻联播/**/*.md"
           fix: true
