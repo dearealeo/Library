@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-05-17T12:32:31.626Z
-# Size: 1057
+# Last Updated: 2025-05-18T12:32:45.220Z
+# Size: 1060
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -241,6 +241,9 @@ speedtest.par1.adky.net
 speedtest.ams.wd6.net
 speedtest.uia.net
 speedtest-srv01.tut.net
+wa01svp-speed11.svc.tds.net
+ny00svp-speed11.svc.tds.net
+ca00svp-speed11.svc.tds.net
 +.ookla.rcp.net
 st2a.les.net
 +.speedtest.i3d.net
