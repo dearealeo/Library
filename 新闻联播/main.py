@@ -2,13 +2,13 @@ from __future__ import annotations  # noqa: CPY001, D100, INP001
 
 import asyncio
 import contextlib
+import datetime
+import functools
 import logging
+import pathlib
 import re
 import sys
-from datetime import datetime, timedelta, timezone
-from functools import lru_cache
-from pathlib import Path
-from typing import TYPE_CHECKING, Final, TypedDict
+import typing
 
 import aiofiles
 import httpx
@@ -16,7 +16,7 @@ import orjson
 from bs4 import BeautifulSoup, Tag
 from markdownify import markdownify as md
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     import collections.abc
 
 """
@@ -24,11 +24,11 @@ Constants
 """
 
 
-BASE_DIR: Final[Path] = Path(__file__).resolve().parent
-README_PATH: Final[Path] = BASE_DIR / "README.md"
-CATALOGUE_PATH: Final[Path] = BASE_DIR / "catalogue.json"
+BASE_DIR: typing.Final[pathlib.Path] = pathlib.Path(__file__).resolve().parent
+README_PATH: typing.Final[pathlib.Path] = BASE_DIR / "README.md"
+CATALOGUE_PATH: typing.Final[pathlib.Path] = BASE_DIR / "catalogue.json"
 
-DEFAULT_HEADERS: Final[dict[str, str]] = {
+DEFAULT_HEADERS: typing.Final[dict[str, str]] = {
     "accept": "text/html, */*; q=0.01",
     "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
     "cache-control": "no-cache",
@@ -44,7 +44,7 @@ DEFAULT_HEADERS: Final[dict[str, str]] = {
     "Referrer-Policy": "strict-origin-when-cross-origin",
 }
 
-CST: Final[timezone] = timezone(timedelta(hours=8))
+CST: typing.Final[datetime.timezone] = datetime.timezone(datetime.timedelta(hours=8))
 
 
 """
@@ -69,11 +69,11 @@ Types
 """
 
 
-class Catalogue(TypedDict):  # noqa: D101
+class Catalogue(typing.TypedDict):  # noqa: D101
     date: str
 
 
-class News(TypedDict):  # noqa: D101
+class News(typing.TypedDict):  # noqa: D101
     title: str
     content: str
     url: str
@@ -84,13 +84,13 @@ Utility Functions
 """
 
 
-@lru_cache(maxsize=32)
+@functools.lru_cache(maxsize=32)
 def get_current_date_formatted() -> str:  # noqa: D103
-    return datetime.now(CST).strftime("%Y%m%d")
+    return datetime.datetime.now(CST).strftime("%Y%m%d")
 
 
 def get_formatted_datetime() -> str:  # noqa: D103
-    return datetime.now(CST).strftime("%Y-%m-%d %H:%M")
+    return datetime.datetime.now(CST).strftime("%Y-%m-%d %H:%M")
 
 
 """
@@ -298,7 +298,7 @@ def convert_news_to_markdown(news_items: list[News]) -> str:  # noqa: D103
     return "".join(markdown_parts)
 
 
-async def update_catalogue_and_readme(date_str: str, news_file_path: Path) -> None:  # noqa: D103
+async def update_catalogue_and_readme(date_str: str, news_file_path: pathlib.Path) -> None:  # noqa: D103
     logger.info("Updating catalogue and README for date: %s", date_str)
     try:
         async with contextlib.AsyncExitStack():
@@ -310,7 +310,7 @@ async def update_catalogue_and_readme(date_str: str, news_file_path: Path) -> No
 
             if not any(entry.get("date") == date_str for entry in catalogue_entries):
                 catalogue_entries.insert(0, {"date": date_str})
-                temp_catalogue: Path = CATALOGUE_PATH.with_suffix(".tmp")
+                temp_catalogue: pathlib.Path = CATALOGUE_PATH.with_suffix(".tmp")
                 async with aiofiles.open(temp_catalogue, "wb") as f:
                     await f.write(orjson.dumps(catalogue_entries, option=orjson.OPT_INDENT_2))
                 temp_catalogue.replace(CATALOGUE_PATH)
@@ -330,7 +330,7 @@ async def update_catalogue_and_readme(date_str: str, news_file_path: Path) -> No
                         insert_marker,
                         f"{insert_marker}\n{readme_entry}",
                     )
-                    temp_readme: Path = README_PATH.with_suffix(".tmp")
+                    temp_readme: pathlib.Path = README_PATH.with_suffix(".tmp")
                     async with aiofiles.open(temp_readme, "w", encoding="utf-8") as f:
                         await f.write(updated_readme)
                     temp_readme.replace(README_PATH)
@@ -356,8 +356,8 @@ Main
 async def main() -> None:  # noqa: D103
     current_date: str = get_current_date_formatted()
     year: str = current_date[:4]
-    year_dir: Path = BASE_DIR / year
-    news_file_path: Path = year_dir / f"{current_date}.md"
+    year_dir: pathlib.Path = BASE_DIR / year
+    news_file_path: pathlib.Path = year_dir / f"{current_date}.md"
 
     logger.info("Starting news collection process for date: %s", current_date)
 
@@ -380,7 +380,7 @@ async def main() -> None:  # noqa: D103
 
         markdown_content: str = convert_news_to_markdown(news_items)
 
-        temp_news_file: Path = news_file_path.with_suffix(".tmp")
+        temp_news_file: pathlib.Path = news_file_path.with_suffix(".tmp")
         with temp_news_file.open("w", encoding="utf-8") as f:
             f.write(markdown_content)
         temp_news_file.replace(news_file_path)
