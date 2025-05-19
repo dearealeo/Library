@@ -2,3 +2,5 @@ httpx[http2]
 beautifulsoup4
 lxml
 orjson
+aiofiles
+markdownify
