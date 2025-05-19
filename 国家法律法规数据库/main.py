@@ -1,4 +1,4 @@
-from __future__ import annotations
+from __future__ import annotations  # noqa: CPY001, D100, EXE002, INP001
 
 import abc
 import argparse
@@ -16,13 +16,7 @@ import sqlite3
 import sys
 import time
 from concurrent.futures import Future, ThreadPoolExecutor
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Final,
-    Optional,
-    TypeAlias,
-)
+from typing import TYPE_CHECKING, Any, Final, TypeAlias
 
 import orjson
 import requests
@@ -40,14 +34,14 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator, Mapping
 
 DbRow: TypeAlias = tuple[
-    Optional[str],
-    Optional[str],
-    Optional[str],
-    Optional[str],
-    Optional[str],
-    Optional[int],
-    Optional[str],
-    Optional[str],
+    str | None,
+    str | None,
+    str | None,
+    str | None,
+    str | None,
+    int | None,
+    str | None,
+    str | None,
     int,
     int,
 ]
@@ -277,7 +271,7 @@ def create_http_session() -> requests.Session:  # noqa: D103
     return session
 
 
-def perform_request(method: str, url: str, **kwargs: Any) -> requests.Response:  # noqa: D103
+def perform_request(method: str, url: str, **kwargs: Any) -> requests.Response:  # noqa: ANN401, D103
     session = create_http_session()
     attempt, max_attempts = 0, 4
 
@@ -286,7 +280,6 @@ def perform_request(method: str, url: str, **kwargs: Any) -> requests.Response: 
         try:
             response = session.request(method, url, timeout=HTTP_TIMEOUT, **kwargs)
             response.raise_for_status()
-            return response
         except requests.exceptions.RequestException as e:
             last_exception = e
             logger.warning(
@@ -298,7 +291,7 @@ def perform_request(method: str, url: str, **kwargs: Any) -> requests.Response: 
                 e,
             )
             if attempt < max_attempts:
-                wait_time = DEF_INIT_DELAY * (2 ** (attempt - 1)) * (0.8 + 0.4 * random.random())
+                wait_time = DEF_INIT_DELAY * (2 ** (attempt - 1)) * (0.8 + 0.4 * random.random())  # noqa: S311
                 logger.info("Retry request in %.2f seconds.", wait_time)
                 time.sleep(wait_time)
             else:
@@ -312,11 +305,14 @@ def perform_request(method: str, url: str, **kwargs: Any) -> requests.Response: 
                 raise ConnectionError(
                     msg,
                 ) from last_exception
+        else:
+            return response
 
-    raise RuntimeError("Unexpected exit from request loop")
+    msg = "Unexpected exit from request loop"
+    raise RuntimeError(msg)
 
 
-def fetch_api_data(base_url: str, page: int) -> ApiResult:
+def fetch_api_data(base_url: str, page: int) -> ApiResult:  # noqa: D103
     timestamp_ms = int(time.time() * 1000)
     url = f"{base_url}&page={page}&size={API_PAGE_SIZE}&_={timestamp_ms}"
     logger.debug("Fetch API data from URL: %s", url)
@@ -329,22 +325,21 @@ def fetch_api_data(base_url: str, page: int) -> ApiResult:
             page,
             len(result.get("result", {}).get("data", [])),
         )
-        return result
     except (
         orjson.JSONDecodeError,
         ConnectionError,
         requests.exceptions.RequestException,
     ) as e:
-        logger.error(
-            "Failed to fetch or parse API data from page %d: %s",
+        logger.exception(
+            "Failed to fetch or parse API data from page %d",
             page,
-            e,
-            exc_info=True,
         )
         return {"result": {"totalSizes": 0, "data": []}, "error": str(e)}
+    else:
+        return result
 
 
-def fetch_document_path(legal_id: str) -> str | None:
+def fetch_document_path(legal_id: str) -> str | None:  # noqa: D103
     base_url = "https://flk.npc.gov.cn"
     api_detail_url = f"{base_url}/api/detail"
     payload = {"id": legal_id}
@@ -371,24 +366,23 @@ def fetch_document_path(legal_id: str) -> str | None:
                 legal_id,
                 result,
             )
-        return None
     except (
         orjson.JSONDecodeError,
         ConnectionError,
         requests.exceptions.RequestException,
         IndexError,
         KeyError,
-    ) as e:
-        logger.error(
-            "Failed to fetch or parse document path for ID %s: %s",
+    ):
+        logger.exception(
+            "Failed to fetch or parse document path for ID %s",
             legal_id,
-            e,
-            exc_info=True,
         )
+        return None
+    else:
         return None
 
 
-def prepare_db_rows(data_list: list[LawData]) -> list[DbRow]:
+def prepare_db_rows(data_list: list[LawData]) -> list[DbRow]:  # noqa: D103
     return [
         (
             item.get("id"),
@@ -418,7 +412,11 @@ class Parser(abc.ABC):  # noqa: D101
         self.parser_type: str = parser_type
 
     @abc.abstractmethod
-    def parse(self, file_path: pathlib.Path, title_hint: str) -> tuple[str, str, list[str]]:
+    def parse(  # noqa: D102
+        self,
+        file_path: pathlib.Path,
+        title_hint: str,
+    ) -> tuple[str, str, list[str]]:
         pass
 
     def __eq__(self, other: object) -> bool:  # noqa: D105
@@ -430,7 +428,7 @@ class Parser(abc.ABC):  # noqa: D101
         return hash(self.parser_type)
 
 
-class Formatter:
+class Formatter:  # noqa: D101
     @staticmethod
     def _filter_content(content: list[str]) -> list[str]:
         filtered_content: list[str] = []
@@ -438,42 +436,42 @@ class Formatter:
         menu_index: int = -1
         pattern: str = ""
         skip_content: bool = False
-        pattern_regex: Optional[str] = None
+        pattern_regex: str | None = None
 
-        for i, line in enumerate(content):
-            line = re.sub(r"\s+", " ", line.replace("\u3000", " ").replace("　", " "))
+        for i, current_line in enumerate(content):
+            processed_line = re.sub(r"\s+", " ", current_line.replace("\u3000", " ").replace("　", " "))
 
             if menu_index >= 0 and i == menu_index + 1:
-                pattern = line
+                pattern = processed_line
                 pattern_regex = next(
-                    (r.replace(NUMBER_RE, "一") for r in INDENT_RE if re.match(r, line)),
+                    (r.replace(NUMBER_RE, "一") for r in INDENT_RE if re.match(r, processed_line)),
                     None,
                 )
                 continue
 
-            if re.match(r"目.*录", line):
+            if re.match(r"目.*录", processed_line):
                 is_menu_section, menu_index = True, i
                 continue
 
             is_menu_section = is_menu_section and not (
-                line == pattern
-                or (pattern_regex and re.match(pattern_regex, line))
-                or (not pattern_regex and re.match(LINE_START, line))
+                processed_line == pattern
+                or (pattern_regex and re.match(pattern_regex, processed_line))
+                or (not pattern_regex and re.match(LINE_START, processed_line))
             )
 
-            if i < 40 and re.match(r"公\s*告", line):
+            if i < 40 and re.match(r"公\s*告", processed_line):  # noqa: PLR2004
                 skip_content = True
 
             if not is_menu_section and not skip_content:
                 content_line = re.sub(
                     f"^(第{NUMBER_RE}{{1,6}}[条章节篇](?:之{NUMBER_RE}{{1,2}})*)[\\s]*",
                     lambda match: f"{match.group(0).strip()} ",
-                    line.strip(),
+                    processed_line.strip(),
                 )
                 if content_line:
                     filtered_content.append(content_line)
 
-            if skip_content and line.startswith(r"法释"):
+            if skip_content and processed_line.startswith(r"法释"):
                 skip_content = False
 
         return filtered_content
@@ -485,12 +483,12 @@ class Formatter:
         if not cleaned_desc:
             return []
 
-        if cleaned_desc.startswith(("（", "(")) and cleaned_desc.endswith(("）", ")")):
+        if cleaned_desc.startswith(("（", "(")) and cleaned_desc.endswith(("）", ")")):  # noqa: RUF001
             cleaned_desc = cleaned_desc[1:-1].strip()
 
         cleaned_desc = re.sub(
             r"[()]",
-            lambda m: "）" if m.group(0) == ")" else "（",
+            lambda m: "）" if m.group(0) == ")" else "（",  # noqa: RUF001
             re.sub(r"[ \u3000]+", " ", cleaned_desc),
         ).strip()
 
@@ -498,25 +496,25 @@ class Formatter:
         result: list[str] = []
 
         for part in parts:
-            part = part.strip()
-            if not part:
+            part_text = part.strip()
+            if not part_text:
                 continue
 
-            if part.startswith("根据"):
-                result.append("- " + part)
-            elif re.match(r"\d{4}年\d{1,2}月\d{1,2}日", part):
-                subparts: list[str] = re.split(r"(?=根据)", part)
+            if part_text.startswith("根据"):
+                result.append("- " + part_text)
+            elif re.match(r"\d{4}年\d{1,2}月\d{1,2}日", part_text):
+                subparts: list[str] = re.split(r"(?=根据)", part_text)
                 for subpart in subparts:
-                    subpart = subpart.strip()
-                    if not subpart:
+                    clean_subpart = subpart.strip()
+                    if not clean_subpart:
                         continue
-                    result.append("- " + subpart.replace("起施行", "施行"))
+                    result.append("- " + clean_subpart.replace("起施行", "施行"))
             else:
-                result.append("- " + part)
+                result.append("- " + part_text)
 
         return [line for line in result if line != "- 根据"]
 
-    def format_markdown(
+    def format_markdown(  # noqa: D102
         self,
         title: str,
         description: str,
@@ -542,7 +540,7 @@ class Formatter:
             )
             return []
 
-        clean_title: str = title.translate(str.maketrans("()", "（）")).strip()
+        clean_title: str = title.translate(str.maketrans("()", "（）")).strip()  # noqa: RUF001
         title_lower: str = clean_title.lower()
 
         output: list[str] = [
@@ -553,7 +551,7 @@ class Formatter:
 
         processed_lines: list[str] = [
             self._process_line(
-                line.translate(str.maketrans("()", "（）")),
+                line.translate(str.maketrans("()", "（）")),  # noqa: RUF001
                 heading_map,
                 condition_pattern,
             )
@@ -563,7 +561,7 @@ class Formatter:
 
         final_output: list[str] = [line for line in [*output, *processed_lines] if line.strip()]
 
-        if len(final_output) < 2:
+        if len(final_output) < 2:  # noqa: PLR2004
             logger.warning("Markdown output seems minimal for: %s", title)
             return [
                 f"# {clean_title}",
@@ -580,7 +578,7 @@ class Formatter:
         condition_pattern: re.Pattern[str],
     ) -> str:
         for pattern, header in compiled_patterns.items():
-            match: Optional[re.Match[str]] = pattern.match(line)
+            match: re.Match[str] | None = pattern.match(line)
             if not match:
                 continue
 
@@ -597,11 +595,11 @@ class Formatter:
         return line
 
 
-class HTML(Parser):
-    def __init__(self) -> None:
+class HTML(Parser):  # noqa: D101
+    def __init__(self) -> None:  # noqa: D107
         super().__init__("HTML")
 
-    def parse(
+    def parse(  # noqa: D102
         self,
         local_file_path: pathlib.Path,
         title_hint: str,
@@ -611,7 +609,7 @@ class HTML(Parser):
             soup: BeautifulSoup = BeautifulSoup(html_content, features="lxml")
             title: str = getattr(soup.title, "text", "") or title_hint
 
-            content_div: Optional[Tag] = soup.find("div", class_="law-content")
+            content_div: Tag | None = soup.find("div", class_="law-content")
             paragraphs: list[Tag] = content_div.find_all("p") if content_div else soup.find_all("p")
 
             content: list[str] = [p.get_text().replace("\xa0", " ").strip() for p in paragraphs if p.get_text().strip()]
@@ -624,29 +622,24 @@ class HTML(Parser):
             description: str = content[0] if content else ""
             content_body: list[str] = content[1:] if len(content) > 1 else []
 
-            return title, description, content_body
-
         except UnicodeDecodeError:
             try:
                 return self.parse(pathlib.Path(str(local_file_path)), title_hint)
-            except Exception as e:
-                logger.error(f"Failed to read HTML file with GBK encoding: {e}")
+            except Exception:
+                logger.exception("Failed to read HTML file with GBK encoding")
                 return "", "", []
-        except Exception as e:
-            logger.error(
-                "Error parsing HTML content from %s: %s",
-                local_file_path,
-                e,
-                exc_info=True,
-            )
+        except Exception:
+            logger.exception("Error parsing HTML content from %s", local_file_path)
             return "", "", []
+        else:
+            return title, description, content_body
 
 
-def is_start_line(line: str) -> bool:
+def is_start_line(line: str) -> bool:  # noqa: D103
     return any(re.match(pattern, line) for pattern in LINE_RE)
 
 
-class Word(Parser):
+class Word(Parser):  # noqa: D101
     def __init__(self) -> None:  # noqa: D107
         super().__init__("WORD")
 
@@ -667,7 +660,8 @@ class Word(Parser):
             )
 
         if parent_elem is None:
-            raise ValueError("Parent element is None during block iteration")
+            msg = "Parent element is None during block iteration"
+            raise ValueError(msg)
 
         for child in parent_elem.iterchildren():
             if isinstance(child, CT_P):
@@ -677,7 +671,7 @@ class Word(Parser):
             else:
                 yield None
 
-    def parse(
+    def parse(  # noqa: D102
         self,
         local_file_path: pathlib.Path,
         title_hint: str,
@@ -685,15 +679,11 @@ class Word(Parser):
         try:
             document: _Document = Document(str(local_file_path))
             result = self._parse_doc_object(document, title_hint)
-            return result or ("", "", [])
-        except Exception as e:
-            logger.error(
-                "Failed to open or parse Word document %s: %s",
-                local_file_path,
-                e,
-                exc_info=True,
-            )
+        except Exception:
+            logger.exception("Failed to open or parse Word document %s", local_file_path)
             return "", "", []
+        else:
+            return result or ("", "", [])
 
     def _parse_doc_object(  # noqa: C901
         self,
@@ -763,7 +753,7 @@ html_parser = HTML()
 word_parser = Word()
 
 
-def find_local_doc(
+def find_local_doc(  # noqa: C901, D103, PLR0912
     legal_title: str,
     table_name: str,
     office: str | None = None,
@@ -788,32 +778,34 @@ def find_local_doc(
                 else:
                     logger.error("Could not get parent directory name (type 2).")
                     target_dir = BASE_DIR / type_name
-            except Exception as e:
-                logger.error(
-                    "Error creating nested directory structure for type %d: %s",
+            except Exception:
+                logger.exception(
+                    "Error creating nested directory structure for type %d",
                     type_id,
-                    e,
                 )
                 target_dir = BASE_DIR / type_name
         else:
             target_dir /= type_name
-            if type_id == 6 and office and (match := re.compile(r"^(.*?)人民代表大会").search(office)):
-                if region_name := match.group(1).strip():
-                    try:
-                        sub_dir = target_dir / region_name
-                        sub_dir.mkdir(parents=True, exist_ok=True)
-                        logger.debug(
-                            "Using subdirectory for region '%s' under '%s'.",
-                            region_name,
-                            target_dir.name,
-                        )
-                        target_dir = sub_dir
-                    except Exception as e:
-                        logger.error(
-                            "Error creating subdirectory for region '%s': %s",
-                            region_name,
-                            e,
-                        )
+            if (
+                type_id == 6  # noqa: PLR2004
+                and office
+                and (match := re.compile(r"^(.*?)人民代表大会").search(office))
+                and (region_name := match.group(1).strip())
+            ):
+                try:
+                    sub_dir = target_dir / region_name
+                    sub_dir.mkdir(parents=True, exist_ok=True)
+                    logger.debug(
+                        "Using subdirectory for region '%s' under '%s'.",
+                        region_name,
+                        target_dir.name,
+                    )
+                    target_dir = sub_dir
+                except Exception:
+                    logger.exception(
+                        "Error creating subdirectory for region '%s'",
+                        region_name,
+                    )
 
     if not target_dir.exists():
         logger.warning("Primary target directory %s does not exist.", target_dir)
@@ -870,7 +862,7 @@ def find_local_doc(
     return None
 
 
-def parse_doc_to_md(
+def parse_doc_to_md(  # noqa: C901, D103, PLR0911
     legal_id: str,
     legal_title: str,
     table_name: str,
@@ -924,12 +916,10 @@ def parse_doc_to_md(
         with output_path.open("w", encoding="utf-8") as f:
             f.write("\\n\\n".join(markdown_lines))
         logger.info("Successfully parsed and saved: %s", output_path.name)
-        return legal_id
-    except OSError as e:
-        logger.error(
-            "Failed to write markdown file %s: %s. Attempting simplified name.",
+    except OSError:
+        logger.exception(
+            "Failed to write markdown file %s. Attempting simplified name.",
             output_path,
-            e,
         )
         simple_output_path = parent_dir / f"{legal_id}.md"
         try:
@@ -939,18 +929,20 @@ def parse_doc_to_md(
                 "Successfully parsed and saved with simplified name: %s",
                 simple_output_path.name,
             )
-            return legal_id
-        except OSError as e2:
-            logger.error(
-                "Failed again to write markdown with simplified filename '%s': %s",
+        except OSError:
+            logger.exception(
+                "Failed again to write markdown with simplified filename '%s'",
                 simple_output_path.name,
-                e2,
             )
             if output_path.exists():
                 output_path.unlink(missing_ok=True)
             if simple_output_path.exists():
                 simple_output_path.unlink(missing_ok=True)
             return None
+        else:
+            return legal_id
+    else:
+        return legal_id
 
 
 """
@@ -958,17 +950,17 @@ Crawling and Downloading
 """
 
 
-def download_document(
+def download_document(  # noqa: C901, D103, PLR0911, PLR0912, PLR0914, PLR0915
     legal_id: str,
     legal_title: str,
     table_name: str,
     request_delay: float,
-    office: Optional[str] = None,
-) -> Optional[str]:
+    office: str | None = None,
+) -> str | None:
     logger.info("Attempt download: %s (ID: %s)", legal_title, legal_id)
 
-    try:
-        doc_path_rel: Optional[str] = fetch_document_path(legal_id)
+    try:  # noqa: PLR1702
+        doc_path_rel: str | None = fetch_document_path(legal_id)
         if not doc_path_rel:
             logger.warning(
                 "Cannot retrieve document path for '%s' (ID: %s). Skip download.",
@@ -991,7 +983,7 @@ def download_document(
             return legal_id
 
         target_dir: pathlib.Path = BASE_DIR
-        type_id: Optional[int] = next(
+        type_id: int | None = next(
             (tid for tid, (code, _) in LAW_TYPES.items() if code == table_name),
             None,
         )
@@ -1015,54 +1007,49 @@ def download_document(
                     else:
                         logger.error("Could not get parent directory name (type 2).")
                         target_dir = BASE_DIR / type_name
-                except Exception as e:
-                    logger.error(
-                        "Error creating nested directory structure for type %d (%s): %s",
+                except Exception:
+                    logger.exception(
+                        "Error creating nested directory structure for type %d (%s)",
                         type_id,
                         type_name,
-                        e,
                     )
                     target_dir = BASE_DIR / type_name
             else:
                 target_dir /= type_name
-                if type_id == 6 and office:
+                if type_id == 6 and office:  # noqa: PLR2004
                     region_pattern = re.compile(r"^(.*?)人民代表大会")
-                    if match := region_pattern.search(office):
-                        if region_name := match.group(1).strip():
-                            try:
-                                sub_dir = target_dir / region_name
-                                sub_dir.mkdir(parents=True, exist_ok=True)
-                                logger.debug(
-                                    "Using subdirectory for region: %s",
-                                    region_name,
-                                )
-                                target_dir = sub_dir
-                            except Exception as e:
-                                logger.error(
-                                    "Error creating subdirectory for region '%s': %s",
-                                    region_name,
-                                    e,
-                                )
+                    if (match := region_pattern.search(office)) and (region_name := match.group(1).strip()):
+                        try:
+                            sub_dir = target_dir / region_name
+                            sub_dir.mkdir(parents=True, exist_ok=True)
+                            logger.debug(
+                                "Using subdirectory for region: %s",
+                                region_name,
+                            )
+                            target_dir = sub_dir
+                        except Exception:
+                            logger.exception(
+                                "Error creating subdirectory for region '%s'",
+                                region_name,
+                            )
 
         try:
             target_dir.mkdir(parents=True, exist_ok=True)
             logger.debug("Ensured directory exists: %s", target_dir)
-        except (OSError, UnicodeEncodeError) as e:
-            logger.error(
-                "Error creating directory '%s': %s. Trying fallback.",
+        except (OSError, UnicodeEncodeError):
+            logger.exception(
+                "Error creating directory '%s'",
                 target_dir,
-                e,
             )
             fallback_dir_name = get_type_code(type_id) if type_id else table_name
             target_dir = target_dir.parent / fallback_dir_name
             try:
                 target_dir.mkdir(parents=True, exist_ok=True)
                 logger.info("Using fallback directory: %s", target_dir)
-            except (OSError, PermissionError) as e_fallback:
-                logger.error(
-                    "Fallback directory creation failed '%s': %s. Using base directory.",
+            except (OSError, PermissionError):
+                logger.exception(
+                    "Fallback directory creation failed '%s'",
                     target_dir,
-                    e_fallback,
                 )
                 target_dir = BASE_DIR
                 target_dir.mkdir(exist_ok=True)
@@ -1077,7 +1064,7 @@ def download_document(
                 legal_title,
             )
             safe_title = "".join(
-                c if c.isascii() and (c.isalnum() or c in (" ", "-", "_")) else "_" for c in legal_title
+                c if c.isascii() and (c.isalnum() or c in {" ", "-", "_"}) else "_" for c in legal_title
             ).strip("_ ")
             if not safe_title:
                 safe_title = legal_id
@@ -1106,7 +1093,7 @@ def download_document(
         )
 
         try:
-            with open(file_path, "wb") as f:
+            with file_path.open("wb") as f:
                 f.writelines(response.iter_content(chunk_size=8192))
             logger.info(
                 "Successfully downloaded document to %s (Size: %d)",
@@ -1114,17 +1101,15 @@ def download_document(
                 file_path.stat().st_size,
             )
             time.sleep(request_delay)
-            return legal_id
-        except OSError as e:
-            logger.error(
-                "Failed to write document '%s' to %s: %s. Attempting simplified name.",
+        except OSError:
+            logger.exception(
+                "Failed to write document '%s' to %s",
                 legal_title,
                 file_path,
-                e,
             )
             simple_file_path = target_dir / f"{legal_id}{file_extension}"
             try:
-                with open(simple_file_path, "wb") as f:
+                with simple_file_path.open("wb") as f:
                     f.writelines(response.iter_content(chunk_size=8192))
                 logger.info(
                     "Successfully downloaded document to simplified path: %s (Size: %d)",
@@ -1132,43 +1117,39 @@ def download_document(
                     simple_file_path.stat().st_size,
                 )
                 time.sleep(request_delay)
-                return legal_id
-            except OSError as e2:
-                logger.error(
-                    "Failed again to write document %s with simplified filename '%s': %s",
+            except OSError:
+                logger.exception(
+                    "Failed again to write document %s with simplified filename '%s'",
                     legal_title,
                     simple_file_path.name,
-                    e2,
                 )
                 for path_to_clean in (file_path, simple_file_path):
                     if path_to_clean.exists():
                         path_to_clean.unlink(missing_ok=True)
                 return None
+        else:
+            return legal_id
 
-    except (ConnectionError, requests.exceptions.RequestException) as e:
-        logger.error(
-            "Network/Request error during download process for '%s' (ID: %s): %s",
+    except (ConnectionError, requests.exceptions.RequestException):
+        logger.exception(
+            "Network/Request error during download process for '%s' (ID: %s)",
             legal_title,
             legal_id,
-            e,
-            exc_info=True,
         )
         return None
-    except Exception as e:
+    except Exception:  # noqa: BLE001
         logger.critical(
-            "Unexpected error downloading document '%s' (ID: %s): %s",
+            "Unexpected error downloading document '%s' (ID: %s)",
             legal_title,
             legal_id,
-            e,
-            exc_info=True,
         )
         return None
 
 
-def download_all_docs(
+def download_all_docs(  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
     type_id: int,
     request_delay: float,
-    auto_parse: bool = False,
+    auto_parse: bool = False,  # noqa: FBT001, FBT002
 ) -> None:
     table_name = get_type_code(type_id)
     type_name = get_type_name(type_id)
@@ -1184,23 +1165,21 @@ def download_all_docs(
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                f'SELECT id, title, office FROM "{table_name}" WHERE saved = 0',
+                f'SELECT id, title, office FROM "{table_name}" WHERE saved = 0',  # noqa: S608
             )
             rows_to_download = [
                 (
                     row["id"],
                     row["title"],
-                    row["office"] if "office" in row.keys() else "",
+                    row.get("office", ""),
                 )
                 for row in cursor.fetchall()
                 if row["id"] and row["title"]
             ]
-    except sqlite3.Error as e:
-        logger.error(
-            "Failed to query database for documents to download (type %s): %s",
+    except sqlite3.Error:
+        logger.exception(
+            "Failed to query database for documents to download (type %s)",
             type_name,
-            e,
-            exc_info=True,
         )
         return
 
@@ -1233,7 +1212,7 @@ def download_all_docs(
             table_name=table_name,
             request_delay=request_delay / max_workers,
         )
-        future_to_id: dict[Future[Optional[str]], str] = {
+        future_to_id: dict[Future[str | None], str] = {
             executor.submit(
                 download_func,
                 legal_id=legal_id,
@@ -1243,8 +1222,7 @@ def download_all_docs(
             for legal_id, legal_title, office in rows_to_download
         }
 
-        for future in future_to_id:
-            legal_id = future_to_id[future]
+        for future, legal_id in future_to_id.items():
             try:
                 result_id: str | None = future.result()
                 if result_id:
@@ -1252,12 +1230,10 @@ def download_all_docs(
                 else:
                     logger.warning("Download task failed for ID: %s", legal_id)
                     failed_count += 1
-            except Exception as exc:
-                logger.error(  # noqa: G201
-                    "Download task for ID %s generated an exception: %s",
+            except Exception:  # noqa: PERF203
+                logger.exception(
+                    "Download task for ID %s generated an exception",
                     legal_id,
-                    exc,
-                    exc_info=True,
                 )
                 failed_count += 1
 
@@ -1268,13 +1244,13 @@ def download_all_docs(
         failed_count,
     )
 
-    if successful_ids:
+    if successful_ids:  # noqa: PLR1702
         logger.info(
             "Update database: Mark %d documents as saved for %s.",
             len(successful_ids),
             type_name,
         )
-        update_sql = f'UPDATE "{table_name}" SET saved = 1 WHERE id = ?'
+        update_sql = f'UPDATE "{table_name}" SET saved = 1 WHERE id = ?'  # noqa: S608
         try:
             with contextlib.closing(
                 sqlite3.connect(DB_PATH, isolation_level=None, timeout=10.0),
@@ -1304,7 +1280,7 @@ def download_all_docs(
                         SELECT id, title, office
                         FROM "{table_name}"
                         WHERE id IN ({placeholders}) AND saved = 1 AND parsed = 0
-                    """
+                    """  # noqa: S608
                     cursor.execute(query, successful_ids)
                     docs_to_parse: list[tuple[str, str, str]] = [
                         (
@@ -1334,7 +1310,7 @@ def download_all_docs(
                                 parsed_ids.append(result)
 
                         if parsed_ids:
-                            parse_update_sql = f'UPDATE "{table_name}" SET parsed = 1 WHERE id = ?'
+                            parse_update_sql = f'UPDATE "{table_name}" SET parsed = 1 WHERE id = ?'  # noqa: S608
                             with update_conn:
                                 update_conn.executemany(
                                     parse_update_sql,
@@ -1354,14 +1330,12 @@ def download_all_docs(
                             "No newly saved documents require parsing at this time.",
                         )
 
-        except sqlite3.Error as e:
-            logger.error(
-                "Failed to update database after downloads for table '%s': %s",
+        except sqlite3.Error:
+            logger.exception(
+                "Failed to update database after downloads for table '%s'",
                 table_name,
-                e,
-                exc_info=True,
             )
-            logger.error(
+            logger.exception(
                 "Failed IDs requiring manual check (saved status): %s",
                 successful_ids,
             )
@@ -1373,7 +1347,7 @@ def download_all_docs(
         parse_saved_docs(type_id, request_delay)
 
 
-def parse_saved_docs(type_id: int, request_delay: float) -> None:
+def parse_saved_docs(type_id: int, request_delay: float) -> None:  # noqa: C901, D103
     if type_id == 0:
         for law_type_id in LAW_TYPES:
             parse_saved_docs(law_type_id, request_delay)
@@ -1394,23 +1368,21 @@ def parse_saved_docs(type_id: int, request_delay: float) -> None:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(
-                f'SELECT id, title, office FROM "{table_name}" WHERE saved = 1 AND parsed = 0',
+                f'SELECT id, title, office FROM "{table_name}" WHERE saved = 1 AND parsed = 0',  # noqa: S608
             )
             rows_to_parse = [
                 (
                     row["id"],
                     row["title"],
-                    row["office"] if "office" in row else "",
+                    row.get("office", ""),
                 )
                 for row in cursor.fetchall()
                 if row["id"] and row["title"]
             ]
-    except sqlite3.Error as e:
-        logger.error(
-            "Failed to query database for documents to parse (type %s): %s",
+    except sqlite3.Error:
+        logger.exception(
+            "Failed to query database for documents to parse (type %s)",
             type_name,
-            e,
-            exc_info=True,
         )
         return
 
@@ -1450,12 +1422,10 @@ def parse_saved_docs(type_id: int, request_delay: float) -> None:
                 time.sleep(
                     max(0.05, request_delay / (max_workers * 5)) if max_workers > 0 else 0.1,
                 )
-            except Exception as exc:
-                logger.error(
-                    "Parsing task for ID %s generated an exception: %s",
+            except Exception:
+                logger.exception(
+                    "Parsing task for ID %s generated an exception",
                     legal_id,
-                    exc,
-                    exc_info=True,
                 )
                 failed_count += 1
 
@@ -1467,7 +1437,7 @@ def parse_saved_docs(type_id: int, request_delay: float) -> None:
     )
 
     if successful_ids:
-        update_sql = f'UPDATE "{table_name}" SET parsed = 1 WHERE id = ?'
+        update_sql = f'UPDATE "{table_name}" SET parsed = 1 WHERE id = ?'  # noqa: S608
         try:
             with contextlib.closing(
                 sqlite3.connect(DB_PATH, isolation_level=None, timeout=10.0),
@@ -1485,27 +1455,25 @@ def parse_saved_docs(type_id: int, request_delay: float) -> None:
                     len(successful_ids),
                     type_name,
                 )
-        except sqlite3.Error as e:
-            logger.error(
-                "Failed to update database after parsing for table '%s': %s",
+        except sqlite3.Error:
+            logger.exception(
+                "Failed to update database after parsing for table '%s'",
                 table_name,
-                e,
-                exc_info=True,
             )
-            logger.error(
+            logger.exception(
                 "Failed IDs requiring manual check (parsed status): %s",
                 successful_ids,
             )
 
 
-def crawl_law_type(
+def crawl_law_type(  # noqa: C901, D103, PLR0911, PLR0912, PLR0913, PLR0914, PLR0915, PLR0917
     type_id: int,
-    download_enabled: bool,
+    download_enabled: bool,  # noqa: FBT001
     start_page: int,
     end_page: int,
     initial_delay: int,
     request_delay: float,
-    parse_enabled: bool = False,
+    parse_enabled: bool = False,  # noqa: FBT001, FBT002
 ) -> None:
     if type_id == 0:
         crawl_all_types(download_enabled, initial_delay, request_delay, parse_enabled)
@@ -1521,8 +1489,8 @@ def crawl_law_type(
 
     try:
         api_url: str = get_api_url(type_id)
-    except ValueError as e:
-        logger.error("Cannot get API URL for type %d: %s. Aborting crawl.", type_id, e)
+    except ValueError:
+        logger.exception("Cannot get API URL for type %d", type_id)
         return
 
     logger.info("Fetching initial page to determine total count for %s.", type_name)
@@ -1544,13 +1512,10 @@ def crawl_law_type(
             page_count,
             type_name,
         )
-    except (KeyError, ValueError, TypeError) as e:
-        logger.error(
-            "Cannot parse total size from initial response for %s: %s. Response: %s. Aborting crawl.",
+    except (KeyError, ValueError, TypeError):
+        logger.exception(
+            "Cannot parse total size from initial response for %s",
             type_name,
-            e,
-            initial_response,
-            exc_info=True,
         )
         return
 
@@ -1619,13 +1584,11 @@ def crawl_law_type(
                             table_name,
                             response_data.get("error", "Unknown structure or error"),
                         )
-                except Exception as exc:
-                    logger.error(
-                        "Fetching page %d (%s) generated an exception: %s",
+                except Exception:
+                    logger.exception(
+                        "Fetching page %d (%s) generated an exception",
                         page,
                         table_name,
-                        exc,
-                        exc_info=True,
                     )
 
     logger.info(
@@ -1643,7 +1606,7 @@ def crawl_law_type(
         )
 
         if db_records:
-            sql = f'INSERT OR IGNORE INTO "{table_name}" (id, title, url, office, type, status, publish, expiry, saved, parsed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            sql = f'INSERT OR IGNORE INTO "{table_name}" (id, title, url, office, type, status, publish, expiry, saved, parsed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'  # noqa: E501, S608
             try:
                 with contextlib.closing(
                     sqlite3.connect(DB_PATH, isolation_level=None, timeout=10.0),
@@ -1661,12 +1624,10 @@ def crawl_law_type(
                         len(db_records),
                         changes,
                     )
-            except sqlite3.Error as e:
-                logger.error(
-                    "Database error saving records for %s: %s",
+            except sqlite3.Error:
+                logger.exception(
+                    "Database error saving records for %s",
                     table_name,
-                    e,
-                    exc_info=True,
                 )
         else:
             logger.warning(
@@ -1691,11 +1652,11 @@ def crawl_law_type(
     logger.info("Completed crawl process for law type %d (%s).", type_id, type_name)
 
 
-def crawl_all_types(
-    download_enabled: bool,
+def crawl_all_types(  # noqa: D103
+    download_enabled: bool,  # noqa: FBT001
     initial_delay: int,
     request_delay: float,
-    parse_enabled: bool = False,
+    parse_enabled: bool = False,  # noqa: FBT001, FBT002
 ) -> None:
     logger.info("Starting crawl of ALL law types.")
 
@@ -1719,13 +1680,13 @@ def crawl_all_types(
             request_delay=request_delay,
             parse_enabled=parse_enabled,
         )
-        futures: list[Future[None]] = [executor.submit(crawl_func, type_id=type_id) for type_id in LAW_TYPES.keys()]
+        futures: list[Future[None]] = [executor.submit(crawl_func, type_id=type_id) for type_id in LAW_TYPES]
 
         for future in concurrent.futures.as_completed(futures):
             try:
                 future.result()
-            except Exception as exc:
-                logger.error("A law type crawl task failed: %s", exc, exc_info=True)
+            except Exception:  # noqa: PERF203
+                logger.exception("A law type crawl task failed")
 
     logger.info("Completed crawl of all law types.")
 
@@ -1748,7 +1709,7 @@ def crawl_all_types(
 #                 "Failed to parse JSON from list page API response: %s. Raw response snippet: %s",
 #                 e,
 #                 response.text[:500],
-#                 exc_info=True,
+#
 #             )
 #             return []
 
@@ -1757,7 +1718,7 @@ def crawl_all_types(
 #         return []
 
 
-def get_type_id_from_code(type_code: str) -> int | None:
+def get_type_id_from_code(type_code: str) -> int | None:  # noqa: D103
     type_id = API_TYPE_TO_ID_MAP.get(type_code)
     if type_id:
         return type_id
@@ -1768,7 +1729,7 @@ def get_type_id_from_code(type_code: str) -> int | None:
     )
 
 
-def check_for_new_items() -> dict[int, list[LawData]]:
+def check_for_new_items() -> dict[int, list[LawData]]:  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
     logger.info(
         "Checking for new items from the list page API, paginating if necessary.",
     )
@@ -1800,7 +1761,7 @@ def check_for_new_items() -> dict[int, list[LawData]]:
                 "No valid/existing law category tables found. Assuming no existing items.",
             )
         else:
-            union_query = " UNION ALL ".join(f'SELECT id FROM "{category}"' for category in valid_categories)
+            union_query = " UNION ALL ".join(f'SELECT id FROM "{category}"' for category in valid_categories)  # noqa: S608
 
             with contextlib.closing(
                 sqlite3.connect(
@@ -1831,17 +1792,13 @@ def check_for_new_items() -> dict[int, list[LawData]]:
                 e,
             )
         else:
-            logger.error(
+            logger.exception(
                 "Database operational error checking for existing items: %s",
-                e,
-                exc_info=True,
             )
             return {}
-    except sqlite3.Error as e:
-        logger.error(
+    except sqlite3.Error:
+        logger.exception(
             "General database error checking for existing items: %s",
-            e,
-            exc_info=True,
         )
         return {}
 
@@ -1867,12 +1824,10 @@ def check_for_new_items() -> dict[int, list[LawData]]:
                 )
                 break
 
-        except (ConnectionError, requests.exceptions.RequestException) as e:
-            logger.error(
-                "Failed to fetch list page %d: %s. Stopping check.",
+        except (ConnectionError, requests.exceptions.RequestException):
+            logger.exception(
+                "Failed to fetch list page %d. Stopping check.",
                 page,
-                e,
-                exc_info=True,
             )
             break
 
@@ -1886,7 +1841,7 @@ def check_for_new_items() -> dict[int, list[LawData]]:
 
         for item in list_items:
             processed_count += 1
-            item_id: Optional[str] = item.get("id")
+            item_id: str | None = item.get("id")
 
             if not item_id:
                 logger.debug(
@@ -1902,7 +1857,7 @@ def check_for_new_items() -> dict[int, list[LawData]]:
                 continue
 
             found_new_on_page = True
-            api_type_identifier: Optional[str] = item.get("type")
+            api_type_identifier: str | None = item.get("type")
 
             if not api_type_identifier:
                 logger.warning(
@@ -1914,7 +1869,7 @@ def check_for_new_items() -> dict[int, list[LawData]]:
                 skipped_missing_type_total += 1
                 continue
 
-            type_id: Optional[int] = get_type_id_from_code(api_type_identifier)
+            type_id: int | None = get_type_id_from_code(api_type_identifier)
 
             if type_id is None:
                 logger.warning(
@@ -1950,7 +1905,7 @@ def check_for_new_items() -> dict[int, list[LawData]]:
     total_new = sum(len(items) for items in result.values())
 
     logger.info(
-        "list page check complete. Total items processed (across pages): %d, Skipped (existing): %d, Skipped (no/invalid type): %d, New items found: %d across %d types.",
+        "list page check complete. Total items processed (across pages): %d, Skipped (existing): %d, Skipped (no/invalid type): %d, New items found: %d across %d types.",  # noqa: E501
         processed_count,
         skipped_existing_total,
         skipped_missing_type_total,
@@ -1962,17 +1917,17 @@ def check_for_new_items() -> dict[int, list[LawData]]:
         logger.info("All items found on checked page(s) already exist in the database.")
     elif not result and skipped_missing_type_total > 0:
         logger.warning(
-            "No new items identified for processing, but %d item(s) were skipped due to missing/invalid type information.",
+            "No new items identified for processing, but %d item(s) were skipped due to missing/invalid type information.",  # noqa: E501
             skipped_missing_type_total,
         )
 
     return result
 
 
-def process_new_items(
-    download_enabled: bool,
+def process_new_items(  # noqa: D103
+    download_enabled: bool,  # noqa: FBT001
     initial_delay: int,
-    parse_enabled: bool = False,
+    parse_enabled: bool = False,  # noqa: FBT001, FBT002
 ) -> None:
     logger.info("Processing new items identified from the list page check.")
 
@@ -1981,7 +1936,7 @@ def process_new_items(
         logger.info("No new items found to process.")
         return
 
-    sql_template: str = 'INSERT OR IGNORE INTO "{}" (id, title, url, office, type, status, publish, expiry, saved, parsed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    sql_template: str = 'INSERT OR IGNORE INTO "{}" (id, title, url, office, type, status, publish, expiry, saved, parsed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'  # noqa: E501
 
     db_pragmas: tuple[str, ...] = (
         "PRAGMA journal_mode=WAL;",
@@ -2020,23 +1975,24 @@ def process_new_items(
             type_id = futures[future]
             try:
                 future.result()
-            except Exception as e:
-                logger.error(
-                    f"Error processing new items for type {type_id} ({get_type_name(type_id)}): {e}",
-                    exc_info=True,
+            except Exception:
+                logger.exception(
+                    "Error processing new items for type %d (%s)",
+                    type_id,
+                    get_type_name(type_id),
                 )
 
     logger.info("Finished processing new items from the list page.")
 
 
-def process_type_items(
+def process_type_items(  # noqa: D103, PLR0913, PLR0917
     type_id: int,
     items: list[LawData],
     sql_template: str,
     db_pragmas: tuple[str, ...],
-    download_enabled: bool,
+    download_enabled: bool,  # noqa: FBT001
     request_delay: float,
-    parse_enabled: bool = False,
+    parse_enabled: bool = False,  # noqa: FBT001, FBT002
 ) -> None:
     type_code = get_type_code(type_id)
     type_name = get_type_name(type_id)
@@ -2107,17 +2063,15 @@ def process_type_items(
                     type_name,
                 )
 
-    except sqlite3.Error as e:
-        logger.error(
-            "Database error saving new records for type %s (%s): %s",
+    except sqlite3.Error:
+        logger.exception(
+            "Database error saving new records for type %s (%s)",
             type_name,
             type_code,
-            e,
-            exc_info=True,
         )
 
 
-def reorg_dfxfg_files() -> None:
+def reorg_dfxfg_files() -> None:  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
     type_id: int = 6
     type_code: str = get_type_code(type_id)
     type_name: str = get_type_name(type_id)
@@ -2151,7 +2105,7 @@ def reorg_dfxfg_files() -> None:
         ) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            query = f'SELECT title, office FROM "{type_code}" WHERE saved = 1 AND title IS NOT NULL AND office IS NOT NULL AND office != ""'
+            query = f'SELECT title, office FROM "{type_code}" WHERE saved = 1 AND title IS NOT NULL AND office IS NOT NULL AND office != ""'  # noqa: E501, S608
             cursor.execute(query)
             file_mappings = {row["title"]: row["office"] for row in cursor.fetchall() if row["title"] and row["office"]}
 
@@ -2167,12 +2121,10 @@ def reorg_dfxfg_files() -> None:
             len(file_mappings),
             type_name,
         )
-    except sqlite3.Error as e:
-        logger.error(
-            "Database error fetching office information for type %s: %s",
+    except sqlite3.Error:
+        logger.exception(
+            "Database error fetching office information for type %s",
             type_name,
-            e,
-            exc_info=True,
         )
         return
 
@@ -2204,7 +2156,7 @@ def reorg_dfxfg_files() -> None:
                 (
                     (title, office)
                     for safe_title, (title, office) in combined_map.items()
-                    if len(safe_title) >= 20 and file_name_stem.startswith(safe_title[:20])
+                    if len(safe_title) >= 20 and file_name_stem.startswith(safe_title[:20])  # noqa: PLR2004
                 ),
                 None,
             )
@@ -2249,13 +2201,12 @@ def reorg_dfxfg_files() -> None:
                             region_name,
                         )
                         stats["moved"] += 1
-                except Exception as e:
+                except Exception:
                     destination_dir_str: str = str(main_dir / region_name) if region_name else "destination directory"
-                    logger.error(
-                        "Error moving file %s to %s: %s",
+                    logger.exception(
+                        "Error moving file %s to %s",
                         file_path.name,
                         destination_dir_str,
-                        e,
                     )
                     stats["error"] += 1
             else:
@@ -2356,7 +2307,7 @@ if __name__ == "__main__":
             start_time: float = time.monotonic()
 
             logger.info(
-                "Script start. Config: LawType=%s, Downloads=%s, CheckList=%s, RequestDelay=%.2f, Reorganize=%s, ParseOnly=%s, EnableParsing=%s",
+                "Script start. Config: LawType=%s, Downloads=%s, CheckList=%s, RequestDelay=%.2f, Reorganize=%s, ParseOnly=%s, EnableParsing=%s",  # noqa: E501
                 "All" if config["target_law_type"] == 0 else config["target_law_type"],
                 config["enable_downloads"],
                 config["check_list_page"],
@@ -2402,7 +2353,8 @@ if __name__ == "__main__":
                 )
 
             logger.info(
-                f"Script finished. Total execution time: {time.monotonic() - start_time:.2f} seconds",
+                "Script finished. Total execution time: %.2f seconds",
+                time.monotonic() - start_time,
             )
 
     except KeyboardInterrupt:
@@ -2410,13 +2362,14 @@ if __name__ == "__main__":
         exit_code = 130
     except SystemExit as e:
         logger.critical(
-            f"Application exited via SystemExit (Code: {e.code}). Reason: %s",
+            "Application exited via SystemExit (Code: %s). Reason: %s",
+            e.code,
             str(e),
             exc_info=False,
         )
         exit_code = e.code if isinstance(e.code, int) else 1
-    except Exception as e:
-        logger.critical(f"An unexpected critical error occurred: {e}", exc_info=True)
+    except Exception as e:  # noqa: BLE001
+        logger.critical("An unexpected critical error occurred: %s", e, exc_info=True)
         exit_code = 1
     finally:
         logging.shutdown()
