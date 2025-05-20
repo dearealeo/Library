@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-05-18T12:32:45.220Z
-# Size: 1060
+# Last Updated: 2025-05-20T12:37:45.538Z
+# Size: 1063
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -630,6 +630,7 @@ tr-ist.orfi.net.tr
 speed.flix.net.tr
 speedtest01.tek.net.tr
 speedtest.spd.net.tr
+speedtest.ph.net.tr
 speedtest.toros.edu.tr
 st-balikesirbandirma-1.turksatkablo.com.tr
 st-tekirdagcorlu-1.turksatkablo.com.tr
@@ -697,6 +698,7 @@ speedtest.fixnet.com.tr
 +.speedtest.comnet.com.tr
 speedtest.fibim.com.tr
 hiztesti.codit.com.tr
+ookla.sh.com.tr
 bassoon-sg-1.violin.co.th
 speedtest.vnet.su
 speedtest.sits.su
@@ -799,6 +801,7 @@ ber.wsqm.telekom-dienste.de
 ookla3.1und1-mobilfunk.de
 speedtest.creolineserver.de
 speedtest.ip-projects.de
+speed.netlixor.de
 speedtest1.synlinq.de
 speedtest01.dns-net.de
 speedtest3.dacor.de
