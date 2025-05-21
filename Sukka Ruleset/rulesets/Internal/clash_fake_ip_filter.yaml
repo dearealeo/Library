@@ -6,6 +6,7 @@ dns:
     - +.+bogon
     - +.+lan
     - +.+local
+    - +.+internal
     - +.+localdomain
     - +.home.arpa
     - dns.msftncsi.com
