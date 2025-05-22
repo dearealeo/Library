@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-05-21T12:36:39.013Z
-# Size: 1064
+# Last Updated: 2025-05-22T12:37:07.772Z
+# Size: 1065
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -619,6 +619,7 @@ speedtest.twds.com.tw
 speedtest.host.com.tw
 +.speedtest.aptg.com.tw
 speedtest.pulse.web.tr
+ookla-server.vim.web.tr
 speedtest.sarnettelekom.net.tr
 +.speednet.net.tr
 speedtest.sunucum.net.tr
