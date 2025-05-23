@@ -1171,7 +1171,7 @@ def download_all_docs(  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
                 (
                     row["id"],
                     row["title"],
-                    row.get("office", ""),
+                    row["office"] if "office" in row.keys() else "",  # noqa: SIM118
                 )
                 for row in cursor.fetchall()
                 if row["id"] and row["title"]
@@ -1286,7 +1286,7 @@ def download_all_docs(  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
                         (
                             row["id"],
                             row["title"],
-                            row.get("office", ""),
+                            row["office"] if "office" in row.keys() else "",  # noqa: SIM118
                         )
                         for row in cursor.fetchall()
                     ]
@@ -1374,7 +1374,7 @@ def parse_saved_docs(type_id: int, request_delay: float) -> None:  # noqa: C901,
                 (
                     row["id"],
                     row["title"],
-                    row.get("office", ""),
+                    row["office"] if "office" in row.keys() else "",  # noqa: SIM118
                 )
                 for row in cursor.fetchall()
                 if row["id"] and row["title"]

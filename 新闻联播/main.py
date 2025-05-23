@@ -17,7 +17,7 @@ from bs4 import BeautifulSoup, Tag
 from markdownify import markdownify as md
 
 if typing.TYPE_CHECKING:
-    import collections.abc
+    from collections.abc import AsyncGenerator
 
 """
 Constants
@@ -102,7 +102,7 @@ Fetch
 async def http_client(  # noqa: D103
     timeout_s: float = 10.0,
     headers: dict[str, str] | None = None,
-) -> collections.abc.AsyncGenerator[httpx.AsyncClient, None]:
+) -> AsyncGenerator[httpx.AsyncClient, None]:
     async with httpx.AsyncClient(
         headers=headers,
         timeout=timeout_s,
