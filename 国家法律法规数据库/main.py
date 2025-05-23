@@ -914,7 +914,7 @@ def parse_doc_to_md(  # noqa: C901, D103, PLR0911
 
     try:
         with output_path.open("w", encoding="utf-8") as f:
-            f.write("\\n\\n".join(markdown_lines))
+            f.write("\n\n".join(markdown_lines))
         logger.info("Successfully parsed and saved: %s", output_path.name)
     except OSError:
         logger.exception(
@@ -924,7 +924,7 @@ def parse_doc_to_md(  # noqa: C901, D103, PLR0911
         simple_output_path = parent_dir / f"{legal_id}.md"
         try:
             with pathlib.Path(simple_output_path).open("w", encoding="utf-8") as f:
-                f.write("\\n\\n".join(markdown_lines))
+                f.write("\n\n".join(markdown_lines))
             logger.info(
                 "Successfully parsed and saved with simplified name: %s",
                 simple_output_path.name,
@@ -2175,7 +2175,7 @@ def reorg_dfxfg_files() -> None:  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
             stats["skipped"] += 1
             continue
 
-        office = matched_entry
+        _, office = matched_entry
 
         match = region_pattern.search(office)
         if match:
@@ -2233,6 +2233,269 @@ def reorg_dfxfg_files() -> None:  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
     )
 
 
+def determine_law_directory(  # noqa: D103
+    table_name: str,
+    office: str | None = None,
+) -> pathlib.Path | None:
+    target_dir: pathlib.Path = BASE_DIR
+    type_id: int | None = next((tid for tid, (code, _) in LAW_TYPES.items() if code == table_name), None)
+    if type_id is None:
+        return BASE_DIR / table_name if (BASE_DIR / table_name).exists() else None
+
+    type_name = get_type_name(type_id)
+    if type_id in {7, 8, 9, 10}:
+        parent_dir_name = get_type_name(2)
+        target_dir = (target_dir / parent_dir_name / type_name) if parent_dir_name else (BASE_DIR / type_name)
+    else:
+        target_dir /= type_name
+        if (
+            type_id == 6  # noqa: PLR2004
+            and office
+            and (match := re.compile(r"^(.*?)人民代表大会").search(office))
+            and (region_name := match.group(1).strip())
+        ):
+            sub_dir = target_dir / region_name
+            target_dir = sub_dir if sub_dir.exists() else target_dir
+
+    if target_dir.exists():
+        return target_dir
+
+    fallback = next(
+        (
+            target_dir.parent / code
+            for _, (code, name) in LAW_TYPES.items()
+            if name == target_dir.name and (target_dir.parent / code).exists()
+        ),
+        None,
+    )
+    return fallback or (BASE_DIR / table_name if (BASE_DIR / table_name).exists() else None)
+
+
+def sync_database_with_files() -> None:  # noqa: D103
+    logger.info("Starting database synchronization with local markdown files...")
+    db_pragmas = ["PRAGMA journal_mode=WAL", "PRAGMA synchronous=NORMAL", "PRAGMA busy_timeout=5000"]
+
+    for table_name, type_name in LAW_TYPES.values():
+        try:
+            with contextlib.closing(sqlite3.connect(DB_PATH, isolation_level=None, timeout=10.0)) as conn:
+                conn.row_factory = sqlite3.Row
+                conn.executescript(";".join(db_pragmas))
+
+                records = conn.execute(
+                    f'SELECT id, title, office, saved, parsed FROM "{table_name}"',  # noqa: S608
+                ).fetchall()
+
+                updates: list[tuple[int, int, str]] = []
+                for record in records:
+                    if not (target_dir := determine_law_directory(table_name, record["office"])):
+                        continue
+
+                    clean_title = re.sub(r'[/\\:*?"<>|]', "_", record["title"]).strip()
+                    md_exists = any(
+                        p.exists() and p.stat().st_size > 0
+                        for p in (
+                            target_dir / f"{clean_title}.md",
+                            target_dir / f"{record['id']}.md",
+                        )
+                    )
+
+                    target = (1 if md_exists else 0,) * 2
+                    current = (record["saved"], record["parsed"])
+                    if target != current:
+                        updates.append((*target, record["id"]))
+
+                if updates:
+                    with conn:
+                        conn.executemany(
+                            f'UPDATE "{table_name}" SET saved = ?, parsed = ? WHERE id = ?',  # noqa: S608
+                            updates,
+                        )
+                    logger.info("Updated %d records for %s.", len(updates), type_name)
+                else:
+                    logger.info("No updates needed for %s.", type_name)
+
+        except sqlite3.Error:
+            logger.exception("Database error during synchronization for type %s (%s)", type_name, table_name)
+
+    logger.info("Database synchronization complete.")
+
+
+def reorg_law_files() -> None:  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
+    parent_type_id: int = 2
+    parent_type_code: str = get_type_code(parent_type_id)
+    parent_type_name: str = get_type_name(parent_type_id)
+
+    if not all((parent_type_name, parent_type_code)):
+        logger.error(
+            "Could not determine type name or code for ID %d. Cannot reorganize.",
+            parent_type_id,
+        )
+        return
+
+    main_dir: pathlib.Path = BASE_DIR / parent_type_name
+    if not (main_dir.exists() and main_dir.is_dir()):
+        logger.warning(
+            "Main directory for %s (%s) does not exist. Nothing to reorganize.",
+            parent_type_name,
+            main_dir,
+        )
+        return
+
+    logger.info(
+        "Starting reorganization of files in '%s' directory (%s).",
+        parent_type_name,
+        main_dir,
+    )
+
+    files_to_check = [f for f in main_dir.glob("*.*") if f.is_file()]
+    if not files_to_check:
+        logger.info("No files found directly under %s directory to reorganize.", parent_type_name)
+        return
+
+    subtypes = {tid: get_type_name(tid) for tid in (7, 8, 9, 10) if get_type_name(tid)}
+
+    for subtype_name in subtypes.values():
+        subdir = main_dir / subtype_name
+        subdir.mkdir(parents=True, exist_ok=True)
+
+    file_mappings: dict[str, int] = {}
+    try:
+        with contextlib.closing(
+            sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True, timeout=10.0),
+        ) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+
+            for subtype_id, subtype_code in ((tid, get_type_code(tid)) for tid in (7, 8, 9, 10)):
+                if not subtype_code:
+                    continue
+
+                query = f'SELECT title FROM "{subtype_code}" WHERE saved = 1 AND title IS NOT NULL'  # noqa: S608
+                cursor.execute(query)
+                for row in cursor.fetchall():
+                    if row["title"]:
+                        file_mappings[row["title"]] = subtype_id
+
+        if not file_mappings:
+            logger.warning(
+                "No saved entries found in database for subtypes of %s. Cannot reorganize files.",
+                parent_type_name,
+            )
+            return
+
+        logger.info(
+            "Found %d database entries for subtypes of %s.",
+            len(file_mappings),
+            parent_type_name,
+        )
+    except sqlite3.Error:
+        logger.exception(
+            "Database error fetching information for subtypes of %s",
+            parent_type_name,
+        )
+        return
+
+    stats: dict[str, int] = {"moved": 0, "skipped": 0, "error": 0}
+
+    safe_title_map: dict[str, tuple[str, int]] = {
+        re.sub(r'[/\\:*?"<>|]', "_", title).strip(): (title, subtype_id) for title, subtype_id in file_mappings.items()
+    }
+    simplified_title_map: dict[str, tuple[str, int]] = {
+        "".join(c if c.isascii() and (c.isalnum() or c in (" ", "-", "_")) else "_" for c in title).strip("_ "): (
+            title,
+            subtype_id,
+        )
+        for title, subtype_id in file_mappings.items()
+    }
+    combined_map = {**simplified_title_map, **safe_title_map}
+
+    for file_path in files_to_check:
+        file_name_stem: str = file_path.stem
+
+        matched_entry: tuple[str, int] | None = combined_map.get(file_name_stem)
+
+        if not matched_entry:
+            match_candidate = next(
+                (
+                    (title, subtype_id)
+                    for safe_title, (title, subtype_id) in combined_map.items()
+                    if len(safe_title) >= 20 and file_name_stem.startswith(safe_title[:20])
+                ),
+                None,
+            )
+            if match_candidate:
+                matched_entry = match_candidate
+                logger.debug(
+                    "Found potential match via prefix for file %s",
+                    file_path.name,
+                )
+
+        if not matched_entry:
+            logger.debug(
+                "No matching database entry found for file stem '%s'. Skipping.",
+                file_name_stem,
+            )
+            stats["skipped"] += 1
+            continue
+
+        _, subtype_id = matched_entry
+        subtype_name = subtypes.get(subtype_id)
+
+        if not subtype_name:
+            logger.warning(
+                "Invalid subtype ID %d for file %s. Skipping.",
+                subtype_id,
+                file_path.name,
+            )
+            stats["skipped"] += 1
+            continue
+
+        try:
+            sub_dir: pathlib.Path = main_dir / subtype_name
+            target_path: pathlib.Path = sub_dir / file_path.name
+
+            if target_path.exists():
+                logger.warning(
+                    "Target file %s already exists. Skipping move for %s.",
+                    target_path,
+                    file_path.name,
+                )
+                stats["skipped"] += 1
+            else:
+                file_path.rename(target_path)
+                logger.debug(
+                    "Moved file '%s' to subdirectory '%s'.",
+                    file_path.name,
+                    subtype_name,
+                )
+                stats["moved"] += 1
+        except Exception:
+            logger.exception(
+                "Error moving file %s to %s",
+                file_path.name,
+                subtype_name,
+            )
+            stats["error"] += 1
+
+    logger.info(
+        "Reorganization complete for %s. Moved: %d, Skipped: %d, Errors: %d.",
+        parent_type_name,
+        stats["moved"],
+        stats["skipped"],
+        stats["error"],
+    )
+
+
+def reorg_files() -> None:  # noqa: D103
+    logger.info("Starting file reorganization for both type 2 (法律) and type 6 (地方性法规).")
+
+    reorg_law_files()
+
+    reorg_dfxfg_files()
+
+    logger.info("File reorganization complete.")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Chinese Law Database Crawler and Parser",
@@ -2246,60 +2509,41 @@ if __name__ == "__main__":
         help=f"Target law type ID (0 for all types). Available: {list(LAW_TYPES.keys())}",
     )
     parser.add_argument(
-        "-c",
-        "--check-list",
-        action="store_true",
-        help="Only check list page for new items and process them (downloads/parses if enabled).",
-    )
-    parser.add_argument(
-        "-n",
-        "--no-download",
-        action="store_true",
-        help="Disable downloading of documents (metadata will still be saved).",
-    )
-    parser.add_argument(
         "-r",
         "--reorganize",
         action="store_true",
-        help="Only reorganize local files for type 6 (地方性法规) based on DB office info.",
+        help="Reorganize local files for type 6 (地方性法规) based on DB office info. This is an exclusive action.",
+    )
+    parser.add_argument(
+        "-d",
+        "--download",
+        action="store_true",
+        help="Enable downloading of documents. If no other primary action (-c, -r) is specified, this will download all documents with saved=0.",  # noqa: E501
     )
     parser.add_argument(
         "-p",
-        "--parse-only",
+        "--parse",
         action="store_true",
-        help="Only parse previously downloaded documents (saved=1, parsed=0).",
+        help="Enable parsing of documents. If no other primary action (-c, -r) is specified, this will parse all documents with saved=1 and parsed=0. If -d is also specified as a primary action, parsing occurs after downloads.",  # noqa: E501
     )
     parser.add_argument(
-        "-np",
-        "--no-parse",
+        "-c",
+        "--check",
         action="store_true",
-        help="Disable parsing of documents (both after download and in parse-only mode).",
+        help="Check list page for new items and process them. Use with -d and/or -p to enable downloads/parsing for new items.",  # noqa: E501
     )
     parser.add_argument(
-        "--delay",
-        type=float,
-        default=DEF_REQ_DELAY,
-        help="Base delay (seconds) between requests/downloads.",
-    )
-    parser.add_argument(
-        "--retry-delay",
-        type=float,
-        default=DEF_INIT_DELAY,
-        help="Initial delay (seconds) for request retries (used in exponential backoff).",
+        "-s",
+        "--sync",
+        action="store_true",
+        help="Synchronize database saved/parsed statuses with actual file presence. This is an exclusive action.",
     )
 
     args: argparse.Namespace = parser.parse_args()
 
-    config: dict[str, Any] = {
-        "target_law_type": args.type,
-        "enable_downloads": not args.no_download,
-        "base_retry_delay": args.retry_delay,
-        "inter_request_delay": args.delay,
-        "check_list_page": args.check_list,
-        "reorganize_files": args.reorganize,
-        "parse_only": args.parse_only,
-        "enable_parsing": not args.no_parse,
-    }
+    enable_downloads: bool = args.download
+    enable_parsing: bool = args.parse
+    target_law_type: int = args.type
 
     exit_code: int = 0
     try:
@@ -2307,49 +2551,56 @@ if __name__ == "__main__":
             start_time: float = time.monotonic()
 
             logger.info(
-                "Script start. Config: LawType=%s, Downloads=%s, CheckList=%s, RequestDelay=%.2f, Reorganize=%s, ParseOnly=%s, EnableParsing=%s",  # noqa: E501
-                "All" if config["target_law_type"] == 0 else config["target_law_type"],
-                config["enable_downloads"],
-                config["check_list_page"],
-                config["inter_request_delay"],
-                config["reorganize_files"],
-                config["parse_only"],
-                config["enable_parsing"],
+                "Script start. Config: LawType=%s, Reorganize=%s, CheckList=%s, Download=%s, Parse=%s, RequestDelay=%.2f",  # noqa: E501
+                "All" if target_law_type == 0 else target_law_type,
+                args.reorganize,
+                args.check,
+                enable_downloads,
+                enable_parsing,
+                DEF_REQ_DELAY,
             )
 
             initialize_database()
 
-            if config["reorganize_files"]:
+            if args.reorganize:
                 logger.info("Mode: Reorganize files.")
-                reorg_dfxfg_files()
-            elif config["parse_only"]:
-                logger.info("Mode: Parse-only.")
-                if not config["enable_parsing"]:
-                    logger.warning(
-                        "Parse-only mode selected, but parsing is disabled via --no-parse. Exiting.",
-                    )
-                else:
-                    parse_saved_docs(
-                        config["target_law_type"],
-                        config["inter_request_delay"],
-                    )
-            elif config["check_list_page"]:
+                reorg_files()
+            elif args.check:
                 logger.info("Mode: Check list page for new items.")
                 process_new_items(
-                    download_enabled=config["enable_downloads"],
-                    initial_delay=config["inter_request_delay"],
-                    parse_enabled=config["enable_parsing"],
+                    download_enabled=enable_downloads,
+                    initial_delay=int(DEF_REQ_DELAY),
+                    parse_enabled=enable_parsing,
                 )
+            elif enable_downloads and not enable_parsing:
+                logger.info("Mode: Download-only.")
+                download_all_docs(type_id=target_law_type, request_delay=DEF_REQ_DELAY)
+            elif not enable_downloads and enable_parsing:
+                logger.info("Mode: Parse-only.")
+                parse_saved_docs(
+                    type_id=target_law_type,
+                    request_delay=DEF_REQ_DELAY,
+                )
+            elif enable_downloads and enable_parsing:
+                logger.info("Mode: Download and Parse.")
+                download_all_docs(
+                    type_id=target_law_type,
+                    request_delay=DEF_REQ_DELAY,
+                    auto_parse=True,
+                )
+            elif args.sync:
+                logger.info("Mode: Synchronize database with files.")
+                sync_database_with_files()
             else:
-                logger.info("Mode: Full crawl.")
+                logger.info("Mode: Full crawl (metadata by default, respect -d/-p if provided).")
                 crawl_law_type(
-                    type_id=config["target_law_type"],
-                    download_enabled=config["enable_downloads"],
+                    type_id=target_law_type,
+                    download_enabled=enable_downloads,
                     start_page=-1,
                     end_page=-1,
-                    initial_delay=config["base_retry_delay"],
-                    request_delay=config["inter_request_delay"],
-                    parse_enabled=config["enable_parsing"],
+                    initial_delay=DEF_INIT_DELAY,
+                    request_delay=DEF_REQ_DELAY,
+                    parse_enabled=enable_parsing,
                 )
 
             logger.info(
