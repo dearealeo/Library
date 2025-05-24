@@ -147,7 +147,8 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: Sukka Ruleset/upstream/.cache
-          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-build-cache-v1-{1}', runner.os, hashFiles('Sukka Ruleset/upstream/pnpm-lock.yaml')) }}
+          key: ${{ runner.os }}-build-cache-v1-${{ hashFiles('Sukka Ruleset/upstream/pnpm-lock.yaml') }}
+          lookup-only: true
 
       # - name: Upload Pages artifact
       #   uses: actions/upload-pages-artifact@v3
