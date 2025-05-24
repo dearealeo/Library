@@ -61,13 +61,13 @@ jobs:
           echo "minute=$(date +'%M')" >> $GITHUB_OUTPUT
           echo "second=$(date +'%S')" >> $GITHUB_OUTPUT
 
-      - name: Download Previous Build
+      - name: Download previous build
         uses: actions/checkout@v4
         with:
-          repository: SukkaLab/ruleset.skk.moe
+          repository: Library/Sukka Ruleset/rulesets
           persist-credentials: false
           path: previous-build-${{ github.run_id }}-${{ github.run_number }}
-          token: ${{ secrets.GIT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Grab building folder
         id: paths
@@ -252,4 +252,4 @@ jobs:
   #       env:
   #         GH_EMAIL: ${{ secrets.GIT_EMAIL }}
   #         GH_USER: ${{ secrets.GIT_USER }}
-  #         GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
