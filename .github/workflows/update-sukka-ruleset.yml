@@ -61,50 +61,28 @@ jobs:
           echo "minute=$(date +'%M')" >> $GITHUB_OUTPUT
           echo "second=$(date +'%S')" >> $GITHUB_OUTPUT
 
-      - name: Download previous build
-        uses: actions/checkout@v4
-        with:
-          repository: Library/Sukka Ruleset/rulesets
-          persist-credentials: false
-          path: previous-build-${{ github.run_id }}-${{ github.run_number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Grab building folder
-        id: paths
-        run: |
-          echo "output_dir=previous-build-${{ github.run_id }}-${{ github.run_number }}" >> $GITHUB_OUTPUT
-
-      - name: Setup build folder
-        run: |
-          if [ ! -d ${{ steps.paths.outputs.output_dir }}/.git ]; then
-            echo ".git not found"
-            exit 1
-          fi
-          rm -rf "${{ steps.paths.outputs.output_dir }}/.git"
-
-          if [ ! -d ${{ steps.paths.outputs.output_dir }}/List ]; then
-            mkdir -p "${{ steps.paths.outputs.output_dir }}/List/domainset"
-            touch "${{ steps.paths.outputs.output_dir }}/List/domainset/speedtest.conf"
-          fi
-          echo "public directory is ready: ${{ steps.paths.outputs.output_dir }}"
-
       - name: Restore build process cache
         uses: actions/cache/restore@v4
         id: cache-db-restore
         with:
           path: Sukka Ruleset/upstream/.cache
-          key: ${{ runner.os }}-v3-${{ steps.date.outputs.year }}-${{ steps.date.outputs.month }}-${{ steps.date.outputs.day }} ${{ steps.date.outputs.hour }}:${{ steps.date.outputs.minute }}:${{ steps.date.outputs.second }}
+          key: ${{ runner.os }}-build-cache-v1-${{ hashFiles('Sukka Ruleset/upstream/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-v3-${{ steps.date.outputs.year }}-${{ steps.date.outputs.month }}-${{ steps.date.outputs.day }} ${{ steps.date.outputs.hour }}:${{ steps.date.outputs.minute }}:
-            ${{ runner.os }}-v3-${{ steps.date.outputs.year }}-${{ steps.date.outputs.month }}-${{ steps.date.outputs.day }} ${{ steps.date.outputs.hour }}:
-            ${{ runner.os }}-v3-${{ steps.date.outputs.year }}-${{ steps.date.outputs.month }}-${{ steps.date.outputs.day }}
-            ${{ runner.os }}-v3-${{ steps.date.outputs.year }}-${{ steps.date.outputs.month }}-
-            ${{ runner.os }}-v3-${{ steps.date.outputs.year }}-
-            ${{ runner.os }}-v3-
+            ${{ runner.os }}-build-cache-v1-
 
       - name: Install dependencies
         run: pnpm install
         working-directory: Sukka Ruleset/upstream
+
+      - name: Define output directory
+        id: paths
+        run: echo "output_dir=./Sukka Ruleset/dist" >> $GITHUB_OUTPUT
+
+      - name: Setup build folder
+        run: |
+          mkdir -p "${{ steps.paths.outputs.output_dir }}/List/domainset"
+          touch "${{ steps.paths.outputs.output_dir }}/List/domainset/speedtest.conf"
+        shell: bash
 
       - name: Build rulesets
         run: pnpm run build
@@ -137,16 +115,6 @@ jobs:
           echo "Link fixing complete."
         shell: bash
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact-${{ github.sha }}-${{ github.run_number }}
-          path: ${{ steps.paths.outputs.output_dir }}
-          if-no-files-found: error
-          retention-days: 1
-          compression-level: 4
-          include-hidden-files: false
-
       - name: Commit files
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -155,7 +123,7 @@ jobs:
           UPSTREAM_COMMIT_SHA=$(git rev-parse --short HEAD)
           cd ../..
 
-          git add "Sukka Ruleset/upstream" "${{ steps.paths.outputs.output_dir }}"
+          git add -f "Sukka Ruleset/upstream" "${{ steps.paths.outputs.output_dir }}"
 
           if git diff --staged --quiet; then
             echo "No changes detected in upstream submodule or rulesets. Nothing to commit."
@@ -179,7 +147,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: Sukka Ruleset/upstream/.cache
-          key: ${{ runner.os }}-v3-${{ steps.date.outputs.year }}-${{ steps.date.outputs.month }}-${{ steps.date.outputs.day }} ${{ steps.date.outputs.hour }}:${{ steps.date.outputs.minute }}:${{ steps.date.outputs.second }}
+          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-build-cache-v1-{1}', runner.os, hashFiles('Sukka Ruleset/upstream/pnpm-lock.yaml')) }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -199,11 +167,13 @@ jobs:
           path: public
       - name: Diff
         run: |
-          git clone --filter=tree:0 --no-tags https://github.com/SukkaLab/ruleset.skk.moe.git ./deploy-git >/dev/null 2>&1
+          git clone --sparse --filter=tree:0 --no-tags https://github.com/dearealeo/Library.git ./deploy-git >/dev/null 2>&1
           cd ./deploy-git
-          git fetch origin master >/dev/null 2>&1
-          rm -rf ./*
-          cp -rf ../public/* ./
+          git sparse-checkout set "Sukka Ruleset/dist"
+          git fetch origin main >/dev/null 2>&1
+          rm -rf ./"Sukka Ruleset/dist"/*
+          mkdir -p ./"Sukka Ruleset/dist"
+          cp -rf ../public/* ./"Sukka Ruleset/dist"/
           git --no-pager diff --minimal
 
   deploy_pages:
@@ -219,37 +189,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-  # deploy_to_github_dist:
-  #   needs:
-  #     - build_and_commit
-  #   name: Deploy to GitHub Dist
-  #   if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-  #   runs-on: ubuntu-24.04-arm
-  #   steps:
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: build-artifact-${{ github.sha }}-${{ github.run_number }}
-  #         path: public
-  #     - name: Upload Dist to GitHub
-  #       continue-on-error: true
-  #       run: |
-  #         gh repo unarchive SukkaLab/ruleset.skk.moe --yes
-  #         git clone --filter=tree:0 --no-tags https://${GH_USER}:${GH_TOKEN}@github.com/SukkaLab/ruleset.skk.moe.git ./deploy-git
-  #         cd ./deploy-git
-  #         git config --global push.default matching
-  #         git config --global user.email "${GH_EMAIL}"
-  #         git config --global user.name "${GH_USER}"
-  #         rm -rf ./*
-  #         cp -rf ../public/* ./
-  #         echo "ruleset.skk.moe" > CNAME
-  #         git add --all .
-  #         git commit -m "deploy: update [${{ steps.date.outputs.cst_time }}]"
-  #         git push --quiet --force origin HEAD:master
-  #         cd ..
-  #         rm -rf ./deploy-git
-  #         gh repo archive SukkaLab/ruleset.skk.moe --yes
-  #       env:
-  #         GH_EMAIL: ${{ secrets.GIT_EMAIL }}
-  #         GH_USER: ${{ secrets.GIT_USER }}
-  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
