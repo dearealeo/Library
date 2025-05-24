@@ -111,7 +111,7 @@ jobs:
         run: |
           OUTPUT_DIR="${{ steps.paths.outputs.output_dir }}"
           echo "Searching for HTML files in $OUTPUT_DIR to fix links..."
-          find "$OUTPUT_DIR" -maxdepth 1 -name '*.html' -exec sed -i 's|href="\(List\|Clash\|sing-box\|Modules\|Mock\|Internal\|LegacyClashPremium\|Surfboard\)/|href="./\1/|g' {} +
+          find "$OUTPUT_DIR" -maxdepth 1 -name '*.html' -exec sed -i 's|href="\([A-Za-z0-9\-/]*\)"|href="/Library/\1"|g' {} +
           echo "Link fixing complete."
         shell: bash
 
