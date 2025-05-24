@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "fonts.googleapis.cn",
+        "fonts.gstatic.cn",
+        "ip.cn"
+      ],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "ipstack.com",
+        "ip-api.com",
+        "db-ip.com",
+        "ip.sb",
+        "ipwho.is",
+        "ipgeolocation.io",
+        "nextdns.io",
+        "ipregistry.co",
+        "ipdata.co",
+        "services.googleapis.cn"
+      ]
+    }
+  ]
+}
