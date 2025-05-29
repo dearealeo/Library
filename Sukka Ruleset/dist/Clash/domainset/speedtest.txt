@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-05-28T12:37:17.411Z
-# Size: 1016
+# Last Updated: 2025-05-29T12:36:20.987Z
+# Size: 1029
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -272,6 +272,7 @@ speedtest2.pacificinternet.com
 speedtest.naturalwireless.com
 ookla-london.briantbroadband.com
 speedtest.unlimitedfiber.com
+speedtest.systemlifeline.com
 +.speedtestkorea.com
 ooklatins.redeconexaonet.com
 speedtest1.indosatooredoo.com
@@ -373,6 +374,7 @@ speedtest.nl.novoserve.com
 speedtest.linknetbv.com
 speedtest.jsqiuying.com
 hiztesti.isimkayit.com
+speedtest.inovewifi.com
 mns.i-systems.com
 venusone.horystech.com
 speedtest.hazalhost.com
@@ -463,6 +465,7 @@ dalspeedtest.rtatel.com
 stwellandpelhamwireless.rogers.com
 stsaultstemariewireless.rogers.com
 ststcatharineswireless.rogers.com
+storangevillewireless.rogers.com
 stmississaugawireless.rogers.com
 stthunderbaywireless.rogers.com
 stlethbridgewireless.rogers.com
@@ -492,6 +495,7 @@ stmiltonwireless.rogers.com
 stlondonwireless.rogers.com
 stguelphwireless.rogers.com
 stscarborough.rogers.com
+storangeville.rogers.com
 stmississauga.rogers.com
 stwoodstock.rogers.com
 ststratford.rogers.com
@@ -502,7 +506,10 @@ stbrantford.rogers.com
 stwaterloo.rogers.com
 ststthomas.rogers.com
 stoakville.rogers.com
+stkingcity.rogers.com
 sthamilton.rogers.com
+stbrampton.rogers.com
+stvaughan.rogers.com
 sttoronto.rogers.com
 stmilton.rogers.com
 stlondon.rogers.com
@@ -797,15 +804,20 @@ stmississauga.netcrawler.ca
 stetobicoke.netcrawler.ca
 stwaterloo.netcrawler.ca
 stmontreal.netcrawler.ca
+stkingcity.netcrawler.ca
 sthamilton.netcrawler.ca
+stbrampton.netcrawler.ca
+stvaughan.netcrawler.ca
 speedtest.netcrawler.ca
 stlondon.netcrawler.ca
 stguelph.netcrawler.ca
+speedtest.mornington.ca
 speedtest.45networks.ca
 speedtest.techminds.ca
 speedtest.execulink.ca
 speedtest.cloudwifi.ca
 speedtest.beyondair.ca
+383-2speedtest.wightman.ca
 falcon.its.utoronto.ca
 speed1.myascend.ca
 speedtest.myaccess.ca
@@ -824,6 +836,7 @@ speedtest-london.start.ca
 speedtest01.o-net.ca
 yk-netspeed.nwtel.ca
 wh-netspeed.nwtel.ca
+speedtest01.ehtel.ca
 speedtest.wwfn.ca
 speedtest.nrbn.ca
 hv1.juce.ca

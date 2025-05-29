@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-05-26T12:35:44.604Z
-# Size: 3587
+# Last Updated: 2025-05-29T12:36:23.659Z
+# Size: 3588
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -3337,6 +3337,7 @@ static.status.io
 image.status.io
 media.smooch.io
 cdn.smooch.io
+wire.shodan.io
 +.ingest.sentry.io
 +.ingest.us.sentry.io
 +.ingest.de.sentry.io
