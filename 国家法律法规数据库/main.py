@@ -1925,11 +1925,12 @@ def check_for_new_items() -> dict[int, list[LawData]]:  # noqa: C901, D103, PLR0
 
 
 def process_new_items(  # noqa: D103
-    download_enabled: bool,  # noqa: FBT001
-    initial_delay: int,
-    parse_enabled: bool = False,  # noqa: FBT001, FBT002
+    download_enabled: bool = True,  # noqa: FBT001, FBT002
+    initial_delay: int = DEF_INIT_DELAY,
+    parse_enabled: bool = True,  # noqa: FBT001, FBT002
 ) -> None:
     logger.info("Processing new items identified from the list page check.")
+    logger.info("Configuration: download_enabled=%s, parse_enabled=%s", download_enabled, parse_enabled)
 
     new_items_by_type: dict[int, list[LawData]] = check_for_new_items()
     if not new_items_by_type:
@@ -2043,20 +2044,25 @@ def process_type_items(  # noqa: D103, PLR0913, PLR0917
                 changes,
             )
 
-            if inserted_ids or download_enabled or parse_enabled:
+            if inserted_ids:
                 if download_enabled:
                     logger.info(
-                        "Initiating document downloads for potentially %d new %s items.",
-                        len(inserted_ids) if inserted_ids else len(db_records),
+                        "Initiating document downloads for %d newly inserted %s items.",
+                        len(inserted_ids),
                         type_name,
                     )
-                    download_all_docs(type_id, request_delay, auto_parse=parse_enabled)
+                    download_new_items(type_id, inserted_ids, request_delay, auto_parse=parse_enabled)
                 elif parse_enabled:
-                    logger.info(
-                        "Download disabled but parse enabled. Initiating parsing check for %s.",
+                    logger.info(  # noqa: PLE1205
+                        "Download disabled but parse enabled. Checking if any new items were already downloaded.",
                         type_name,
                     )
-                    parse_saved_docs(type_id, request_delay)
+                    parse_specific_items(type_id, inserted_ids, request_delay)
+            elif download_enabled or parse_enabled:
+                logger.info(
+                    "No new items inserted, but download/parse was requested for %s. No action taken.",
+                    type_name,
+                )
             else:
                 logger.info(
                     "No new items inserted and download/parse disabled for %s.",
@@ -2069,6 +2075,266 @@ def process_type_items(  # noqa: D103, PLR0913, PLR0917
             type_name,
             type_code,
         )
+
+
+def download_new_items(  # noqa: D103, PLR0915
+    type_id: int,
+    item_ids: list[str],
+    request_delay: float,
+    auto_parse: bool = False,  # noqa: FBT001, FBT002
+) -> None:
+    table_name = get_type_code(type_id)
+    type_name = get_type_name(type_id)
+    if not table_name:
+        logger.error("Invalid type_id %d provided for downloading specific items.", type_id)
+        return
+
+    logger.info("Start targeted download for %d specified items of type %s.", len(item_ids), type_name)
+
+    items_to_download: list[tuple[str, str, str]] = []
+    try:
+        with contextlib.closing(sqlite3.connect(DB_PATH, timeout=10.0)) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            placeholders = ",".join(["?"] * len(item_ids))
+            cursor.execute(
+                f'SELECT id, title, office FROM "{table_name}" WHERE id IN ({placeholders})',  # noqa: S608
+                item_ids,
+            )
+            items_to_download = [
+                (
+                    row["id"],
+                    row["title"],
+                    row["office"] if "office" in row.keys() else "",  # noqa: SIM118
+                )
+                for row in cursor.fetchall()
+                if row["id"] and row["title"]
+            ]
+    except sqlite3.Error:
+        logger.exception(
+            "Failed to query database for specific documents to download (type %s)",
+            type_name,
+        )
+        return
+
+    if not items_to_download:
+        logger.info("No documents found for targeted download in %s.", type_name)
+        return
+
+    logger.info(
+        "Found %d documents for targeted download in %s.",
+        len(items_to_download),
+        type_name,
+    )
+
+    successful_ids: list[str] = []
+    failed_count: int = 0
+    max_workers: int = min(max(1, int(CPU_COUNT * MAX_THREADS_RATIO)), 5)
+
+    with ThreadPoolExecutor(
+        max_workers=max_workers,
+        thread_name_prefix=f"TargetDownload_{table_name}",
+    ) as executor:
+        download_func = functools.partial(
+            download_document,
+            table_name=table_name,
+            request_delay=request_delay / max_workers,
+        )
+        future_to_id: dict[Future[str | None], str] = {
+            executor.submit(
+                download_func,
+                legal_id=legal_id,
+                legal_title=legal_title,
+                office=office,
+            ): legal_id
+            for legal_id, legal_title, office in items_to_download
+        }
+
+        for future, legal_id in future_to_id.items():
+            try:
+                result_id: str | None = future.result()
+                if result_id:
+                    successful_ids.append(result_id)
+                else:
+                    logger.warning("Download task failed for ID: %s", legal_id)
+                    failed_count += 1
+            except Exception:  # noqa: PERF203
+                logger.exception(
+                    "Download task for ID %s generated an exception",
+                    legal_id,
+                )
+                failed_count += 1
+
+    logger.info(
+        "Targeted download process completed for %s. Success/Already Existed: %d, Failed: %d.",
+        type_name,
+        len(successful_ids),
+        failed_count,
+    )
+
+    if successful_ids:
+        logger.info(
+            "Update database: Mark %d documents as saved for %s.",
+            len(successful_ids),
+            type_name,
+        )
+        update_sql = f'UPDATE "{table_name}" SET saved = 1 WHERE id = ?'  # noqa: S608
+        try:
+            with contextlib.closing(
+                sqlite3.connect(DB_PATH, isolation_level=None, timeout=10.0),
+            ) as update_conn:
+                update_conn.execute("PRAGMA journal_mode=WAL;")
+                update_conn.execute("PRAGMA synchronous=NORMAL;")
+                update_conn.execute("PRAGMA busy_timeout = 5000;")
+
+                with update_conn:
+                    update_conn.executemany(
+                        update_sql,
+                        [(id_val,) for id_val in successful_ids],
+                    )
+                logger.info(
+                    "Database updated successfully for %d documents marked as saved.",
+                    len(successful_ids),
+                )
+
+                if auto_parse:
+                    logger.info(
+                        "Initiating automatic parsing for newly saved documents.",
+                    )
+                    parse_specific_items(type_id, successful_ids, request_delay)
+
+        except sqlite3.Error:
+            logger.exception(
+                "Failed to update database after downloads for table '%s'",
+                table_name,
+            )
+            logger.exception(
+                "Failed IDs requiring manual check (saved status): %s",
+                successful_ids,
+            )
+
+
+def parse_specific_items(type_id: int, item_ids: list[str], request_delay: float) -> None:  # noqa: D103
+    if not item_ids:
+        logger.info("No specific items provided for parsing.")
+        return
+
+    table_name = get_type_code(type_id)
+    type_name = get_type_name(type_id)
+    if not table_name:
+        logger.error("Invalid type_id %d provided for parsing specific items.", type_id)
+        return
+
+    logger.info("Start targeted parsing for %d specified items of type %s.", len(item_ids), type_name)
+
+    items_to_parse: list[tuple[str, str, str]] = []
+    try:
+        with contextlib.closing(sqlite3.connect(DB_PATH, timeout=10.0)) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            placeholders = ",".join(["?"] * len(item_ids))
+            cursor.execute(
+                f'SELECT id, title, office FROM "{table_name}" WHERE id IN ({placeholders}) AND saved = 1',  # noqa: S608
+                item_ids,
+            )
+            items_to_parse = [
+                (
+                    row["id"],
+                    row["title"],
+                    row["office"] if "office" in row.keys() else "",  # noqa: SIM118
+                )
+                for row in cursor.fetchall()
+                if row["id"] and row["title"]
+            ]
+    except sqlite3.Error:
+        logger.exception(
+            "Failed to query database for specific documents to parse (type %s)",
+            type_name,
+        )
+        return
+
+    if not items_to_parse:
+        logger.info("No documents found for targeted parsing in %s.", type_name)
+        return
+
+    logger.info(
+        "Found %d documents to parse for %s.",
+        len(items_to_parse),
+        type_name,
+    )
+
+    successful_ids: list[str] = []
+    failed_count: int = 0
+    max_workers: int = min(max(1, int(CPU_COUNT * MAX_THREADS_RATIO)), 5)
+
+    with ThreadPoolExecutor(
+        max_workers=max_workers,
+        thread_name_prefix=f"TargetParse_{table_name}",
+    ) as executor:
+        future_to_id: dict[Future[str | None], str] = {
+            executor.submit(
+                parse_doc_to_md,
+                legal_id,
+                legal_title,
+                table_name,
+                office,
+            ): legal_id
+            for legal_id, legal_title, office in items_to_parse
+        }
+
+        for future in concurrent.futures.as_completed(future_to_id):
+            legal_id = future_to_id[future]
+            try:
+                result_id: str | None = future.result()
+                if result_id:
+                    successful_ids.append(result_id)
+                else:
+                    failed_count += 1
+                time.sleep(
+                    max(0.05, request_delay / (max_workers * 5)) if max_workers > 0 else 0.1,
+                )
+            except Exception:
+                logger.exception(
+                    "Parsing task for ID %s generated an exception",
+                    legal_id,
+                )
+                failed_count += 1
+
+    logger.info(
+        "Targeted parsing process completed for %s. Success: %d, Failed: %d.",
+        type_name,
+        len(successful_ids),
+        failed_count,
+    )
+
+    if successful_ids:
+        update_sql = f'UPDATE "{table_name}" SET parsed = 1 WHERE id = ?'  # noqa: S608
+        try:
+            with contextlib.closing(
+                sqlite3.connect(DB_PATH, isolation_level=None, timeout=10.0),
+            ) as conn:
+                conn.execute("PRAGMA journal_mode=WAL;")
+                conn.execute("PRAGMA synchronous=NORMAL;")
+                conn.execute("PRAGMA busy_timeout = 5000;")
+                with conn:
+                    conn.executemany(
+                        update_sql,
+                        [(id_val,) for id_val in successful_ids],
+                    )
+                logger.info(
+                    "Database updated successfully: Marked %d documents as parsed for %s.",
+                    len(successful_ids),
+                    type_name,
+                )
+        except sqlite3.Error:
+            logger.exception(
+                "Failed to update database after parsing for table '%s'",
+                table_name,
+            )
+            logger.exception(
+                "Failed IDs requiring manual check (parsed status): %s",
+                successful_ids,
+            )
 
 
 def reorg_dfxfg_files() -> None:  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
@@ -2419,7 +2685,7 @@ def reorg_law_files() -> None:  # noqa: C901, D103, PLR0912, PLR0914, PLR0915
                 (
                     (title, subtype_id)
                     for safe_title, (title, subtype_id) in combined_map.items()
-                    if len(safe_title) >= 20 and file_name_stem.startswith(safe_title[:20])
+                    if len(safe_title) >= 20 and file_name_stem.startswith(safe_title[:20])  # noqa: PLR2004
                 ),
                 None,
             )
@@ -2530,7 +2796,7 @@ if __name__ == "__main__":
         "-c",
         "--check",
         action="store_true",
-        help="Check list page for new items and process them. Use with -d and/or -p to enable downloads/parsing for new items.",  # noqa: E501
+        help="Check list page for new items and process them.",
     )
     parser.add_argument(
         "-s",
@@ -2568,9 +2834,9 @@ if __name__ == "__main__":
             elif args.check:
                 logger.info("Mode: Check list page for new items.")
                 process_new_items(
-                    download_enabled=enable_downloads,
+                    download_enabled=enable_downloads if args.download else True,
                     initial_delay=int(DEF_REQ_DELAY),
-                    parse_enabled=enable_parsing,
+                    parse_enabled=enable_parsing if args.parse else True,
                 )
             elif enable_downloads and not enable_parsing:
                 logger.info("Mode: Download-only.")
