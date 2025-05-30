@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-05-29T12:36:23.659Z
-# Size: 3588
+# Last Updated: 2025-05-30T12:36:30.998Z
+# Size: 3591
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -2087,6 +2087,9 @@ videos2-h.sendvid.com
 thumbs2.sendvid.com
 cdn.segment.com
 ocsp.sectigo.com
+image-stgus.samsung.com
+image-us.samsung.com
+images.samsung.com
 cdn-b.saashub.com
 +.cdn.rollbar.com
 tools.refokus.com
