@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-06-01T12:33:57.086Z
-# Size: 1037
+# Last Updated: 2025-06-02T12:37:33.509Z
+# Size: 1041
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -38,6 +38,7 @@ speedtest.brooketel.coop
 speedtest04.ber.server.camp
 speedtest03.ber.server.camp
 sg.cloudhost.asia
+speed.onlinedersm.xyz
 speed1.yasarnet.xyz
 tyo.st.spacecore.pro
 sea.st.spacecore.pro
@@ -100,6 +101,7 @@ lg-sin.fdcservers.net
 lg-hkg.fdcservers.net
 lg-ams.fdcservers.net
 lon-hex-speedtest.cloudconnx.net
+speed.alsalamnet.net
 speedtest.viberlink.net
 speedtest-lon.veloxserv.net
 +.speedtest.net
@@ -271,6 +273,7 @@ speedtest-aus.chainlinkhosting.com
 speedtest.parishbroadband.com
 speedtest2.pacificinternet.com
 speedtest.naturalwireless.com
+digital-net-isp.com
 ookla-london.briantbroadband.com
 speedtest.unlimitedfiber.com
 speedtest.systemlifeline.com
@@ -424,6 +427,7 @@ speedtest.ca-tr.kamatera.com
 speedtest.eu.kamatera.com
 speedtest.ixirhost.com
 txg-speedtest.infinirc.com
+speed.inet-isp.com
 sv-ookla.geolinks.com
 la-ookla.geolinks.com
 +.speedtest.frontier.com
