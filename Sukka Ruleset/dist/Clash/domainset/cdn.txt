@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-06-02T12:37:34.642Z
-# Size: 3596
+# Last Updated: 2025-06-03T12:37:42.604Z
+# Size: 3599
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -512,6 +512,7 @@ img.javstore.net
 +.forgecdn.net
 connect.facebook.net
 static.esimplus.net
+pub.creaders.net
 assets.bitstamp.net
 damassets.autodesk.net
 jira-frontend-bifrost.prod-east.frontend.public.atl-paas.net
@@ -1803,6 +1804,7 @@ assets.scaleway.com
 embed.savvycal.com
 public.saasexch.com
 +.rrcdnbf3.com
+apps-static.route4me.com
 +.roseimgs.com
 cdn.roboflow.com
 app.roboflow.com
@@ -2633,6 +2635,7 @@ static.vanta.com
 +.twimg.com
 media1.tenor.com
 media.tenor.com
+c.tadst.com
 assets.stash.com
 cdn.stash.com
 +.srcdn.com

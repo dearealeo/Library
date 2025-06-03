@@ -1,6 +1,6 @@
 <?php
 
-// # Build 2025-06-02T12:37:35.074Z
+// # Build 2025-06-03T12:37:40.784Z
 
 declare(strict_types=1);
 
@@ -1688,6 +1688,7 @@ $_ENV['Clash_Group_Config'] = [
         'DOMAIN-SUFFIX,fastlylb.net,Global',
         'DOMAIN-SUFFIX,dns-oarc.net,Global',
         'DOMAIN-SUFFIX,diagrams.net,Global',
+        'DOMAIN-SUFFIX,creaders.net,Global',
         'DOMAIN-SUFFIX,cloudapp.net,Global',
         'DOMAIN-SUFFIX,cachefly.net,Global',
         'DOMAIN-SUFFIX,akamaihd.net,Global',
@@ -2877,6 +2878,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR,23.61.203.0/24,Domestic',
         'IP-CIDR,23.63.29.0/24,Domestic',
         'IP-CIDR,23.63.98.0/23,Domestic',
+        'IP-CIDR,23.207.201.0/24,Domestic',
         'IP-CIDR,23.216.52.0/23,Domestic',
         'IP-CIDR,23.225.71.0/24,Domestic',
         'IP-CIDR,23.247.128.0/24,Domestic',
@@ -6583,7 +6585,6 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR,211.160.4.0/23,Domestic',
         'IP-CIDR,211.160.9.0/24,Domestic',
         'IP-CIDR,211.160.10.0/23,Domestic',
-        'IP-CIDR,211.160.15.0/24,Domestic',
         'IP-CIDR,211.160.16.0/21,Domestic',
         'IP-CIDR,211.160.24.0/24,Domestic',
         'IP-CIDR,211.160.26.0/23,Domestic',
@@ -7423,7 +7424,6 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2406:840:e608::/46,Domestic',
         'IP-CIDR6,2406:840:e621::/48,Domestic',
         'IP-CIDR6,2406:840:e666::/47,Domestic',
-        'IP-CIDR6,2406:840:e720::/44,Domestic',
         'IP-CIDR6,2406:840:e770::/48,Domestic',
         'IP-CIDR6,2406:840:e777::/48,Domestic',
         'IP-CIDR6,2406:840:e80f::/48,Domestic',
