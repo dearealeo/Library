@@ -12,6 +12,7 @@ The software herein is licensed under the [MIT](./LICENSE) by [@dearealeo](https
 
 ## Schedule
 <!-- INSERT -->
+- [20250605](./2025/20250605.md)
 - [20250604](./2025/20250604.md)
 - [20250603](./2025/20250603.md)
 - [20250602](./2025/20250602.md)
