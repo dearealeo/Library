@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-06-07T12:33:29.335Z
-# Size: 1057
+# Last Updated: 2025-06-08T07:58:19.172Z
+# Size: 1060
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -670,6 +670,7 @@ speedtest3.vodafone.com.tr
 speedtest.vodafone.com.tr
 speedtest.teknosos.com.tr
 stestacb.netspeed.com.tr
+rspeed.mi-group.com.tr
 speedtest.lodosnet.com.tr
 speedtest.kapteyan.com.tr
 hiztesti.hiperbox.com.tr
@@ -804,11 +805,13 @@ speedtest.reycom.cr
 speedtest1.claro.cr
 speedtest.tigo.cr
 speed.data.cr
+speedtest.tigo.co.cr
 speedtest.ct.co.cr
 speedtest.technofiber.co
 speedtest.dukekunshan.edu.cn
 cesu-nb.zjtelecom.com.cn
 cesu-hz.zjtelecom.com.cn
+speedtest.bmcc.com.cn
 speedtest.asymptote.cc
 speedtest.redbirdcommunications.ca
 sp1.voyageurinternet.ca
