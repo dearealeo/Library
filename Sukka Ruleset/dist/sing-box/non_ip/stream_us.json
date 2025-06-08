@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "staticasiafox.akamaized.net",
+        "dashasiafox.akamaized.net",
+        "bcbolt446c5271-a.akamaihd.net",
+        "edge.api.brightcove.com",
+        "cbsplaylistserver.aws.syncbak.com",
+        "cbsservice.aws.syncbak.com",
+        "prod-api.crackle.com",
+        "cbsi.live.ott.irdeto.com"
+      ],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "paramountplus.com",
+        "discoveryplus.com",
+        "theplatform.com",
+        "hulustream.com",
+        "cbsaavideo.com",
+        "peacocktv.com",
+        "encoretvb.com",
+        "disco-api.com",
+        "cbsivideo.com",
+        "showtime.com",
+        "foxplus.com",
+        "uplynk.com",
+        "huluim.com",
+        "foxdcg.com",
+        "dnitv.com",
+        "vudu.com",
+        "hulu.com",
+        "cbsi.com",
+        "sho.com",
+        "fox.com",
+        "hulu.us",
+        "discoveryplus.co.uk",
+        "pluto.tv",
+        "hulu.tv",
+        "hjholdings.jp",
+        "happyon.jp",
+        "hulu.jp",
+        "discoveryplus.in"
+      ],
+      "process_name": ["com.hulu.plus"]
+    }
+  ]
+}

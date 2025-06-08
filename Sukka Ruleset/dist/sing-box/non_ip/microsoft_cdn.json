@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "statics.teams.cdn.office.net",
+        "res-1.cdn.office.net",
+        "res.cdn.office.net"
+      ],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "download.windowsupdate.com",
+        "ctldl.windowsupdate.com",
+        "cn.windowssearch.com",
+        "download.visualstudio.microsoft.com",
+        "officecdn.microsoft.com",
+        "developer.microsoft.com",
+        "download.microsoft.com",
+        "devblogs.microsoft.com",
+        "learn.microsoft.com",
+        "download.prss.microsoft.com",
+        "docs.microsoft.com",
+        "wscont2.apps.microsoft.com",
+        "wscont1.apps.microsoft.com",
+        "sdx.microsoft.com",
+        "dl.delivery.mp.microsoft.com",
+        "storeedgefd.dsx.mp.microsoft.com",
+        "fs.microsoft.com"
+      ]
+    }
+  ]
+}

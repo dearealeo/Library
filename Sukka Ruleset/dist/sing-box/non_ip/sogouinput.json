@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "oth.str.mdt.qq.com"
+      ],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "account.sogou.com",
+        "shouji.sogou.com",
+        "pinyin.sogou.com",
+        "macime.sogou.com",
+        "ime.sogou.com",
+        "get.sogou.com",
+        "sginput.qq.com",
+        "beacon.qq.com"
+      ],
+      "process_name": ["SogouInput", "SogouTaskManager", "SogouServices"]
+    }
+  ]
+}

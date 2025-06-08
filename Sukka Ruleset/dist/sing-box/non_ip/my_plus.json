@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "hv-monster-submit.skk.moe",
+        "api.wakatime.com",
+        "writer-api.mintlify.com"
+      ],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "18comic.vip",
+        "18comic.org",
+        "akamaized.net",
+        "akamaihd.net",
+        "azurefd.net",
+        "vo.msecnd.net",
+        "akamai-content-networks.com",
+        "kxcdn.com"
+      ]
+    }
+  ]
+}

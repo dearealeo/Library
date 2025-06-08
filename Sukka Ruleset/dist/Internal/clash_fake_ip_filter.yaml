@@ -1,0 +1,23 @@
+dns:
+  fake-ip-filter:
+    - +.+m2m
+    - +.$injections.adguard.org
+    - +.$local.adguard.org
+    - +.+bogon
+    - +.+lan
+    - +.+local
+    - +.+internal
+    - +.+localdomain
+    - +.home.arpa
+    - dns.msftncsi.com
+    - "*.srv.nintendo.net"
+    - "*.stun.playstation.net"
+    - xbox.*.microsoft.com
+    - "*.xboxlive.com"
+    - "*.turn.twilio.com"
+    - "*.stun.twilio.com"
+    - stun.syncthing.net
+    - stun.*
+    - "*.sslip.io"
+    - "*.nip.io"
+
