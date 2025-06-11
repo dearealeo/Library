@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-06-10T12:42:16.342Z
-# Size: 3606
+# Last Updated: 2025-06-11T12:42:06.234Z
+# Size: 3608
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -1677,6 +1677,7 @@ assetscdn-wchat.eu.freshchat.com
 +.framercdn.com
 +.forbesimg.com
 cdn.fontshare.com
+api.fontshare.com
 +.fncstatic.com
 +.fiverrcdn.com
 static.filehorse.com
@@ -2304,6 +2305,7 @@ static.bytepan.com
 organizer.bizzabo.com
 static.news.bitcoin.com
 api.bintray.com
+affportal.bhphoto.com
 +.bfzypic.com
 +.bftuvip.com
 promotions.betfair.com
