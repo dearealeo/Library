@@ -49,205 +49,140 @@ jobs:
         run: pip install --no-cache-dir markdown2
 
       - name: Create directory structure
+        if: always()
         run: |
           mkdir -p ./public
           cp -r ./docs/* ./public/
           mkdir -p ./public/{sukka-ruleset,laws/{constitution,laws-list,administrative-regulations,local-regulations,judicial-interpretations,supervisory-regulations},news/{2022,2023,2024,2025}}
 
       - name: Process Sukka Ruleset content
+        if: always()
         run: |
-          mkdir -p ./public/sukka-ruleset
-
           [ -d "./Sukka Ruleset/dist" ] && [ -n "$(ls -A "./Sukka Ruleset/dist" 2>/dev/null)" ] && {
-            cp -r "./Sukka Ruleset/dist"/* ./public/sukka-ruleset/ 2>/dev/null || true
+            find "./Sukka Ruleset/dist" -type f -print0 | while IFS= read -r -d '' file; do
+              dest="./public/sukka-ruleset/${file#./Sukka Ruleset/dist/}"
+              [ ${#dest} -gt 255 ] && continue
+              mkdir -p "$(dirname "$dest")"
+              cp "$file" "$dest" 2>/dev/null || true
+            done
 
             find ./public/sukka-ruleset -type f -name "*.html" -not -path "./public/sukka-ruleset/index.html" -print0 |
               xargs -0 -P $(nproc) sed -i 's|href="\([A-Za-z0-9/\-]*\)"|href="/Library/sukka-ruleset/\1"|g; s|src="\([^"]*\)"|src="/Library/sukka-ruleset/\1"|g' 2>/dev/null || true
 
             find ./public/sukka-ruleset -mindepth 1 -maxdepth 1 -type d -print0 |
-              xargs -0 -P $(nproc) -I{} bash -c 'dir="{}"; bn=$(basename "$dir"); find "$dir" -type f -name "*.html" -print0 2>/dev/null |
-                xargs -0 -P $(nproc) sed -i "s|href=\"\\([^\"]*\\)\"|href=\"/Library/sukka-ruleset/$bn/\\1\"|g; s|src=\"\\([^\"]*\\)\"|src=\"/Library/sukka-ruleset/$bn/\\1\"|g" 2>/dev/null || true'
+              xargs -0 -I{} bash -c 'dir="{}"; bn=$(basename "$dir"); find "$dir" -type f -name "*.html" -print0 2>/dev/null |
+                xargs -0 -P $(nproc) sed -i "s|href=\"\\([^\"]*\\)\"|href=\"/Library/sukka-ruleset/$bn/\\1\"|g; s|src=\"\\([^\"]*\\)\"|src=\"/Library/sukka-ruleset/$bn/\\1\"|g" 2>/dev/null || true' &
           }
+        continue-on-error: true
 
       - name: Process National Database of Laws and Regulations content
+        if: always()
         run: |
           declare -A dir_map=( ["宪法"]="constitution" ["法律"]="laws-list" ["行政法规"]="administrative-regulations" ["地方性法规"]="local-regulations" ["司法解释"]="judicial-interpretations" ["监察法规"]="supervisory-regulations" )
 
           for src_dir in "${!dir_map[@]}"; do
             target_dir="./public/laws/${dir_map[$src_dir]}"
-            mkdir -p "$target_dir"
             [ -d "./国家法律法规数据库/$src_dir" ] && cp -r "./国家法律法规数据库/$src_dir/"* "$target_dir/" 2>/dev/null || true &
           done
           wait
 
-          law_header='<!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width,initial-scale=1">
-              <meta http-equiv="X-UA-Compatible" content="IE=edge">
-              <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''">
-              <title>National Database of Laws and Regulations</title>
-              <style>
-                  :root{--g1:rgb(142,142,147);--g2:rgb(174,174,178);--g3:rgb(199,199,204);--g4:rgb(209,209,214);--g5:rgb(229,229,234);--g6:rgb(242,242,247);--bg:#fff;--tx:rgb(28,28,30)}
-                  @media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--g2:rgb(99,99,102);--g3:rgb(72,72,74);--g4:rgb(58,58,60);--g5:rgb(44,44,46);--g6:rgb(28,28,30);--bg:rgb(28,28,30);--tx:rgb(242,242,247)}}
-                  body{font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:var(--tx);background:var(--bg);max-width:900px;margin:0 auto;padding:20px;text-size-adjust:100%;-webkit-font-smoothing:antialiased}
-                  h1,h2,h3,h4,h5,h6{color:var(--tx);text-rendering:optimizeLegibility}
-                  header{margin-bottom:30px}
-                  header a{text-decoration:none;color:var(--g1);touch-action:manipulation}
-                  header a:hover{text-decoration:underline}
-                  article{margin-top:20px;background:var(--bg);padding:20px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-                  a{color:var(--g1);touch-action:manipulation}
-                  a:hover{text-decoration:underline}
-                  footer{margin-top:30px;color:var(--g2);font-size:0.9em;text-align:center}
-              </style>
-              <link rel="preload" href="/Library/laws/" as="document">
-              <link rel="dns-prefetch" href="https://github.com">
-          </head>
-          <body>
-              <header>
-                  <p><a href="/Library/laws/">Back to National Database of Laws and Regulations</a></p>
-              </header>
-              <article>'
-
-          law_footer='</article>
-              <footer>
-                  &copy; <script>document.write(new Date().getFullYear())</script> Library
-              </footer>
-          </body>
-          </html>'
+          law_header='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''"><title>National Database of Laws and Regulations</title><style>:root{--g1:rgb(142,142,147);--g2:rgb(174,174,178);--g3:rgb(199,199,204);--g4:rgb(209,209,214);--g5:rgb(229,229,234);--g6:rgb(242,242,247);--bg:#fff;--tx:rgb(28,28,30)}@media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--g2:rgb(99,99,102);--g3:rgb(72,72,74);--g4:rgb(58,58,60);--g5:rgb(44,44,46);--g6:rgb(28,28,30);--bg:rgb(28,28,30);--tx:rgb(242,242,247)}}body{font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:var(--tx);background:var(--bg);max-width:900px;margin:0 auto;padding:20px;text-size-adjust:100%;-webkit-font-smoothing:antialiased}h1,h2,h3,h4,h5,h6{color:var(--tx);text-rendering:optimizeLegibility}header{margin-bottom:30px}header a{text-decoration:none;color:var(--g1);touch-action:manipulation}header a:hover{text-decoration:underline}article{margin-top:20px;background:var(--bg);padding:20px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,.1)}a{color:var(--g1);touch-action:manipulation}a:hover{text-decoration:underline}footer{margin-top:30px;color:var(--g2);font-size:0.9em;text-align:center}</style><link rel="preload" href="/Library/laws/" as="document"><link rel="dns-prefetch" href="https://github.com"></head><body><header><p><a href="/Library/laws/">Back to National Database of Laws and Regulations</a></p></header><article>'
+          law_footer='</article><footer>&copy; <script>document.write(new Date().getFullYear())</script> Library</footer></body></html>'
 
           cat > convert_md.py << 'EOF'
-          import sys
-          import markdown2
-          import os
-
-          if len(sys.argv) != 4:
-              sys.exit(1)
-
+          import sys, markdown2, os
+          if len(sys.argv) != 4: sys.exit(1)
           input_file, header_file, footer_file = sys.argv[1:4]
-
           try:
-              with open(input_file, 'r', encoding='utf-8') as f:
-                  md_content = f.read()
-
-              with open(header_file, 'r', encoding='utf-8') as f:
-                  header = f.read()
-
-              with open(footer_file, 'r', encoding='utf-8') as f:
-                  footer = f.read()
-
+              output_file = input_file.replace('.md', '.html')
+              if len(output_file) > 255:
+                  sys.exit(0)
+              with open(input_file, 'r', encoding='utf-8') as f: md_content = f.read()
+              with open(header_file, 'r', encoding='utf-8') as f: header = f.read()
+              with open(footer_file, 'r', encoding='utf-8') as f: footer = f.read()
               html_content = markdown2.markdown(md_content, extras=['tables', 'fenced-code-blocks'])
               sys.stdout.write(header + html_content + footer)
-          except Exception as e:
-              sys.stderr.write(f"Error processing {input_file}: {str(e)}\n")
-              sys.exit(1)
+          except: sys.exit(0)
           EOF
 
           echo "$law_header" > law_header.html
           echo "$law_footer" > law_footer.html
 
-          find ./public/laws -type f -name "*.md" -print0 | xargs -0 -P $(nproc) -I{} bash -c 'python convert_md.py "$1" law_header.html law_footer.html > "${1%.md}.html"' _ {}
+          cat > process_md_file.sh << 'EOF'
+          #!/bin/bash
+          input_file="$1"
+          output_file="${input_file%.md}.html"
+          [ ${#output_file} -gt 255 ] && exit 0
+          python convert_md.py "$input_file" law_header.html law_footer.html > "$output_file" 2>/dev/null || true
+          exit 0
+          EOF
+          chmod +x process_md_file.sh
 
-          redirect_html='<!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width,initial-scale=1">
-              <meta http-equiv="X-UA-Compatible" content="IE=edge">
-              <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''">
-              <title>National Database of Laws and Regulations</title>
-              <meta http-equiv="refresh" content="0;url=/Library/laws/">
-              <style>:root{--g1:rgb(142,142,147);--tx:rgb(28,28,30);--bg:#fff}@media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--tx:rgb(242,242,247);--bg:rgb(28,28,30)}}body{font-family:system-ui,-apple-system,sans-serif;color:var(--tx);background:var(--bg);text-align:center;padding:20px}</style>
-          </head>
-          <body><p>Redirecting to National Database of Laws and Regulations...</p></body>
-          </html>'
+          find ./public/laws -type f -name "*.md" -print0 | xargs -0 -P $(nproc) ./process_md_file.sh
+
+          redirect_html='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''"><title>National Database of Laws and Regulations</title><meta http-equiv="refresh" content="0;url=/Library/laws/"><style>:root{--g1:rgb(142,142,147);--tx:rgb(28,28,30);--bg:#fff}@media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--tx:rgb(242,242,247);--bg:rgb(28,28,30)}}body{font-family:system-ui,-apple-system,sans-serif;color:var(--tx);background:var(--bg);text-align:center;padding:20px}</style></head><body><p>Redirecting to National Database of Laws and Regulations...</p></body></html>'
 
           printf '%s\n' "${dir_map[@]}" | xargs -P $(nproc) -I{} bash -c '[ ! -f "./public/laws/{}/index.html" ] && echo "$0" > "./public/laws/{}/index.html"' "$redirect_html"
 
           [ -f "./国家法律法规数据库/README.md" ] && cp "./国家法律法规数据库/README.md" ./public/laws/README.md 2>/dev/null || true
+        continue-on-error: true
 
       - name: Process Xinwen Lianbo content
+        if: always()
         run: |
-          news_header='<!DOCTYPE html>
-          <html lang="zh-CN">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width,initial-scale=1">
-              <meta http-equiv="X-UA-Compatible" content="IE=edge">
-              <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''">
-              <title>Xinwen Lianbo</title>
-              <style>
-                  :root{--g1:rgb(142,142,147);--g2:rgb(174,174,178);--g3:rgb(199,199,204);--g4:rgb(209,209,214);--g5:rgb(229,229,234);--g6:rgb(242,242,247);--bg:#fff;--tx:rgb(28,28,30)}
-                  @media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--g2:rgb(99,99,102);--g3:rgb(72,72,74);--g4:rgb(58,58,60);--g5:rgb(44,44,46);--g6:rgb(28,28,30);--bg:rgb(28,28,30);--tx:rgb(242,242,247)}}
-                  body{font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:var(--tx);background:var(--bg);max-width:900px;margin:0 auto;padding:20px;text-size-adjust:100%;-webkit-font-smoothing:antialiased}
-                  h1,h2,h3,h4,h5,h6{color:var(--tx);text-rendering:optimizeLegibility}
-                  header{margin-bottom:30px}
-                  header a{text-decoration:none;color:var(--g1);touch-action:manipulation}
-                  header a:hover{text-decoration:underline}
-                  article{margin-top:20px;background:var(--bg);padding:20px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-                  a{color:var(--g1);touch-action:manipulation}
-                  a:hover{text-decoration:underline}
-                  footer{margin-top:30px;color:var(--g2);font-size:0.9em;text-align:center}
-                  .date-display{color:var(--g2);font-size:0.9em;margin-bottom:20px}
-              </style>
-              <link rel="preload" href="/Library/news/" as="document">
-              <link rel="dns-prefetch" href="https://tv.cctv.com">
-          </head>
-          <body>
-              <header>
-                  <p><a href="/Library/news/">Back to Xinwen Lianbo</a></p>
-              </header>
-              <article>'
-
-          news_footer='</article>
-              <footer>
-                  &copy; <script>document.write(new Date().getFullYear())</script> Library
-              </footer>
-          </body>
-          </html>'
+          news_header='<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''"><title>Xinwen Lianbo</title><style>:root{--g1:rgb(142,142,147);--g2:rgb(174,174,178);--g3:rgb(199,199,204);--g4:rgb(209,209,214);--g5:rgb(229,229,234);--g6:rgb(242,242,247);--bg:#fff;--tx:rgb(28,28,30)}@media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--g2:rgb(99,99,102);--g3:rgb(72,72,74);--g4:rgb(58,58,60);--g5:rgb(44,44,46);--g6:rgb(28,28,30);--bg:rgb(28,28,30);--tx:rgb(242,242,247)}}body{font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:var(--tx);background:var(--bg);max-width:900px;margin:0 auto;padding:20px;text-size-adjust:100%;-webkit-font-smoothing:antialiased}h1,h2,h3,h4,h5,h6{color:var(--tx);text-rendering:optimizeLegibility}header{margin-bottom:30px}header a{text-decoration:none;color:var(--g1);touch-action:manipulation}header a:hover{text-decoration:underline}article{margin-top:20px;background:var(--bg);padding:20px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,.1)}a{color:var(--g1);touch-action:manipulation}a:hover{text-decoration:underline}footer{margin-top:30px;color:var(--g2);font-size:0.9em;text-align:center}.date-display{color:var(--g2);font-size:0.9em;margin-bottom:20px}</style><link rel="preload" href="/Library/news/" as="document"><link rel="dns-prefetch" href="https://tv.cctv.com"></head><body><header><p><a href="/Library/news/">Back to Xinwen Lianbo</a></p></header><article>'
+          news_footer='</article><footer>&copy; <script>document.write(new Date().getFullYear())</script> Library</footer></body></html>'
 
           echo "$news_header" > news_header.html
           echo "$news_footer" > news_footer.html
 
-          redirect_template='<!DOCTYPE html>
-          <html lang="zh-CN">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width,initial-scale=1">
-              <meta http-equiv="X-UA-Compatible" content="IE=edge">
-              <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''">
-              <title>Xinwen Lianbo __YEAR__-__MONTH__</title>
-              <meta http-equiv="refresh" content="0;url=/Library/news/">
-              <style>:root{--g1:rgb(142,142,147);--tx:rgb(28,28,30);--bg:#fff}@media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--tx:rgb(242,242,247);--bg:rgb(28,28,30)}}body{font-family:system-ui,-apple-system,sans-serif;color:var(--tx);background:var(--bg);text-align:center;padding:20px}</style>
-          </head>
-          <body><p>Redirecting to Xinwen Lianbo...</p></body>
-          </html>'
+          cat > convert_news_md.py << 'EOF'
+          import sys, markdown2, os
+          if len(sys.argv) != 4: sys.exit(0)
+          input_file, header_file, footer_file = sys.argv[1:4]
+          try:
+              output_file = input_file.replace('.md', '.html')
+              if len(output_file) > 255: sys.exit(0)
+              with open(input_file, 'r', encoding='utf-8') as f: md_content = f.read()
+              with open(header_file, 'r', encoding='utf-8') as f: header = f.read()
+              with open(footer_file, 'r', encoding='utf-8') as f: footer = f.read()
+              html_content = markdown2.markdown(md_content, extras=['tables', 'fenced-code-blocks'])
+              sys.stdout.write(header + html_content + footer)
+          except: sys.exit(0)
+          EOF
 
-          for year in 2022 2023 2024 2025; do
-            (
-              if [ -d "./新闻联播/$year" ]; then
-                mkdir -p "./public/news/$year"
-                cp -r "./新闻联播/$year"/* "./public/news/$year/" 2>/dev/null || true
+          redirect_template='<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''"><title>Xinwen Lianbo __YEAR__-__MONTH__</title><meta http-equiv="refresh" content="0;url=/Library/news/"><style>:root{--g1:rgb(142,142,147);--tx:rgb(28,28,30);--bg:#fff}@media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--tx:rgb(242,242,247);--bg:rgb(28,28,30)}}body{font-family:system-ui,-apple-system,sans-serif;color:var(--tx);background:var(--bg);text-align:center;padding:20px}</style></head><body><p>Redirecting to Xinwen Lianbo...</p></body></html>'
 
-                find "./新闻联播/$year" -maxdepth 1 -mindepth 1 -type d -print0 | xargs -0 -P $(nproc) -I{} bash -c '
-                  month_name=$(basename "{}")
-                  target_dir="./public/news/'$year'/$month_name"
-                  mkdir -p "$target_dir"
-                  sed "s/__YEAR__/'$year'/g; s/__MONTH__/$month_name/g" <<< "'"$redirect_template"'" > "$target_dir/index.html"
-                '
-              fi
-            ) &
+          for year in {2022..2025}; do
+            [ -d "./新闻联播/$year" ] && {
+              mkdir -p "./public/news/$year"
+
+              find "./新闻联播/$year" -type f -print0 | while IFS= read -r -d '' file; do
+                dest="./public/news/$year/${file#./新闻联播/$year/}"
+                [ ${#dest} -gt 255 ] && continue
+                mkdir -p "$(dirname "$dest")"
+                cp "$file" "$dest" 2>/dev/null || true
+              done
+
+              find "./新闻联播/$year" -maxdepth 1 -mindepth 1 -type d -print0 | xargs -0 -P $(nproc) -I{} bash -c '
+                month_name=$(basename "{}")
+                target_dir="./public/news/'$year'/$month_name"
+                mkdir -p "$target_dir"
+                sed "s/__YEAR__/'$year'/g; s/__MONTH__/$month_name/g" <<< "'"$redirect_template"'" > "$target_dir/index.html"
+              ' &
+            }
           done
           wait
 
           cat > process_news_md.sh << 'EOF'
           #!/bin/bash
           file="$1"
-          base_name="${file%.md}"
+          output_file="${file%.md}.html"
+          [ ${#output_file} -gt 255 ] && exit 0
           file_date=$(basename "$file" .md)
           printf "%s\n<div class=\"date-display\">%s</div>" "$(cat news_header.html)" "$file_date" |
-            python convert_md.py "$file" /dev/stdin news_footer.html > "$base_name.html" 2>/dev/null || true
+            python convert_news_md.py "$file" /dev/stdin news_footer.html > "$output_file" 2>/dev/null || true
+          exit 0
           EOF
           chmod +x process_news_md.sh
 
@@ -255,8 +190,10 @@ jobs:
 
           [ -f "./新闻联播/README.md" ] && cp "./新闻联播/README.md" ./public/news/README.md 2>/dev/null || true
           [ -f "./新闻联播/catalogue.json" ] && cp "./新闻联播/catalogue.json" ./public/news/catalogue.json 2>/dev/null || true
+        continue-on-error: true
 
       - name: Fix base URLs in HTML files
+        if: always()
         run: |
           find ./public -type f -name "*.html" -not -path "./public/index.html" -not -path "./public/404.html" -not -path "./public/sukka-ruleset/index.html" -not -path "./public/laws/index.html" -not -path "./public/news/index.html" -print0 |
             xargs -0 -P $(nproc) sed -i '
@@ -281,6 +218,7 @@ jobs:
             '
 
       - name: Upload artifact
+        if: always()
         uses: actions/upload-pages-artifact@v3
         with:
           path: "./public"
