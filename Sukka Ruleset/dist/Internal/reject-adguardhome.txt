@@ -1,5 +1,5 @@
 ! Title: Sukka's Ruleset - AdGuardHome Blocklist
-! Last modified: Sun, 15 Jun 2025 15:39:19 GMT
+! Last modified: Sun, 15 Jun 2025 16:21:49 GMT
 ! Expires: 6 hours
 ! License: https://github.com/SukkaW/Surge/blob/master/LICENSE
 ! Homepage: https://github.com/SukkaW/Surge
@@ -442,6 +442,7 @@
 ||nexjzgqalrtgq.online^
 ||track.myquotehealth.online^
 ||msqwborynxnqd.online^
+||mqszaiyafukar.online^
 ||mfkygwkhrbabn.online^
 ||maocsjbcjljog.online^
 ||lqrjuhhbzagoq.online^
@@ -1841,6 +1842,7 @@
 ||nvqlygqniapyb.site^
 ||nuzehescwgfmr.site^
 ||ntoucbwriboqc.site^
+||nncdtquddmjjb.site^
 ||nakrovixeenac.site^
 ||mdwzdvbjkixim.site^
 ||lp.manlywellness.site^
@@ -6294,6 +6296,7 @@
 ||noblock.pro^
 ||lessite.pro^
 ||link.insense.pro^
+||icysong.pro^
 ||load.ss.hydrion.pro^
 ||httpdns.pro^
 ||gomain2.pro^
@@ -24216,6 +24219,7 @@
 ||info.genesishealth.com^
 ||metrics.genentech-pro.com^
 ||affiliates.genealogybank.com^
+||gcitdhlfdtmis.com^
 ||gboxrthnyezkx.com^
 ||gblmbxqdilerp.com^
 ||gazedatthewon.com^
