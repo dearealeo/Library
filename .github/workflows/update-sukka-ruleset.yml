@@ -105,15 +105,7 @@ jobs:
             echo "Build marker 'Sukka Ruleset/upstream/.BUILD_FINISHED' not found"
             exit 1
           fi
-          echo "Output directory '$OUTPUT_DIR' exists and is not empty."
-
-      - name: Fix relative links in generated HTML
-        run: |
-          OUTPUT_DIR="${{ steps.paths.outputs.output_dir }}"
-          echo "Searching for HTML files in $OUTPUT_DIR to fix links..."
-          find "$OUTPUT_DIR" -maxdepth 1 -name '*.html' -exec sed -i 's|href="\([A-Za-z0-9/\-]*\)"|href="/Library/\1"|g' {} +
-          echo "Link fixing complete."
-        shell: bash
+          echo "Output directory '$OUTPUT_DIR' exists and is not empty"
 
       - name: Commit files
         run: |
@@ -129,17 +121,17 @@ jobs:
             echo "No changes detected in upstream submodule or rulesets. Nothing to commit."
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           else
-            echo "Changes detected. Committing..."
+            echo "Changes detected. Committing"
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
-            git commit -m "feat(ruleset): update [${{ steps.date.outputs.cst_time }}]" -m "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} (Upstream commit: $UPSTREAM_COMMIT_SHA)"
+            git commit -m "feat(ruleset): update [${{ steps.date.outputs.cst_time }}]"
           fi
 
       - name: Push changes
         if: env.HAS_CHANGES == 'true'
         run: |
-          echo "Pulling latest changes with rebase..."
+          echo "Pulling latest changes with rebase"
           git pull --rebase origin ${{ github.ref_name }}
-          echo "Pushing changes..."
+          echo "Pushing changes"
           git push origin HEAD:${{ github.ref_name }}
 
       - name: Save build process cache
@@ -148,11 +140,6 @@ jobs:
         with:
           path: Sukka Ruleset/upstream/.cache
           key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-build-cache-v1-{1}', runner.os, hashFiles('Sukka Ruleset/upstream/pnpm-lock.yaml')) }}
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ${{ steps.paths.outputs.output_dir }}
 
   diff_deployment_on_pr:
     if: github.event_name == 'pull_request'
@@ -175,17 +162,3 @@ jobs:
           mkdir -p ./"Sukka Ruleset/dist"
           cp -rf ../public/* ./"Sukka Ruleset/dist"/
           git --no-pager diff --minimal
-
-  deploy_pages:
-    name: Deploy to GitHub Pages
-    needs: build_and_commit
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
