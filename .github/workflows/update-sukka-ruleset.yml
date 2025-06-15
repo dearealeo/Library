@@ -107,6 +107,13 @@ jobs:
           fi
           echo "Output directory '$OUTPUT_DIR' exists and is not empty"
 
+      - name: Remove files that should not be committed
+        run: |
+          rm -f "${{ steps.paths.outputs.output_dir }}/404.html"
+          rm -f "${{ steps.paths.outputs.output_dir }}/_headers"
+          rm -f "${{ steps.paths.outputs.output_dir }}/index.html"
+          rm -f "${{ steps.paths.outputs.output_dir }}/README.md"
+
       - name: Commit files
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
