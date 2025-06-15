@@ -1,0 +1,52 @@
+/*
+  cache-control: public, max-age=240, stale-while-revalidate=60, stale-if-error=15
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+/LICENSE/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/domainset/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/non_ip/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/ip/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/List/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/Surge/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/Clash/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/sing-box/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/Surfboard/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/LegacyClashPremium/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/Modules/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/Script/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/Mock/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/Assets/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/Internal/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
+/default/*
+  content-type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex

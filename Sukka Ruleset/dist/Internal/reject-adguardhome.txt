@@ -1,5 +1,5 @@
 ! Title: Sukka's Ruleset - AdGuardHome Blocklist
-! Last modified: Sun, 15 Jun 2025 14:05:04 GMT
+! Last modified: Sun, 15 Jun 2025 15:39:19 GMT
 ! Expires: 6 hours
 ! License: https://github.com/SukkaW/Surge/blob/master/LICENSE
 ! Homepage: https://github.com/SukkaW/Surge
@@ -1085,6 +1085,7 @@
 ||kdwgubgjlcvzm.space^
 ||jxnncepmitwxh.space^
 ||jabxsbaestpzo.space^
+||ipfgvwdwcqiwo.space^
 ||ikqmtjvrfirax.space^
 ||hqmwsnmnyxkyo.space^
 ||hpemfpfhiekqc.space^
@@ -1846,6 +1847,7 @@
 ||lsbzzkonxksrw.site^
 ||lrxzfherqqllp.site^
 ||lrhyuixtcgnpn.site^
+||lmyvafkazblue.site^
 ||lhxmrcyaqsvze.site^
 ||lbynwfntolegb.site^
 ||kjpfxbojgminv.site^
@@ -3764,6 +3766,7 @@
 ||koabouphie.xyz^
 ||kmfkiwghhe.xyz^
 ||kaarheciqa.xyz^
+||iwqqnukbit.xyz^
 ||is02050qqp.xyz^
 ||is02041qqp.xyz^
 ||enviromint.xyz^
@@ -6119,6 +6122,7 @@
 ||simple-store.pro^
 ||scrawnywhole.pro^
 ||sad-sandwich.pro^
+||pungent-coat.pro^
 ||phechiptupti.pro^
 ||past-concern.pro^
 ||nathanaeldan.pro^
@@ -6331,7 +6335,6 @@
 ||crabs.pro^
 ||statstest.upti.pro^
 ||analytics.turk.pro^
-||qntm.pro^
 ||ponk.pro^
 ||pxl.knam.pro^
 ||ipxx.pro^
@@ -8602,6 +8605,7 @@
 ||koutoowekoa.net^
 ||kixestalsie.net^
 ||jullyambery.net^
+||joohugreene.net^
 ||joaphaufouy.net^
 ||iphautimide.net^
 ||intensecoin.net^
@@ -12825,6 +12829,7 @@
 ||questioningcomplimentarypotato.com^
 ||preparationsinstantdisposition.com^
 ||possibilityfoundationwallpaper.com^
+||increasinglyirritationecstatic.com^
 ||gtm.implantologiaciraolobrucculeri.com^
 ||enterprise-consortiumoperation.com^
 ||trk.engineleasingandfinance-europe.com^
@@ -13147,6 +13152,7 @@
 ||tr.e.trouver-un-logement-neuf.com^
 ||app.tributecommunitiescentre.com^
 ||t.tributecommunitiescentre.com^
+||traversefaultlessashamed.com^
 ||t-s.transplantaccessservices.com^
 ||t.transplantaccessservices.com^
 ||marketing.thesanfranciscopeninsula.com^
@@ -13426,11 +13432,13 @@
 ||go.guardiandatadestruction.com^
 ||srepdata.greenfield-westallisnow.com^
 ||a8.global-mobility-service.com^
+||georgianamortalemployed.com^
 ||track.info.gastroenterologyadvisor.com^
 ||s.freelanceratecalculator.com^
 ||fractionfridgejudiciary.com^
 ||floralrichardapprentice.com^
 ||trk.findmanufacturingbuyers.com^
+||fedirresponsibilityface.com^
 ||fastidiousilliteratehag.com^
 ||info.fairwaywholesalelending.com^
 ||news.expoprotection-securite.com^
@@ -16655,7 +16663,6 @@
 ||sslstats.healthydirections.com^
 ||stats.healthydirections.com^
 ||rtk.trk.healthsecuritynow.com^
-||healthroundprince.com^
 ||rtk.trk.healthpeaceofmind.com^
 ||tracking.healthitanalytics.com^
 ||info.healthcareittoday.com^
@@ -20121,7 +20128,6 @@
 ||cm-sg.americanexpress.com^
 ||cm-jp.americanexpress.com^
 ||cm-in.americanexpress.com^
-||omns.americanexpress.com^
 ||images.sbs.americanexpress.com^
 ||omn.americanexpress.com^
 ||gct.americanexpress.com^
@@ -23115,6 +23121,7 @@
 ||requinsenroot.com^
 ||cups.republicoftea.com^
 ||dc.areacliente.repsolluzygas.com^
+||reprintdesert.com^
 ||replevyduelli.com^
 ||rephobeejigra.com^
 ||repeatsweater.com^
@@ -26601,7 +26608,6 @@
 ||pyrkxp.novafotograf.com^
 ||novaexchange.com^
 ||notconscious.com^
-||notcardboard.com^
 ||assets-v2.northsidesun.com^
 ||seniorliving.northoakslcs.com^
 ||sales.northeastind.com^
@@ -28720,6 +28726,7 @@
 ||youdloaners.com^
 ||yokesdolmen.com^
 ||ymrxocxihgf.com^
+||yjrwrrcvpng.com^
 ||yieldselect.com^
 ||static-ssp.yidianzixun.com^
 |oppo.yidianzixun.com^
@@ -28985,6 +28992,7 @@
 ||trk.underarmour.com^
 ||trk.us.underarmour.com^
 ||trk.e.underarmour.com^
+||unbentfaced.com^
 ||umedadelemp.com^
 ||ultimuspool.com^
 ||ult-blk-cbl.com^
@@ -33369,6 +33377,7 @@
 ||rhythmrule.com^
 ||rhymezebra.com^
 ||marketing.rhinofoods.com^
+||rhasonbugs.com^
 ||rgtghulduk.com^
 ||marketing.rgproducts.com^
 ||marketing.revrvgroup.com^
@@ -45940,7 +45949,6 @@
 ||saa.mysmile.wellfit.com^
 ||logtake.weidian.com^
 ||metrics.wegmans.com^
-||mbox.wegmans.com^
 ||data.msg.wegmans.com^
 ||wfmlp.eml.wegmans.com^
 ||data.eml.wegmans.com^
@@ -49527,7 +49535,6 @@
 ||explore-dev.agilent.com^
 ||explore-ft.agilent.com^
 ||metrics.agilent.com^
-||explore.agilent.com^
 ||afminer.com^
 ||yoxeha.afloral.com^
 ||affyrtb.com^
@@ -49743,7 +49750,6 @@
 ||zononi.com^
 ||jumbo.zomato.com^
 ||zodoth.com^
-||zodalt.com^
 ||zmonei.com^
 ||zlinkp.com^
 ||s.zlinkn.com^
@@ -50734,7 +50740,6 @@
 ||rtxrtb.com^
 ||rtrhit.com^
 ||rtrgt2.com^
-||rtmscl.com^
 ||rtgvwr.com^
 ||rtbpop.com^
 ||rtbbnr.com^
@@ -57203,7 +57208,6 @@
 ||analytics.ubs.com^
 ||tt.ubs.com^
 ||metrics.ubi.com^
-||data.ubi.com^
 ||clk.ubi.com^
 ||ads.tvb.com^
 ||statistics.tuv.com^
@@ -62492,7 +62496,6 @@
 ||sa.adidas.ru^
 ||adcamp.ru^
 ||vwegpo.adamas.ru^
-||6dp0i7.ru^
 ||gjhkyh.4fresh.ru^
 ||46rtpw.ru^
 ||zlolhl.3dnews.ru^
