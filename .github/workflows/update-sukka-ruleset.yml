@@ -42,7 +42,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.10.0
+          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version-file: "Sukka Ruleset/upstream/.node-version"

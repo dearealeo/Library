@@ -174,10 +174,8 @@ database.db-journal
 *.html
 
 # ----- Sukka Ruleset Build Output -----
+!Sukka\ Ruleset/dist/
 Sukka\ Ruleset/dist/404.html
 Sukka\ Ruleset/dist/_headers
 Sukka\ Ruleset/dist/index.html
 Sukka\ Ruleset/dist/README.md
-
-# ----- dist Files -----
-!Sukka\ Ruleset/dist/
