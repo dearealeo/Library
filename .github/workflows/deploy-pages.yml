@@ -40,9 +40,10 @@ jobs:
         uses: actions/setup-python@v5.6.0
         with:
           python-version: "3.13"
+          cache: "pip"
 
       - name: Install Python dependencies
-        run: pip install markdown2
+        run: pip install --no-cache-dir markdown2
 
       - name: Create directory structure
         run: |
@@ -52,25 +53,29 @@ jobs:
 
       - name: Process Sukka Ruleset content
         run: |
-          SUKKA_DIR="./Sukka Ruleset"
-          [ -d "$SUKKA_DIR/dist" ] && [ "$(ls -A "$SUKKA_DIR/dist")" ] && {
-            find "$SUKKA_DIR/dist" -type f -not -name "404.html" -not -name "_headers" -not -name "index.html" -not -name "README.md" -exec cp {} ./public/sukka-ruleset/ \;
+          mkdir -p ./public/sukka-ruleset
 
-            find "$SUKKA_DIR/dist" -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -I{} bash -c 'dir="{}"; dir_name=$(basename "$dir"); mkdir -p "./public/sukka-ruleset/$dir_name"; find "$dir" -type f -exec cp {} "./public/sukka-ruleset/$dir_name/" \;'
+          [ -d "./Sukka Ruleset/dist" ] && [ -n "$(ls -A "./Sukka Ruleset/dist" 2>/dev/null)" ] && {
+            cp -r "./Sukka Ruleset/dist"/* ./public/sukka-ruleset/ 2>/dev/null || true
 
-            find ./public/sukka-ruleset -type f -name "*.html" -not -path "./public/sukka-ruleset/index.html" -print0 | xargs -0 -P $(nproc) sed -i 's|href="\([A-Za-z0-9/\-]*\)"|href="/Library/sukka-ruleset/\1"|g; s|src="\([^"]*\)"|src="/Library/sukka-ruleset/\1"|g'
+            find ./public/sukka-ruleset -type f -name "*.html" -not -path "./public/sukka-ruleset/index.html" -print0 |
+              xargs -0 -P $(nproc) sed -i 's|href="\([A-Za-z0-9/\-]*\)"|href="/Library/sukka-ruleset/\1"|g; s|src="\([^"]*\)"|src="/Library/sukka-ruleset/\1"|g' 2>/dev/null || true
 
-            find ./public/sukka-ruleset -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -I{} bash -c 'dir="{}"; dir_name=$(basename "$dir"); find "$dir" -type f -name "*.html" -not -path "./public/sukka-ruleset/$dir_name/index.html" -print0 | xargs -0 -P $(nproc) sed -i "s|href=\"\\([^\"]*\\)\"|href=\"/Library/sukka-ruleset/$dir_name/\\1\"|g; s|src=\"\\([^\"]*\\)\"|src=\"/Library/sukka-ruleset/$dir_name/\\1\"|g"'
+            find ./public/sukka-ruleset -mindepth 1 -maxdepth 1 -type d -print0 |
+              xargs -0 -P $(nproc) -I{} bash -c 'dir="{}"; bn=$(basename "$dir"); find "$dir" -type f -name "*.html" -print0 2>/dev/null |
+                xargs -0 -P $(nproc) sed -i "s|href=\"\\([^\"]*\\)\"|href=\"/Library/sukka-ruleset/$bn/\\1\"|g; s|src=\"\\([^\"]*\\)\"|src=\"/Library/sukka-ruleset/$bn/\\1\"|g" 2>/dev/null || true'
           }
 
       - name: Process National Database of Laws and Regulations content
         run: |
           declare -A dir_map=( ["宪法"]="constitution" ["法律"]="laws-list" ["行政法规"]="administrative-regulations" ["地方性法规"]="local-regulations" ["司法解释"]="judicial-interpretations" ["监察法规"]="supervisory-regulations" )
 
-          LAWS_DIR="./国家法律法规数据库"
           for src_dir in "${!dir_map[@]}"; do
-            [ -d "$LAWS_DIR/$src_dir" ] && cp -r "$LAWS_DIR/$src_dir/"* "./public/laws/${dir_map[$src_dir]}/"
+            target_dir="./public/laws/${dir_map[$src_dir]}"
+            mkdir -p "$target_dir"
+            [ -d "./国家法律法规数据库/$src_dir" ] && cp -r "./国家法律法规数据库/$src_dir/"* "$target_dir/" 2>/dev/null || true &
           done
+          wait
 
           law_header='<!DOCTYPE html>
           <html lang="en">
@@ -112,22 +117,28 @@ jobs:
           cat > convert_md.py << 'EOF'
           import sys
           import markdown2
+          import os
 
           if len(sys.argv) != 4:
               sys.exit(1)
 
           input_file, header_file, footer_file = sys.argv[1:4]
 
-          with open(input_file, 'r', encoding='utf-8') as f:
-              md_content = f.read()
+          try:
+              with open(input_file, 'r', encoding='utf-8') as f:
+                  md_content = f.read()
 
-          with open(header_file, 'r', encoding='utf-8') as f:
-              header = f.read()
+              with open(header_file, 'r', encoding='utf-8') as f:
+                  header = f.read()
 
-          with open(footer_file, 'r', encoding='utf-8') as f:
-              footer = f.read()
+              with open(footer_file, 'r', encoding='utf-8') as f:
+                  footer = f.read()
 
-          print(header + markdown2.markdown(md_content, extras=['tables', 'fenced-code-blocks']) + footer)
+              html_content = markdown2.markdown(md_content, extras=['tables', 'fenced-code-blocks'])
+              sys.stdout.write(header + html_content + footer)
+          except Exception as e:
+              sys.stderr.write(f"Error processing {input_file}: {str(e)}\n")
+              sys.exit(1)
           EOF
 
           echo "$law_header" > law_header.html
@@ -151,7 +162,7 @@ jobs:
 
           printf '%s\n' "${dir_map[@]}" | xargs -P $(nproc) -I{} bash -c '[ ! -f "./public/laws/{}/index.html" ] && echo "$0" > "./public/laws/{}/index.html"' "$redirect_html"
 
-          [ -f "$LAWS_DIR/README.md" ] && cp "$LAWS_DIR/README.md" ./public/laws/README.md
+          [ -f "./国家法律法规数据库/README.md" ] && cp "./国家法律法规数据库/README.md" ./public/laws/README.md 2>/dev/null || true
 
       - name: Process Xinwen Lianbo content
         run: |
@@ -210,32 +221,61 @@ jobs:
           <body><p>Redirecting to Xinwen Lianbo...</p></body>
           </html>'
 
-          NEWS_DIR="./新闻联播"
           for year in 2022 2023 2024 2025; do
-            [ -d "$NEWS_DIR/$year" ] && {
-              find "$NEWS_DIR/$year" -type d | xargs -P $(nproc) -I{} mkdir -p "./public/news/{}"
-              find "$NEWS_DIR/$year" -type f -name "*.md" | xargs -P $(nproc) -I{} cp {} "./public/news/{}"
+            (
+              if [ -d "./新闻联播/$year" ]; then
+                mkdir -p "./public/news/$year"
+                cp -r "./新闻联播/$year"/* "./public/news/$year/" 2>/dev/null || true
 
-              find "$NEWS_DIR/$year" -type d -mindepth 1 -maxdepth 1 -print0 | xargs -0 -P $(nproc) -I{} bash -c 'dir="{}"; month_name=$(basename "$dir"); target_dir="./public/news/$(basename $(dirname "$dir"))/$month_name"; mkdir -p "$target_dir"; sed "s/__YEAR__/$(basename $(dirname "$dir"))/g; s/__MONTH__/$month_name/g" <<< "$0" > "$target_dir/index.html"' "$redirect_template"
-            }
+                find "./新闻联播/$year" -maxdepth 1 -mindepth 1 -type d -print0 | xargs -0 -P $(nproc) -I{} bash -c '
+                  month_name=$(basename "{}")
+                  target_dir="./public/news/'$year'/$month_name"
+                  mkdir -p "$target_dir"
+                  sed "s/__YEAR__/'$year'/g; s/__MONTH__/$month_name/g" <<< "'"$redirect_template"'" > "$target_dir/index.html"
+                '
+              fi
+            ) &
           done
+          wait
 
-          find ./public/news -type f -name "*.md" -print0 | xargs -0 -P $(nproc) -I{} bash -c '
-            file="$1"
-            base_name="${file%.md}"
-            file_date=$(basename "$file" .md)
-            printf "%s\n<div class=\"date-display\">%s</div>" "$(cat news_header.html)" "$file_date" > "$base_name.temp_header"
-            python convert_md.py "$file" "$base_name.temp_header" news_footer.html > "$base_name.html"
-            rm "$base_name.temp_header"
-          ' _ "{}"
+          cat > process_news_md.sh << 'EOF'
+          #!/bin/bash
+          file="$1"
+          base_name="${file%.md}"
+          file_date=$(basename "$file" .md)
+          printf "%s\n<div class=\"date-display\">%s</div>" "$(cat news_header.html)" "$file_date" |
+            python convert_md.py "$file" /dev/stdin news_footer.html > "$base_name.html" 2>/dev/null || true
+          EOF
+          chmod +x process_news_md.sh
 
-          [ -f "$NEWS_DIR/README.md" ] && cp "$NEWS_DIR/README.md" ./public/news/README.md
-          [ -f "$NEWS_DIR/catalogue.json" ] && cp "$NEWS_DIR/catalogue.json" ./public/news/catalogue.json
+          find ./public/news -type f -name "*.md" -print0 | xargs -0 -P $(nproc) ./process_news_md.sh
+
+          [ -f "./新闻联播/README.md" ] && cp "./新闻联播/README.md" ./public/news/README.md 2>/dev/null || true
+          [ -f "./新闻联播/catalogue.json" ] && cp "./新闻联播/catalogue.json" ./public/news/catalogue.json 2>/dev/null || true
 
       - name: Fix base URLs in HTML files
         run: |
-          find ./public -type f -name "*.html" -not -path "./public/index.html" -not -path "./public/404.html" -not -path "./public/sukka-ruleset/index.html" -not -path "./public/laws/index.html" -not -path "./public/news/index.html" -print0 | xargs -0 -P $(nproc) sed -i 's|href="/\([^L]\)|href="/Library/\1|g; s|href="/L\([^i]\)|href="/Library/L\1|g; s|href="/Li\([^b]\)|href="/Library/Li\1|g; s|href="/Lib\([^r]\)|href="/Library/Lib\1|g; s|href="/Libr\([^a]\)|href="/Library/Libr\1|g; s|href="/Libra\([^r]\)|href="/Library/Libra\1|g; s|href="/Librar\([^y]\)|href="/Library/Librar\1|g; s|href="/Library\([^/]\)|href="/Library/\1|g; s|src="/\([^L]\)|src="/Library/\1|g; s|src="/L\([^i]\)|src="/Library/L\1|g; s|src="/Li\([^b]\)|src="/Library/Li\1|g; s|src="/Lib\([^r]\)|src="/Library/Lib\1|g; s|src="/Libr\([^a]\)|src="/Library/Libr\1|g; s|src="/Libra\([^r]\)|src="/Library/Libra\1|g; s|src="/Librar\([^y]\)|src="/Library/Librar\1|g; s|src="/Library\([^/]\)|src="/Library/\1|g'
-          find ./public -type f -name "*.html" -print0 | xargs -0 -P $(nproc) sed -i 's|href="/Library/http|href="http|g; s|src="/Library/http|src="http|g'
+          find ./public -type f -name "*.html" -not -path "./public/index.html" -not -path "./public/404.html" -not -path "./public/sukka-ruleset/index.html" -not -path "./public/laws/index.html" -not -path "./public/news/index.html" -print0 |
+            xargs -0 -P $(nproc) sed -i '
+              s|href="/\([^L]\)|href="/Library/\1|g;
+              s|href="/L\([^i]\)|href="/Library/L\1|g;
+              s|href="/Li\([^b]\)|href="/Library/Li\1|g;
+              s|href="/Lib\([^r]\)|href="/Library/Lib\1|g;
+              s|href="/Libr\([^a]\)|href="/Library/Libr\1|g;
+              s|href="/Libra\([^r]\)|href="/Library/Libra\1|g;
+              s|href="/Librar\([^y]\)|href="/Library/Librar\1|g;
+              s|href="/Library\([^/]\)|href="/Library/\1|g;
+              s|src="/\([^L]\)|src="/Library/\1|g;
+              s|src="/L\([^i]\)|src="/Library/L\1|g;
+              s|src="/Li\([^b]\)|src="/Library/Li\1|g;
+              s|src="/Lib\([^r]\)|src="/Library/Lib\1|g;
+              s|src="/Libr\([^a]\)|src="/Library/Libr\1|g;
+              s|src="/Libra\([^r]\)|src="/Library/Libra\1|g;
+              s|src="/Librar\([^y]\)|src="/Library/Librar\1|g;
+              s|src="/Library\([^/]\)|src="/Library/\1|g;
+              s|href="/Library/http|href="http|g;
+              s|src="/Library/http|src="http|g
+            '
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
