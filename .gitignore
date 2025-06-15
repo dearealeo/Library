@@ -172,6 +172,7 @@ database.db-journal
 *.docx
 *.htm
 *.html
+!docs/**/*.html
 
 # ----- Sukka Ruleset Build Output -----
 !Sukka\ Ruleset/dist/

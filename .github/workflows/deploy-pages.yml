@@ -1,0 +1,240 @@
+name: Deploy GitHub Pages
+
+on:
+  workflow_run:
+    workflows: ["Update today Sukka Rulesets", "Update today National Database of Laws and Regulations", "Update today Xinwen Lianbo"]
+    types:
+      - completed
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install -g markdown-it --no-fund --no-audit
+      
+      - name: Create directory structure
+        run: |
+          mkdir -p ./public
+          cp -r ./docs/* ./public/
+          mkdir -p ./public/{sukka-ruleset,laws/{constitution,laws-list,administrative-regulations,local-regulations,judicial-interpretations,supervisory-regulations},news/{2022,2023,2024,2025}}
+      
+      - name: Process Sukka Ruleset content
+        run: |
+          [ -d "./Sukka Ruleset/dist" ] && [ "$(ls -A "./Sukka Ruleset/dist")" ] && {
+            find "./Sukka Ruleset/dist" -type f -not -name "404.html" -not -name "_headers" -not -name "index.html" -not -name "README.md" -exec cp {} ./public/sukka-ruleset/ \;
+            
+            find "./Sukka Ruleset/dist" -mindepth 1 -maxdepth 1 -type d | while read -r dir; do
+              dir_name=$(basename "$dir")
+              mkdir -p "./public/sukka-ruleset/$dir_name"
+              find "$dir" -type f -exec cp {} "./public/sukka-ruleset/$dir_name/" \;
+            done
+            
+            find ./public/sukka-ruleset -type f -name "*.html" -not -path "./public/sukka-ruleset/index.html" -exec sed -i 's|href="\([A-Za-z0-9/\-]*\)"|href="/Library/sukka-ruleset/\1"|g; s|src="\([^"]*\)"|src="/Library/sukka-ruleset/\1"|g' {} \;
+            
+            find ./public/sukka-ruleset -mindepth 1 -maxdepth 1 -type d | while read -r dir; do
+              dir_name=$(basename "$dir")
+              find "$dir" -type f -name "*.html" -not -path "./public/sukka-ruleset/$dir_name/index.html" -exec sed -i "s|href=\"\\([^\"]*\\)\"|href=\"/Library/sukka-ruleset/$dir_name/\\1\"|g; s|src=\"\\([^\"]*\\)\"|src=\"/Library/sukka-ruleset/$dir_name/\\1\"|g" {} \;
+            done
+          }
+      
+      - name: Process National Database of Laws and Regulations content
+        run: |
+          declare -A dir_map=( ["宪法"]="constitution" ["法律"]="laws-list" ["行政法规"]="administrative-regulations" ["地方性法规"]="local-regulations" ["司法解释"]="judicial-interpretations" ["监察法规"]="supervisory-regulations" )
+          
+          for src_dir in "${!dir_map[@]}"; do
+            [ -d "./国家法律法规数据库/$src_dir" ] && cp -r "./国家法律法规数据库/$src_dir/"* "./public/laws/${dir_map[$src_dir]}/"
+          done
+          
+          law_header='<!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width,initial-scale=1">
+              <meta http-equiv="X-UA-Compatible" content="IE=edge">
+              <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''">
+              <title>National Database of Laws and Regulations</title>
+              <style>
+                  :root{--g1:rgb(142,142,147);--g2:rgb(174,174,178);--g3:rgb(199,199,204);--g4:rgb(209,209,214);--g5:rgb(229,229,234);--g6:rgb(242,242,247);--bg:#fff;--tx:rgb(28,28,30)}
+                  @media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--g2:rgb(99,99,102);--g3:rgb(72,72,74);--g4:rgb(58,58,60);--g5:rgb(44,44,46);--g6:rgb(28,28,30);--bg:rgb(28,28,30);--tx:rgb(242,242,247)}}
+                  body{font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:var(--tx);background:var(--bg);max-width:900px;margin:0 auto;padding:20px;text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+                  h1,h2,h3,h4,h5,h6{color:var(--tx);text-rendering:optimizeLegibility}
+                  header{margin-bottom:30px}
+                  header a{text-decoration:none;color:var(--g1);touch-action:manipulation}
+                  header a:hover{text-decoration:underline}
+                  article{margin-top:20px;background:var(--bg);padding:20px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+                  a{color:var(--g1);touch-action:manipulation}
+                  a:hover{text-decoration:underline}
+                  footer{margin-top:30px;color:var(--g2);font-size:0.9em;text-align:center}
+              </style>
+              <link rel="preload" href="/Library/laws/" as="document">
+              <link rel="dns-prefetch" href="https://github.com">
+          </head>
+          <body>
+              <header>
+                  <p><a href="/Library/laws/">Back to National Database of Laws and Regulations</a></p>
+              </header>
+              <article>'
+          
+          law_footer='</article>
+              <footer>
+                  &copy; <script>document.write(new Date().getFullYear())</script> Library
+              </footer>
+          </body>
+          </html>'
+          
+          find ./public/laws -type f -name "*.md" -print0 | xargs -0 -P $(nproc) -I{} bash -c '
+            file="$1"
+            base_name="${file%.md}"
+            markdown-it "$file" | { echo "$2"; cat; echo "$3"; } > "$base_name.html"
+          ' _ {} "$law_header" "$law_footer"
+          
+          for dir in "${dir_map[@]}"; do
+            [ ! -f "./public/laws/$dir/index.html" ] && echo '<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width,initial-scale=1">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''">
+                <title>National Database of Laws and Regulations</title>
+                <meta http-equiv="refresh" content="0;url=/Library/laws/">
+                <style>:root{--g1:rgb(142,142,147);--tx:rgb(28,28,30);--bg:#fff}@media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--tx:rgb(242,242,247);--bg:rgb(28,28,30)}}body{font-family:system-ui,-apple-system,sans-serif;color:var(--tx);background:var(--bg);text-align:center;padding:20px}</style>
+            </head>
+            <body><p>Redirecting to National Database of Laws and Regulations...</p></body>
+            </html>' > "./public/laws/$dir/index.html"
+          done
+          
+          [ -f "./国家法律法规数据库/README.md" ] && cp "./国家法律法规数据库/README.md" ./public/laws/README.md
+      
+      - name: Process Xinwen Lianbo content
+        run: |
+          news_header='<!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width,initial-scale=1">
+              <meta http-equiv="X-UA-Compatible" content="IE=edge">
+              <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''">
+              <title>Xinwen Lianbo</title>
+              <style>
+                  :root{--g1:rgb(142,142,147);--g2:rgb(174,174,178);--g3:rgb(199,199,204);--g4:rgb(209,209,214);--g5:rgb(229,229,234);--g6:rgb(242,242,247);--bg:#fff;--tx:rgb(28,28,30)}
+                  @media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--g2:rgb(99,99,102);--g3:rgb(72,72,74);--g4:rgb(58,58,60);--g5:rgb(44,44,46);--g6:rgb(28,28,30);--bg:rgb(28,28,30);--tx:rgb(242,242,247)}}
+                  body{font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:var(--tx);background:var(--bg);max-width:900px;margin:0 auto;padding:20px;text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+                  h1,h2,h3,h4,h5,h6{color:var(--tx);text-rendering:optimizeLegibility}
+                  header{margin-bottom:30px}
+                  header a{text-decoration:none;color:var(--g1);touch-action:manipulation}
+                  header a:hover{text-decoration:underline}
+                  article{margin-top:20px;background:var(--bg);padding:20px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+                  a{color:var(--g1);touch-action:manipulation}
+                  a:hover{text-decoration:underline}
+                  footer{margin-top:30px;color:var(--g2);font-size:0.9em;text-align:center}
+                  .date-display{color:var(--g2);font-size:0.9em;margin-bottom:20px}
+              </style>
+              <link rel="preload" href="/Library/news/" as="document">
+              <link rel="dns-prefetch" href="https://tv.cctv.com">
+          </head>
+          <body>
+              <header>
+                  <p><a href="/Library/news/">Back to Xinwen Lianbo</a></p>
+              </header>
+              <article>'
+          
+          news_footer='</article>
+              <footer>
+                  &copy; <script>document.write(new Date().getFullYear())</script> Library
+              </footer>
+          </body>
+          </html>'
+          
+          redirect_template='<!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width,initial-scale=1">
+              <meta http-equiv="X-UA-Compatible" content="IE=edge">
+              <meta http-equiv="Content-Security-Policy" content="default-src '\''self'\''; style-src '\''unsafe-inline'\'' '\''self'\''; script-src '\''self'\''">
+              <title>Xinwen Lianbo __YEAR__-__MONTH__</title>
+              <meta http-equiv="refresh" content="0;url=/Library/news/">
+              <style>:root{--g1:rgb(142,142,147);--tx:rgb(28,28,30);--bg:#fff}@media(prefers-color-scheme:dark){:root{--g1:rgb(142,142,147);--tx:rgb(242,242,247);--bg:rgb(28,28,30)}}body{font-family:system-ui,-apple-system,sans-serif;color:var(--tx);background:var(--bg);text-align:center;padding:20px}</style>
+          </head>
+          <body><p>Redirecting to Xinwen Lianbo...</p></body>
+          </html>'
+          
+          for year in 2022 2023 2024 2025; do
+            [ -d "./新闻联播/$year" ] && {
+              find "./新闻联播/$year" -type d -exec mkdir -p "./public/news/{}" \;
+              find "./新闻联播/$year" -type f -name "*.md" -exec cp {} "./public/news/{}" \;
+              
+              find "./新闻联播/$year" -type d -mindepth 1 -maxdepth 1 | while read -r month_dir; do
+                month_name=$(basename "$month_dir")
+                target_dir="./public/news/$year/$month_name"
+                mkdir -p "$target_dir"
+                echo "$redirect_template" | sed "s/__YEAR__/$year/g; s/__MONTH__/$month_name/g" > "$target_dir/index.html"
+              done
+            }
+          done
+          
+          find ./public/news -type f -name "*.md" -print0 | xargs -0 -P $(nproc) -I{} bash -c '
+            file="$1"
+            base_name="${file%.md}"
+            file_date=$(basename "$file" .md)
+            { 
+              echo "$2"
+              echo "<div class=\"date-display\">$file_date</div>"
+              markdown-it "$file"
+              echo "$3"
+            } > "$base_name.html"
+          ' _ {} "$news_header" "$news_footer"
+          
+          [ -f "./新闻联播/README.md" ] && cp "./新闻联播/README.md" ./public/news/README.md
+          [ -f "./新闻联播/catalogue.json" ] && cp "./新闻联播/catalogue.json" ./public/news/catalogue.json
+      
+      - name: Fix base URLs in HTML files
+        run: |
+          find ./public -type f -name "*.html" -not -path "./public/index.html" -not -path "./public/404.html" -not -path "./public/sukka-ruleset/index.html" -not -path "./public/laws/index.html" -not -path "./public/news/index.html" -exec sed -i 's|href="/|href="/Library/|g; s|src="/|src="/Library/|g' {} \;
+          find ./public -type f -name "*.html" -exec sed -i 's|href="/Library/http|href="http|g; s|src="/Library/http|src="http|g' {} \;
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './public'
+          retention-days: 1
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
