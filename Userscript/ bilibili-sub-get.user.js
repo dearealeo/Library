@@ -155,7 +155,7 @@
     });
 
     subtitleExtractionPromise
-      .then((subtitles) => {
+      .then(subtitles => {
         const uniqueSubtitles = [...new Set(subtitles)];
         const subtitleContent = uniqueSubtitles.join("\n");
 
@@ -168,7 +168,7 @@
           return true;
         });
       })
-      .catch((error) => {
+      .catch(error => {
         updateUIState(
           error.message || "Unexpected error extracting subtitles."
         );
@@ -182,7 +182,7 @@
 
   function extractSubtitlesWithPrimarySelector() {
     const subtitles = [];
-    document.querySelectorAll("._Part_1iu0q_16").forEach((subtitleEntry) => {
+    document.querySelectorAll("._Part_1iu0q_16").forEach(subtitleEntry => {
       const timeElem = subtitleEntry.querySelector("._TimeText_1iu0q_35");
       const textElem = subtitleEntry.querySelector("._Text_1iu0q_64");
 
@@ -199,7 +199,7 @@
 
     document
       .querySelectorAll('[class*="time"], [class*="Time"]')
-      .forEach((timeElem) => {
+      .forEach(timeElem => {
         if (timeRegex.test(timeElem.textContent.trim())) {
           const textElem = timeElem.nextElementSibling;
           if (textElem) {
@@ -213,7 +213,7 @@
         .querySelectorAll(
           '[class*="subtitle"], [class*="Subtitle"], [class*="Part"], [class*="part"], [class*="Line"], [class*="line"]'
         )
-        .forEach((container) => {
+        .forEach(container => {
           const children = container.children;
           if (children.length >= 2) {
             const firstChild = children[0];
@@ -244,7 +244,7 @@
         .querySelectorAll(
           '[class*="text"], [class*="Text"], [class*="content"], [class*="Content"]'
         )
-        .forEach((elem) => {
+        .forEach(elem => {
           const text = elem.textContent.trim();
           if (text.length > 0) {
             subtitles.push(text);
@@ -265,14 +265,14 @@
 
     const buttonByText = Array.from(
       document.querySelectorAll("span, button, div")
-    ).find((el) => el.textContent === targetText);
+    ).find(el => el.textContent === targetText);
     if (buttonByText) return buttonByText;
 
     return Array.from(
       document.querySelectorAll(
         '[class*="Label"], [class*="label"], [class*="btn"], [class*="button"]'
       )
-    ).find((el) => el.textContent === targetText);
+    ).find(el => el.textContent === targetText);
   }
 
   function showNotification(message, referenceElement) {
