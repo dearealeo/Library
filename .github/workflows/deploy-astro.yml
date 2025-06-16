@@ -50,34 +50,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24.2.0
-          cache: pnpm
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: cd docs && pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
-
-      - name: Setup build cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            docs/.astro/
-            docs/node_modules/.vite/
-            docs/node_modules/.cache/
-          key: ${{ runner.os }}-astro-build-${{ hashFiles('docs/src/**/*.js', 'docs/src/**/*.jsx', 'docs/src/**/*.ts', 'docs/src/**/*.tsx', 'docs/src/**/*.astro') }}
-          restore-keys: |
-            ${{ runner.os }}-astro-build-
+        run: cd docs && pnpm install --frozen-lockfile
 
       - name: Lint
         run: cd docs && pnpm run lint
@@ -89,18 +64,6 @@ jobs:
 
       - name: Build
         run: cd docs && pnpm run build
-
-      - name: Post-build optimizations
-        run: |
-          echo "Optimizing assets"
-          find docs/dist -type f -name "*.js" -exec gzip -9 -k {} \; &
-          find docs/dist -type f -name "*.css" -exec gzip -9 -k {} \; &
-          find docs/dist -type f -name "*.html" -exec gzip -9 -k {} \; &
-          find docs/dist -type f -name "*.js" -exec brotli -q 11 -k {} \; &
-          find docs/dist -type f -name "*.css" -exec brotli -q 11 -k {} \; &
-          find docs/dist -type f -name "*.html" -exec brotli -q 11 -k {} \; &
-          wait
-          echo "Optimization complete"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -121,12 +84,3 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           timeout: 600000
-
-      - name: Validate deployment
-        run: |
-          if [[ "${{ steps.deployment.outcome }}" == "success" ]]; then
-            echo "Deployment successful! Site available at ${{ steps.deployment.outputs.page_url }}"
-          else
-            echo "Deployment failed"
-            exit 1
-          fi
