@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const categoryMap = {
+export const categoryMap = {
   constitution: "宪法",
   statutes: "法律",
   "administrative-regulations": "行政法规",
@@ -10,9 +10,8 @@ const categoryMap = {
   "supervisory-regulations": "监察法规",
 };
 
-const validCategories = Object.keys(categoryMap);
-
 export async function getStaticPaths() {
+  const validCategories = Object.keys(categoryMap);
   const paths = [];
   
   validCategories.forEach(category => {

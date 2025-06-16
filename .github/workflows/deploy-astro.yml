@@ -58,6 +58,9 @@ jobs:
         run: cd docs && pnpm run lint
         continue-on-error: true
 
+      - name: Sync
+        run: cd docs && pnpm run sync
+
       - name: Format
         run: cd docs && pnpm run format
         continue-on-error: true
