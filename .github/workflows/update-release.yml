@@ -2,10 +2,7 @@ name: Publish today Release
 
 on:
   workflow_run:
-    workflows:
-      [
-        "Update today Xinwen Lianbo"
-      ]
+    workflows: ["Update today Xinwen Lianbo"]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -18,7 +15,7 @@ jobs:
   prepare:
     name: Prepare Release Data
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     outputs:
       date: ${{ steps.date.outputs.full_date }}
       year: ${{ steps.date.outputs.year }}
@@ -37,7 +34,7 @@ jobs:
         id: date
         run: |
           TZ=Asia/Shanghai date +'year=%y\nmonth=%m\nday=%d\nfull_date=%Y-%m-%d' >> $GITHUB_OUTPUT
-          
+
       - name: Check commits from all workflows in last 24 hours
         id: check-commits
         run: |
@@ -45,11 +42,11 @@ jobs:
           HAS_NEWS=$(echo "$COMMITS" | grep -c "feat(news): update")
           HAS_LAWS=$(echo "$COMMITS" | grep -c "feat(laws): update")
           HAS_RULESET=$(echo "$COMMITS" | grep -c "feat(ruleset): update")
-          
+
           echo "News commits: $HAS_NEWS"
           echo "Laws commits: $HAS_LAWS"
           echo "Ruleset commits: $HAS_RULESET"
-          
+
           if (( HAS_NEWS > 0 && HAS_LAWS > 0 && HAS_RULESET > 0 )); then
             echo "All required workflow commits found within the last 24 hours."
             echo "should_proceed=true" >> $GITHUB_OUTPUT
@@ -57,7 +54,7 @@ jobs:
             echo "Not all required workflow commits found within the last 24 hours."
             echo "should_proceed=false" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: Set workflow matrix
         id: set-matrix
         run: |
@@ -80,13 +77,13 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}
           lfs: true
-          
+
       - name: Install dependencies
         run: |
           sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq && sudo apt-get install -y --no-install-recommends p7zip-full pigz zstd parallel xxhash
           [ -w /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor ] && echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
           sudo sysctl -w vm.dirty_ratio=80 vm.dirty_background_ratio=20 vm.dirty_expire_centisecs=12000 || true
-          
+
       - name: Create archive for ${{ matrix.workflow }}
         id: create_archive
         env:
@@ -98,33 +95,33 @@ jobs:
         run: |
           declare -A DIR_MAP=( ["国家法律法规数据库"]="./data/laws" ["新闻联播"]="./data/xinwen" ["Sukka_Rulesets"]="./data/rulesets" )
           SOURCE_DIR="${DIR_MAP[$WORKFLOW_NAME]}"
-          
+
           [ -z "$SOURCE_DIR" ] && { echo "Unknown workflow: $WORKFLOW_NAME"; exit 1; }
-          
+
           ARCHIVE_NAME="${WORKFLOW_NAME}_${DATE}.tar.zst"
-          
+
           echo "Creating compressed archive for $WORKFLOW_NAME from $SOURCE_DIR"
           [ -d "$SOURCE_DIR" ] || { echo "Source directory $SOURCE_DIR not found"; exit 1; }
-          
+
           tar --use-compress-program="pigz -1" -cf - -C "$(dirname "$SOURCE_DIR")" "$(basename "$SOURCE_DIR")" | \
             zstd -T$ZSTD_NBTHREADS -$ZSTD_CLEVEL --ultra --long=31 --adapt=min=16,max=19 - -o "$ARCHIVE_NAME"
-          
+
           ARCHIVE_SIZE=$(stat -c%s "$ARCHIVE_NAME")
           echo "Compressed archive size: $ARCHIVE_SIZE bytes"
-          
+
           if (( ARCHIVE_SIZE > MAX_SIZE )); then
             echo "Compressed archive exceeds size limit, applying splitting strategy"
-            
+
             TEMP_DIR=$(mktemp -d)
             trap 'rm -rf "$TEMP_DIR"' EXIT INT TERM HUP
-            
+
             original_hash=$(xxh64sum "$ARCHIVE_NAME" | cut -d" " -f1)
             original_size=$ARCHIVE_SIZE
-            
+
             echo "Processing: $ARCHIVE_NAME ($original_size bytes)"
             split_dir="${WORKFLOW_NAME}_split"
             mkdir -p "$split_dir"
-            
+
             manifest="$split_dir/manifest.txt"
             {
               echo "Original file: $ARCHIVE_NAME"
@@ -133,9 +130,9 @@ jobs:
               echo "Split timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
               echo "Parts:"
             } > "$manifest"
-            
+
             split -b 1500M --numeric-suffixes=1 --suffix-length=3 "$ARCHIVE_NAME" "$TEMP_DIR/part_"
-            
+
             find "$TEMP_DIR" -name "part_*" -type f -print0 | sort -z |
             parallel -0 --halt now,fail=1 --jobs 90% --pipe-part '\
               part={}; \
@@ -145,13 +142,13 @@ jobs:
               verify_hash=$(xxh64sum "$split_dir/$part_name" | cut -d" " -f1); \
               [ "$part_hash" = "$verify_hash" ] || { echo "ERROR: Hash verification failed for $part_name" >&2; exit 1; }; \
               echo "$part_name: $part_hash (split part)" >> "$manifest";'
-            
+
             rm -f "$ARCHIVE_NAME"
             echo "ARCHIVE_PATH=${split_dir}" >> $GITHUB_OUTPUT
           else
             echo "ARCHIVE_PATH=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -177,7 +174,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
-          
+
       - name: Get commit history
         id: commits
         run: |
