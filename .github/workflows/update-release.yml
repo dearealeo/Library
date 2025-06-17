@@ -1,0 +1,155 @@
+name: Publish today Release
+
+on:
+  workflow_run:
+    workflows:
+      [
+        "Update today National Database of Laws and Regulations",
+        "Update today Xinwen Lianbo",
+        "Update today Sukka Rulesets",
+      ]
+    types: [completed]
+    branches: [main]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+          lfs: true
+
+      - name: Get current date
+        id: date
+        run: |
+          TZ=Asia/Shanghai date +'year=%y\nmonth=%m\nday=%d\nfull_date=%Y-%m-%d' >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: |
+          DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends p7zip-full pigz zstd parallel xxhash
+          # Set CPU governor to performance mode if possible
+          if [ -w /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor ]; then
+            echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+          fi
+
+      - name: Process large files
+        id: process_files
+        env:
+          MAX_SIZE: 2147483648
+          ZSTD_CLEVEL: 19
+          ZSTD_NBTHREADS: 0
+        run: |
+          TEMP_DIR=$(mktemp -d)
+          trap 'rm -rf "$TEMP_DIR"' EXIT
+
+          find . -type f -size +${MAX_SIZE}c -print0 |
+          xargs -0 -I{} bash -c '
+            file="{}"
+            original_name=$(basename "$file")
+            dir_path=$(dirname "$file")
+            dir_name="$dir_path/split_$original_name"
+
+            case "$file" in
+              *..*)
+                echo "Security: Path traversal attempt detected" >&2
+                exit 1
+                ;;
+            esac
+
+            temp_subdir="$TEMP_DIR/$(xxhsum <<< "$file" | cut -d" " -f1)"
+            mkdir -p "$temp_subdir"
+
+            original_hash=$(xxh64sum "$file" | cut -d" " -f1)
+            original_size=$(stat -c%s "$file")
+
+            echo "Processing: $file ($original_size bytes)"
+            mkdir -p "$dir_name"
+
+            manifest="$dir_name/manifest.txt"
+            {
+              echo "Original file: $original_name"
+              echo "Original size: $original_size bytes"
+              echo "Original xxHash: $original_hash"
+              echo "Split timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+              echo "Parts:"
+            } > "$manifest"
+
+            split -b 1500M --numeric-suffixes=1 --suffix-length=3 "$file" "$temp_subdir/part_"
+
+            find "$temp_subdir" -name "part_*" | sort |
+            parallel --halt now,fail=1 --jobs 80% '\
+              part={}; \
+              part_name=$(basename "$part"); \
+              part_num=$(echo "$part_name" | sed "s/part_//"); \
+              part_hash=$(xxh64sum "$part" | cut -d" " -f1); \
+
+              if zstd -T$ZSTD_NBTHREADS -$ZSTD_CLEVEL --ultra "$part" -o "$dir_name/$part_name.zst" 2>/dev/null; then \
+                compressed_hash=$(xxh64sum "$dir_name/$part_name.zst" | cut -d" " -f1); \
+                compressed_size=$(stat -c%s "$dir_name/$part_name.zst"); \
+                echo "$part_name.zst: $compressed_hash (zstd, $compressed_size bytes)" >> "$manifest"; \
+              elif 7z a -t7z -m0=lzma2 -mx=9 -mfb=273 -md=128m -ms=on -mmt=on "$dir_name/$part_name.7z" "$part" >/dev/null 2>&1; then \
+                compressed_hash=$(xxh64sum "$dir_name/$part_name.7z" | cut -d" " -f1); \
+                compressed_size=$(stat -c%s "$dir_name/$part_name.7z"); \
+                echo "$part_name.7z: $compressed_hash (7z, $compressed_size bytes)" >> "$manifest"; \
+              else \
+                cp --preserve=timestamps "$part" "$dir_name/$part_name"; \
+                verify_hash=$(xxh64sum "$dir_name/$part_name" | cut -d" " -f1); \
+                if [ "$part_hash" != "$verify_hash" ]; then \
+                  echo "ERROR: Hash verification failed for $part_name" >&2; \
+                  exit 1; \
+                fi; \
+                echo "$part_name: $part_hash (uncompressed)" >> "$manifest"; \
+              fi'
+
+            if [ ! -s "$manifest" ]; then
+              echo "ERROR: Failed to create manifest for $file" >&2
+              exit 1
+            fi
+
+            part_count=$(grep -c "^part_" "$manifest" || true)
+            if [ "$part_count" -gt 0 ]; then
+              rm -f "$file"
+              echo "Processed $file into $part_count parts"
+            else
+              echo "WARNING: No parts created for $file, original preserved" >&2
+            fi
+          '
+
+      - name: Get commit history
+        id: commits
+        run: |
+          {
+            echo "commits<<EOF"
+            git -c log.showSignature=false log --pretty=format:"- %s (%h)" --since="24 hours ago" --no-merges
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2.3.2
+        with:
+          tag_name: v${{ steps.date.outputs.year }}.${{ steps.date.outputs.month }}.${{ steps.date.outputs.day }}
+          name: Release ${{ steps.date.outputs.year }}.${{ steps.date.outputs.month }}.${{ steps.date.outputs.day }}
+          body: |
+            Release ${{ steps.date.outputs.full_date }}
+
+            Recent commits:
+            ${{ steps.commits.outputs.commits }}
+
+            Notes:
+            - Large files have been split and compressed using zstd or 7z
+            - Each split directory includes a manifest.txt with xxHash checksums
+          draft: false
+          prerelease: false
+          generate_release_notes: true
