@@ -39,15 +39,15 @@ jobs:
         id: check-commits
         run: |
           COMMITS=$(git log --since="24 hours ago" --oneline)
-          HAS_NEWS=$(echo "$COMMITS" | grep -c "feat(news): update")
-          HAS_LAWS=$(echo "$COMMITS" | grep -c "feat(laws): update")
-          HAS_RULESET=$(echo "$COMMITS" | grep -c "feat(ruleset): update")
+          HAS_NEWS=$(echo "$COMMITS" | grep -c "feat(news): update" || true)
+          HAS_LAWS=$(echo "$COMMITS" | grep -c "feat(laws): update" || true)
+          HAS_RULESET=$(echo "$COMMITS" | grep -c "feat(ruleset): update" || true)
 
           echo "News commits: $HAS_NEWS"
           echo "Laws commits: $HAS_LAWS"
           echo "Ruleset commits: $HAS_RULESET"
 
-          if (( HAS_NEWS > 0 && HAS_LAWS > 0 && HAS_RULESET > 0 )); then
+          if [[ $HAS_NEWS -gt 0 && $HAS_LAWS -gt 0 && $HAS_RULESET -gt 0 ]]; then
             echo "All required workflow commits found within the last 24 hours."
             echo "should_proceed=true" >> $GITHUB_OUTPUT
           else
@@ -74,7 +74,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           ref: ${{ github.ref }}
           lfs: true
 
@@ -82,7 +82,8 @@ jobs:
         run: |
           sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq && sudo apt-get install -y --no-install-recommends p7zip-full pigz zstd parallel xxhash
           [ -w /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor ] && echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-          sudo sysctl -w vm.dirty_ratio=80 vm.dirty_background_ratio=20 vm.dirty_expire_centisecs=12000 || true
+          sudo sysctl -w vm.dirty_ratio=80 vm.dirty_background_ratio=20 vm.dirty_expire_centisecs=12000 vm.swappiness=10 vm.vfs_cache_pressure=50 || true
+          sudo sysctl -w net.core.somaxconn=65535 net.ipv4.tcp_max_syn_backlog=65535 || true
 
       - name: Create archive for ${{ matrix.workflow }}
         id: create_archive
@@ -93,20 +94,22 @@ jobs:
           ZSTD_CLEVEL: 19
           ZSTD_NBTHREADS: 0
         run: |
+          set -euo pipefail
           declare -A DIR_MAP=( ["国家法律法规数据库"]="./国家法律法规数据库" ["新闻联播"]="./新闻联播" ["Sukka Ruleset"]="./Sukka Ruleset" )
           SOURCE_DIR="${DIR_MAP[$WORKFLOW_NAME]}"
 
-          [ -z "$SOURCE_DIR" ] && { echo "Unknown workflow: $WORKFLOW_NAME"; exit 1; }
+          [[ -z "$SOURCE_DIR" ]] && { echo "Unknown workflow: $WORKFLOW_NAME"; exit 1; }
 
           ARCHIVE_NAME="${WORKFLOW_NAME}_${DATE}.tar.zst"
 
           echo "Creating compressed archive for $WORKFLOW_NAME from $SOURCE_DIR"
-          [ -d "$SOURCE_DIR" ] || { echo "Source directory $SOURCE_DIR not found"; exit 1; }
+          [[ -d "$SOURCE_DIR" ]] || { echo "Source directory $SOURCE_DIR not found"; exit 1; }
 
           SOURCE_DIR_DIRNAME="$(dirname "$SOURCE_DIR")"
           SOURCE_DIR_BASENAME="$(basename "$SOURCE_DIR")"
-          tar --use-compress-program="pigz -1" -cf - -C "$SOURCE_DIR_DIRNAME" "$SOURCE_DIR_BASENAME" | \
-            zstd -T$ZSTD_NBTHREADS -$ZSTD_CLEVEL --ultra --long=31 --adapt=min=16,max=19 - -o "$ARCHIVE_NAME"
+          
+          ionice -c 2 -n 0 nice -n -20 tar --use-compress-program="pigz -1" -cf - -C "$SOURCE_DIR_DIRNAME" "$SOURCE_DIR_BASENAME" | \
+            ionice -c 2 -n 0 nice -n -20 zstd -T$ZSTD_NBTHREADS -$ZSTD_CLEVEL --ultra --long=31 --adapt=min=16,max=19 --no-progress - -o "$ARCHIVE_NAME"
 
           ARCHIVE_SIZE=$(stat -c%s "$ARCHIVE_NAME")
           echo "Compressed archive size: $ARCHIVE_SIZE bytes"
@@ -133,20 +136,21 @@ jobs:
               echo "Parts:"
             } > "$manifest"
 
-            split -b 1500M --numeric-suffixes=1 --suffix-length=3 "$ARCHIVE_NAME" "$TEMP_DIR/part_"
+            split -b 1900M --numeric-suffixes=1 --suffix-length=3 "$ARCHIVE_NAME" "$TEMP_DIR/part_"
 
             find "$TEMP_DIR" -name "part_*" -type f -print0 | sort -z |
-            parallel -0 --halt now,fail=1 --jobs 90% --pipe-part '\
+            parallel -0 --halt now,fail=1 --jobs 95% --pipe-part '\
               part={}; \
               part_name=$(basename "$part"); \
               part_hash=$(xxh64sum "$part" | cut -d" " -f1); \
-              cp --reflink=auto --sparse=always "$part" "$split_dir/$part_name"; \
+              ionice -c 2 -n 0 cp --reflink=auto --sparse=always "$part" "$split_dir/$part_name"; \
               verify_hash=$(xxh64sum "$split_dir/$part_name" | cut -d" " -f1); \
-              [ "$part_hash" = "$verify_hash" ] || { echo "ERROR: Hash verification failed for $part_name" >&2; exit 1; }; \
+              [[ "$part_hash" = "$verify_hash" ]] || { echo "ERROR: Hash verification failed for $part_name" >&2; exit 1; }; \
               echo "$part_name: $part_hash (split part)" >> "$manifest";'
 
-            rm -f "$ARCHIVE_NAME"
+            shred -u "$ARCHIVE_NAME" 2>/dev/null || rm -f "$ARCHIVE_NAME"
             echo "ARCHIVE_PATH=${split_dir}" >> $GITHUB_OUTPUT
+            echo "::notice::Archive split into multiple parts due to size constraints"
           else
             echo "ARCHIVE_PATH=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
           fi
@@ -157,6 +161,7 @@ jobs:
           name: ${{ matrix.workflow }}_archive
           path: ${{ steps.create_archive.outputs.ARCHIVE_PATH }}
           retention-days: 1
+          compression-level: 0
 
   publish:
     name: Publish Release
@@ -169,33 +174,55 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           ref: ${{ github.ref }}
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
-
-      - name: Get commit history
-        id: commits
+          
+      - name: Prepare files for release
         run: |
-          echo "commits<<EOF" >> $GITHUB_OUTPUT
-          git -c log.showSignature=false log --pretty=format:"- %s (%h)" --since="24 hours ago" --no-merges >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          set -euo pipefail
+          mkdir -p ./release-files
+          
+          find ./artifacts -type f -name "*.tar.zst" -exec cp -a --reflink=auto {} ./release-files/ \;
+          
+          find ./artifacts -path "*_archive/*_split" -type d | while read -r split_dir; do
+            if [[ -d "$split_dir" ]]; then
+              workflow_name=$(basename "$(dirname "$split_dir")" | sed 's/_archive$//')
+              date_str="${{ needs.prepare.outputs.full_date }}"
+              
+              if [[ -f "$split_dir/manifest.txt" ]]; then
+                cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${workflow_name}_${date_str}_manifest.txt"
+              fi
+              
+              find "$split_dir" -name "part_*" -type f -print0 | sort -z | xargs -0 -I{} cp -a --reflink=auto {} "./release-files/${workflow_name}_${date_str}_$(basename {})"
+            fi
+          done
+          
+          find ./release-files -type f -print0 | xargs -0 -n1 ls -la
+
+      - name: Generate release notes
+        id: generate_notes
+        run: |
+          {
+            echo "# Release ${{ needs.prepare.outputs.date }}"
+            echo ""
+            echo "## Recent commits"
+            echo ""
+            git -c log.showSignature=false log --pretty=format:"* %s (%h)" --since="24 hours ago" --no-merges
+          } > release_notes.md
 
       - name: Create Release
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: v${{ needs.prepare.outputs.year }}.${{ needs.prepare.outputs.month }}.${{ needs.prepare.outputs.day }}
           name: Release ${{ needs.prepare.outputs.year }}.${{ needs.prepare.outputs.month }}.${{ needs.prepare.outputs.day }}
-          body: |
-            Release ${{ needs.prepare.outputs.date }}
-
-            Recent commits:
-            ${{ steps.commits.outputs.commits }}
+          body_path: release_notes.md
           draft: false
           prerelease: false
-          generate_release_notes: true
+          generate_release_notes: false
           files: |
-            ./artifacts/**/*
+            ./release-files/*
