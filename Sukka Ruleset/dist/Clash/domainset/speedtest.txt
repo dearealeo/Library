@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-06-15T14:04:50.371Z
-# Size: 1072
+# Last Updated: 2025-06-17T12:42:25.657Z
+# Size: 1074
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -666,6 +666,7 @@ bur1speedtest.turktelekom.com.tr
 ant1speedtest.turktelekom.com.tr
 adn1speedtest.turktelekom.com.tr
 speedtest1.atlantisnet.com.tr
+test.turuncunet.com.tr
 sp.merkurnet.com.tr
 zdt-iptv.highspeed.com.tr
 speedtest9.vodafone.com.tr
@@ -834,6 +835,7 @@ speedtest.gosfieldtel.ca
 speedtest.fibernetics.ca
 stscarborough.netcrawler.ca
 stmississauga.netcrawler.ca
+stnorthyork.netcrawler.ca
 stetobicoke.netcrawler.ca
 stwaterloo.netcrawler.ca
 stmontreal.netcrawler.ca
