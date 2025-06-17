@@ -16,11 +16,131 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: Publish Release
+  prepare:
+    name: Prepare Release Data
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    timeout-minutes: 120
+    outputs:
+      date: ${{ steps.date.outputs.full_date }}
+      year: ${{ steps.date.outputs.year }}
+      month: ${{ steps.date.outputs.month }}
+      day: ${{ steps.date.outputs.day }}
+      workflows: ${{ steps.set-matrix.outputs.workflows }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Get current date
+        id: date
+        run: |
+          TZ=Asia/Shanghai date +'year=%y\nmonth=%m\nday=%d\nfull_date=%Y-%m-%d' >> $GITHUB_OUTPUT
+          
+      - name: Set workflow matrix
+        id: set-matrix
+        run: |
+          echo "workflows=[\"国家法律法规数据库\",\"新闻联播\",\"Sukka_Rulesets\"]" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build Archive for ${{ matrix.workflow }}
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        workflow: ${{fromJson(needs.prepare.outputs.workflows)}}
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+          lfs: true
+          
+      - name: Install dependencies
+        run: |
+          DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends p7zip-full pigz zstd parallel xxhash
+          [ -w /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor ] && echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+          
+      - name: Create archive for ${{ matrix.workflow }}
+        id: create_archive
+        env:
+          WORKFLOW_NAME: ${{ matrix.workflow }}
+          DATE: ${{ needs.prepare.outputs.full_date }}
+          MAX_SIZE: 2147483648
+          ZSTD_CLEVEL: 19
+          ZSTD_NBTHREADS: 0
+        run: |
+          declare -A DIR_MAP=( ["国家法律法规数据库"]="./data/laws" ["新闻联播"]="./data/xinwen" ["Sukka_Rulesets"]="./data/rulesets" )
+          SOURCE_DIR="${DIR_MAP[$WORKFLOW_NAME]}"
+          
+          [ -z "$SOURCE_DIR" ] && { echo "Unknown workflow: $WORKFLOW_NAME"; exit 1; }
+          
+          ARCHIVE_NAME="${WORKFLOW_NAME}_${DATE}.tar.zst"
+          
+          echo "Creating compressed archive for $WORKFLOW_NAME from $SOURCE_DIR"
+          [ -d "$SOURCE_DIR" ] || { echo "Source directory $SOURCE_DIR not found"; exit 1; }
+          
+          tar -cf - -C "$(dirname "$SOURCE_DIR")" "$(basename "$SOURCE_DIR")" | zstd -T$ZSTD_NBTHREADS -$ZSTD_CLEVEL --ultra --long=31 - -o "$ARCHIVE_NAME"
+          
+          ARCHIVE_SIZE=$(stat -c%s "$ARCHIVE_NAME")
+          echo "Compressed archive size: $ARCHIVE_SIZE bytes"
+          
+          if [ "$ARCHIVE_SIZE" -gt "$MAX_SIZE" ]; then
+            echo "Compressed archive exceeds size limit, applying splitting strategy"
+            
+            TEMP_DIR=$(mktemp -d)
+            trap 'rm -rf "$TEMP_DIR"' EXIT INT TERM
+            
+            original_hash=$(xxh64sum "$ARCHIVE_NAME" | cut -d" " -f1)
+            original_size=$ARCHIVE_SIZE
+            
+            echo "Processing: $ARCHIVE_NAME ($original_size bytes)"
+            split_dir="${WORKFLOW_NAME}_split"
+            mkdir -p "$split_dir"
+            
+            manifest="$split_dir/manifest.txt"
+            {
+              echo "Original file: $ARCHIVE_NAME"
+              echo "Original size: $original_size bytes"
+              echo "Original xxHash: $original_hash"
+              echo "Split timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+              echo "Parts:"
+            } > "$manifest"
+            
+            split -b 1500M --numeric-suffixes=1 --suffix-length=3 "$ARCHIVE_NAME" "$TEMP_DIR/part_"
+            
+            find "$TEMP_DIR" -name "part_*" -type f -print0 | sort -z |
+            parallel -0 --halt now,fail=1 --jobs 80% '\
+              part={}; \
+              part_name=$(basename "$part"); \
+              part_hash=$(xxh64sum "$part" | cut -d" " -f1); \
+              cp --reflink=auto --sparse=always --preserve=timestamps "$part" "$split_dir/$part_name"; \
+              verify_hash=$(xxh64sum "$split_dir/$part_name" | cut -d" " -f1); \
+              [ "$part_hash" = "$verify_hash" ] || { echo "ERROR: Hash verification failed for $part_name" >&2; exit 1; }; \
+              echo "$part_name: $part_hash (split part)" >> "$manifest";'
+            
+            rm -f "$ARCHIVE_NAME"
+            echo "ARCHIVE_PATH=${split_dir}" >> $GITHUB_OUTPUT
+          else
+            echo "ARCHIVE_PATH=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.workflow }}_archive
+          path: ${{ steps.create_archive.outputs.ARCHIVE_PATH }}
+          retention-days: 1
+
+  publish:
+    name: Publish Release
+    needs: [prepare, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
@@ -29,104 +149,12 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
-          lfs: true
 
-      - name: Get current date
-        id: date
-        run: |
-          TZ=Asia/Shanghai date +'year=%y\nmonth=%m\nday=%d\nfull_date=%Y-%m-%d' >> $GITHUB_OUTPUT
-
-      - name: Install dependencies
-        run: |
-          DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends p7zip-full pigz zstd parallel xxhash
-          # Set CPU governor to performance mode if possible
-          if [ -w /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor ]; then
-            echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-          fi
-
-      - name: Process large files
-        id: process_files
-        env:
-          MAX_SIZE: 2147483648
-          ZSTD_CLEVEL: 19
-          ZSTD_NBTHREADS: 0
-        run: |
-          TEMP_DIR=$(mktemp -d)
-          trap 'rm -rf "$TEMP_DIR"' EXIT
-
-          find . -type f -size +${MAX_SIZE}c -print0 |
-          xargs -0 -I{} bash -c '
-            file="{}"
-            original_name=$(basename "$file")
-            dir_path=$(dirname "$file")
-            dir_name="$dir_path/split_$original_name"
-
-            case "$file" in
-              *..*)
-                echo "Security: Path traversal attempt detected" >&2
-                exit 1
-                ;;
-            esac
-
-            temp_subdir="$TEMP_DIR/$(xxhsum <<< "$file" | cut -d" " -f1)"
-            mkdir -p "$temp_subdir"
-
-            original_hash=$(xxh64sum "$file" | cut -d" " -f1)
-            original_size=$(stat -c%s "$file")
-
-            echo "Processing: $file ($original_size bytes)"
-            mkdir -p "$dir_name"
-
-            manifest="$dir_name/manifest.txt"
-            {
-              echo "Original file: $original_name"
-              echo "Original size: $original_size bytes"
-              echo "Original xxHash: $original_hash"
-              echo "Split timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-              echo "Parts:"
-            } > "$manifest"
-
-            split -b 1500M --numeric-suffixes=1 --suffix-length=3 "$file" "$temp_subdir/part_"
-
-            find "$temp_subdir" -name "part_*" | sort |
-            parallel --halt now,fail=1 --jobs 80% '\
-              part={}; \
-              part_name=$(basename "$part"); \
-              part_num=$(echo "$part_name" | sed "s/part_//"); \
-              part_hash=$(xxh64sum "$part" | cut -d" " -f1); \
-
-              if zstd -T$ZSTD_NBTHREADS -$ZSTD_CLEVEL --ultra "$part" -o "$dir_name/$part_name.zst" 2>/dev/null; then \
-                compressed_hash=$(xxh64sum "$dir_name/$part_name.zst" | cut -d" " -f1); \
-                compressed_size=$(stat -c%s "$dir_name/$part_name.zst"); \
-                echo "$part_name.zst: $compressed_hash (zstd, $compressed_size bytes)" >> "$manifest"; \
-              elif 7z a -t7z -m0=lzma2 -mx=9 -mfb=273 -md=128m -ms=on -mmt=on "$dir_name/$part_name.7z" "$part" >/dev/null 2>&1; then \
-                compressed_hash=$(xxh64sum "$dir_name/$part_name.7z" | cut -d" " -f1); \
-                compressed_size=$(stat -c%s "$dir_name/$part_name.7z"); \
-                echo "$part_name.7z: $compressed_hash (7z, $compressed_size bytes)" >> "$manifest"; \
-              else \
-                cp --preserve=timestamps "$part" "$dir_name/$part_name"; \
-                verify_hash=$(xxh64sum "$dir_name/$part_name" | cut -d" " -f1); \
-                if [ "$part_hash" != "$verify_hash" ]; then \
-                  echo "ERROR: Hash verification failed for $part_name" >&2; \
-                  exit 1; \
-                fi; \
-                echo "$part_name: $part_hash (uncompressed)" >> "$manifest"; \
-              fi'
-
-            if [ ! -s "$manifest" ]; then
-              echo "ERROR: Failed to create manifest for $file" >&2
-              exit 1
-            fi
-
-            part_count=$(grep -c "^part_" "$manifest" || true)
-            if [ "$part_count" -gt 0 ]; then
-              rm -f "$file"
-              echo "Processed $file into $part_count parts"
-            else
-              echo "WARNING: No parts created for $file, original preserved" >&2
-            fi
-          '
-
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+          
       - name: Get commit history
         id: commits
         run: |
@@ -139,17 +167,15 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2.3.2
         with:
-          tag_name: v${{ steps.date.outputs.year }}.${{ steps.date.outputs.month }}.${{ steps.date.outputs.day }}
-          name: Release ${{ steps.date.outputs.year }}.${{ steps.date.outputs.month }}.${{ steps.date.outputs.day }}
+          tag_name: v${{ needs.prepare.outputs.year }}.${{ needs.prepare.outputs.month }}.${{ needs.prepare.outputs.day }}
+          name: Release ${{ needs.prepare.outputs.year }}.${{ needs.prepare.outputs.month }}.${{ needs.prepare.outputs.day }}
           body: |
-            Release ${{ steps.date.outputs.full_date }}
+            Release ${{ needs.prepare.outputs.date }}
 
             Recent commits:
             ${{ steps.commits.outputs.commits }}
-
-            Notes:
-            - Large files have been split and compressed using zstd or 7z
-            - Each split directory includes a manifest.txt with xxHash checksums
           draft: false
           prerelease: false
           generate_release_notes: true
+          files: |
+            ./artifacts/**/*
