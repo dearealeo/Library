@@ -58,7 +58,7 @@ jobs:
       - name: Set workflow matrix
         id: set-matrix
         run: |
-          echo "workflows=[\"国家法律法规数据库\",\"新闻联播\",\"Sukka_Rulesets\"]" >> $GITHUB_OUTPUT
+          echo "workflows=[\"国家法律法规数据库\",\"新闻联播\",\"Sukka Ruleset\"]" >> $GITHUB_OUTPUT
 
   build:
     name: Build Archive for ${{ matrix.workflow }}
@@ -93,7 +93,7 @@ jobs:
           ZSTD_CLEVEL: 19
           ZSTD_NBTHREADS: 0
         run: |
-          declare -A DIR_MAP=( ["国家法律法规数据库"]="./data/laws" ["新闻联播"]="./data/xinwen" ["Sukka_Rulesets"]="./data/rulesets" )
+          declare -A DIR_MAP=( ["国家法律法规数据库"]="./国家法律法规数据库" ["新闻联播"]="./新闻联播" ["Sukka Ruleset"]="./Sukka Ruleset" )
           SOURCE_DIR="${DIR_MAP[$WORKFLOW_NAME]}"
 
           [ -z "$SOURCE_DIR" ] && { echo "Unknown workflow: $WORKFLOW_NAME"; exit 1; }
@@ -103,7 +103,9 @@ jobs:
           echo "Creating compressed archive for $WORKFLOW_NAME from $SOURCE_DIR"
           [ -d "$SOURCE_DIR" ] || { echo "Source directory $SOURCE_DIR not found"; exit 1; }
 
-          tar --use-compress-program="pigz -1" -cf - -C "$(dirname "$SOURCE_DIR")" "$(basename "$SOURCE_DIR")" | \
+          SOURCE_DIR_DIRNAME="$(dirname "$SOURCE_DIR")"
+          SOURCE_DIR_BASENAME="$(basename "$SOURCE_DIR")"
+          tar --use-compress-program="pigz -1" -cf - -C "$SOURCE_DIR_DIRNAME" "$SOURCE_DIR_BASENAME" | \
             zstd -T$ZSTD_NBTHREADS -$ZSTD_CLEVEL --ultra --long=31 --adapt=min=16,max=19 - -o "$ARCHIVE_NAME"
 
           ARCHIVE_SIZE=$(stat -c%s "$ARCHIVE_NAME")
