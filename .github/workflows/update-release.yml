@@ -92,7 +92,6 @@ jobs:
         id: create_archive
         env:
           WORKFLOW_NAME: ${{ matrix.workflow }}
-          DATE: ${{ needs.prepare.outputs.full_date }}
           MAX_SIZE: 2147483648
           ZSTD_CLEVEL: 19
           ZSTD_NBTHREADS: 0
@@ -103,7 +102,7 @@ jobs:
 
           [[ -z "$SOURCE_DIR" ]] && { echo "Unknown workflow: $WORKFLOW_NAME"; exit 1; }
 
-          ARCHIVE_NAME="${WORKFLOW_NAME}_${DATE}.tar.zst"
+          ARCHIVE_NAME="${WORKFLOW_NAME}.tar.zst"
           echo "Creating compressed archive for $WORKFLOW_NAME from $SOURCE_DIR"
           echo "Archive name will be: $ARCHIVE_NAME"
 
@@ -128,7 +127,7 @@ jobs:
             original_size=$ARCHIVE_SIZE
 
             echo "Processing: $ARCHIVE_NAME ($original_size bytes)"
-            split_dir="${WORKFLOW_NAME}_${DATE}_split"
+            split_dir="${WORKFLOW_NAME}_split"
             mkdir -p "$split_dir"
 
             manifest="$split_dir/manifest.txt"
@@ -140,12 +139,12 @@ jobs:
               echo "Parts:"
             } > "$manifest"
 
-            split -b 1900M --numeric-suffixes=1 --suffix-length=3 "$ARCHIVE_NAME" "$TEMP_DIR/part_"
+            split -b 1900M --numeric-suffixes=1 --suffix-length=2 "$ARCHIVE_NAME" "$TEMP_DIR/${WORKFLOW_NAME}_"
 
-            find "$TEMP_DIR" -name "part_*" -type f -print0 | sort -z |
+            find "$TEMP_DIR" -name "${WORKFLOW_NAME}_*" -type f -print0 | sort -z |
             parallel -0 --halt now,fail=1 --jobs 95% --pipe-part '\
               part={}; \
-              part_name=$(basename "$part"); \
+              part_name=$(basename "$part").tar.zst; \
               part_hash=$(xxh64sum "$part" | cut -d" " -f1); \
               ionice -c 2 -n 0 cp --reflink=auto --sparse=always "$part" "$split_dir/$part_name"; \
               verify_hash=$(xxh64sum "$split_dir/$part_name" | cut -d" " -f1); \
@@ -162,7 +161,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.workflow }}_archive
+          name: ${{ matrix.workflow }}
           path: ${{ steps.create_archive.outputs.ARCHIVE_PATH }}
           retention-days: 1
           compression-level: 0
@@ -190,7 +189,6 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ./release-files
-          date_str="${{ needs.prepare.outputs.full_date }}"
 
           declare -a workflows=("国家法律法规数据库" "新闻联播" "Sukka Ruleset")
 
@@ -199,34 +197,26 @@ jobs:
           find ./artifacts -type f -print0 | LC_ALL=C sort -z > /dev/shm/artifact_list.txt
 
           for workflow in "${workflows[@]}"; do
-            artifact_dir="./artifacts/${workflow}_archive"
+            artifact_dir="./artifacts/${workflow}"
             [[ ! -d "$artifact_dir" ]] && continue
 
             find "$artifact_dir" -type f -name "*.tar.zst" -print0 |
             while IFS= read -r -d '' file; do
-              filename=${file##*/}
-              if [[ "$filename" != *"$date_str"* ]]; then
-                new_name="${workflow}_${date_str}.tar.zst"
-                cp -a --reflink=auto --sparse=always "$file" "./release-files/$new_name"
-              else
-                cp -a --reflink=auto --sparse=always "$file" "./release-files/"
-              fi
+              cp -a --reflink=auto --sparse=always "$file" "./release-files/"
             done
 
-            split_dir="$artifact_dir/${workflow}_${date_str}_split"
+            split_dir="$artifact_dir/${workflow}_split"
             if [[ -d "$split_dir" ]]; then
-              # Copy manifest with direct path reference
               [[ -f "$split_dir/manifest.txt" ]] &&
-                cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${workflow}_${date_str}_manifest.txt"
+                cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${workflow}_manifest.txt"
 
-              find "$split_dir" -name "part_*" -type f -print0 |
+              find "$split_dir" -name "${workflow}_*.tar.zst" -type f -print0 |
               LC_ALL=C sort -z |
               xargs -0 -P $(nproc) -I{} bash -c '
                 src="$1"
-                base=$(basename "$src")
-                dst="./release-files/$2_$3_$base"
+                dst="./release-files/$(basename "$src")"
                 cp -a --reflink=auto --sparse=always "$src" "$dst"
-              ' _ {} "$workflow" "$date_str"
+              ' _ {}
             fi
           done
 
@@ -239,8 +229,6 @@ jobs:
         id: generate_notes
         run: |
           {
-            echo "# Release ${{ needs.prepare.outputs.date }}"
-            echo ""
             echo "## Recent commits"
             echo ""
             git -c log.showSignature=false log --pretty=format:"* %s (%h)" --since="24 hours ago" --no-merges
@@ -250,7 +238,7 @@ jobs:
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: v${{ needs.prepare.outputs.year }}.${{ needs.prepare.outputs.month }}.${{ needs.prepare.outputs.day }}
-          name: Release ${{ needs.prepare.outputs.year }}.${{ needs.prepare.outputs.month }}.${{ needs.prepare.outputs.day }}
+          name: Release ${{ needs.prepare.outputs.date }}
           body_path: release_notes.md
           draft: false
           prerelease: false
