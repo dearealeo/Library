@@ -87,3 +87,33 @@ updates:
         applies-to: security-updates
         patterns:
           - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/docs"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+    assignees:
+      - "dearealeo"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps(docs)"
+    groups:
+      prod-deps:
+        applies-to: version-updates
+        dependency-type: "production"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      dev-deps:
+        applies-to: version-updates
+        dependency-type: "development"
+        patterns:
+          - "*"
+      security-deps:
+        applies-to: security-updates
+        patterns:
+          - "*"
