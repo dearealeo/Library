@@ -104,8 +104,9 @@ jobs:
           [[ -z "$SOURCE_DIR" ]] && { echo "Unknown workflow: $WORKFLOW_NAME"; exit 1; }
 
           ARCHIVE_NAME="${WORKFLOW_NAME}_${DATE}.tar.zst"
-
           echo "Creating compressed archive for $WORKFLOW_NAME from $SOURCE_DIR"
+          echo "Archive name will be: $ARCHIVE_NAME"
+
           [[ -d "$SOURCE_DIR" ]] || { echo "Source directory $SOURCE_DIR not found"; exit 1; }
 
           SOURCE_DIR_DIRNAME="$(dirname "$SOURCE_DIR")"
@@ -127,7 +128,7 @@ jobs:
             original_size=$ARCHIVE_SIZE
 
             echo "Processing: $ARCHIVE_NAME ($original_size bytes)"
-            split_dir="${WORKFLOW_NAME}_split"
+            split_dir="${WORKFLOW_NAME}_${DATE}_split"
             mkdir -p "$split_dir"
 
             manifest="$split_dir/manifest.txt"
@@ -189,23 +190,50 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ./release-files
+          date_str="${{ needs.prepare.outputs.full_date }}"
 
-          find ./artifacts -type f -name "*.tar.zst" -exec cp -a --reflink=auto {} ./release-files/ \;
+          declare -a workflows=("国家法律法规数据库" "新闻联播" "Sukka Ruleset")
 
-          find ./artifacts -path "*_archive/*_split" -type d | while read -r split_dir; do
-            if [[ -d "$split_dir" ]]; then
-              workflow_name=$(basename "$(dirname "$split_dir")" | sed 's/_archive$//')
-              date_str="${{ needs.prepare.outputs.full_date }}"
+          exec {fd_log}>&1
 
-              if [[ -f "$split_dir/manifest.txt" ]]; then
-                cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${workflow_name}_${date_str}_manifest.txt"
+          find ./artifacts -type f -print0 | LC_ALL=C sort -z > /dev/shm/artifact_list.txt
+
+          for workflow in "${workflows[@]}"; do
+            artifact_dir="./artifacts/${workflow}_archive"
+            [[ ! -d "$artifact_dir" ]] && continue
+
+            find "$artifact_dir" -type f -name "*.tar.zst" -print0 |
+            while IFS= read -r -d '' file; do
+              filename=${file##*/}
+              if [[ "$filename" != *"$date_str"* ]]; then
+                new_name="${workflow}_${date_str}.tar.zst"
+                cp -a --reflink=auto --sparse=always "$file" "./release-files/$new_name"
+              else
+                cp -a --reflink=auto --sparse=always "$file" "./release-files/"
               fi
+            done
 
-              find "$split_dir" -name "part_*" -type f -print0 | sort -z | xargs -0 -I{} cp -a --reflink=auto {} "./release-files/${workflow_name}_${date_str}_$(basename {})"
+            split_dir="$artifact_dir/${workflow}_${date_str}_split"
+            if [[ -d "$split_dir" ]]; then
+              # Copy manifest with direct path reference
+              [[ -f "$split_dir/manifest.txt" ]] &&
+                cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${workflow}_${date_str}_manifest.txt"
+
+              find "$split_dir" -name "part_*" -type f -print0 |
+              LC_ALL=C sort -z |
+              xargs -0 -P $(nproc) -I{} bash -c '
+                src="$1"
+                base=$(basename "$src")
+                dst="./release-files/$2_$3_$base"
+                cp -a --reflink=auto --sparse=always "$src" "$dst"
+              ' _ {} "$workflow" "$date_str"
             fi
           done
 
-          find ./release-files -type f -print0 | xargs -0 -n1 ls -la
+          echo "Files to be uploaded:"
+          find ./release-files -type f -print0 | LC_ALL=C sort -z | xargs -0 -n1 basename
+
+          rm -f /dev/shm/artifact_list.txt
 
       - name: Generate release notes
         id: generate_notes
