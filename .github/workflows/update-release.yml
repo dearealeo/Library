@@ -42,9 +42,9 @@ jobs:
         id: check-commits
         run: |
           COMMITS=$(git log --since="24 hours ago" --oneline)
-          HAS_NEWS=$(echo "$COMMITS" | grep -c "feat(news): update" || true)
-          HAS_LAWS=$(echo "$COMMITS" | grep -c "feat(laws): update" || true)
-          HAS_RULESET=$(echo "$COMMITS" | grep -c "feat(ruleset): update" || true)
+          HAS_NEWS=$(echo "$COMMITS" | grep -c "feat(news): update" || echo "0")
+          HAS_LAWS=$(echo "$COMMITS" | grep -c "feat(laws): update" || echo "0")
+          HAS_RULESET=$(echo "$COMMITS" | grep -c "feat(ruleset): update" || echo "0")
 
           echo "News commits: $HAS_NEWS"
           echo "Laws commits: $HAS_LAWS"
@@ -142,14 +142,21 @@ jobs:
             split -b 1900M --numeric-suffixes=1 --suffix-length=2 "$ARCHIVE_NAME" "$TEMP_DIR/${WORKFLOW_NAME}_"
 
             find "$TEMP_DIR" -name "${WORKFLOW_NAME}_*" -type f -print0 | sort -z |
-            parallel -0 --halt now,fail=1 --jobs 95% --pipe-part '\
-              part={}; \
-              part_name=$(basename "$part").tar.zst; \
-              part_hash=$(xxh64sum "$part" | cut -d" " -f1); \
-              ionice -c 2 -n 0 cp --reflink=auto --sparse=always "$part" "$split_dir/$part_name"; \
-              verify_hash=$(xxh64sum "$split_dir/$part_name" | cut -d" " -f1); \
-              [[ "$part_hash" = "$verify_hash" ]] || { echo "ERROR: Hash verification failed for $part_name" >&2; exit 1; }; \
-              echo "$part_name: $part_hash (split part)" >> "$manifest";'
+            while IFS= read -r -d '' part; do
+              part_basename=$(basename "$part")
+              part_name="${part_basename}.tar.zst"
+              part_hash=$(xxh64sum "$part" | cut -d" " -f1)
+              
+              ionice -c 2 -n 0 cp --reflink=auto --sparse=always "$part" "$split_dir/$part_name"
+              verify_hash=$(xxh64sum "$split_dir/$part_name" | cut -d" " -f1)
+              
+              if [[ "$part_hash" != "$verify_hash" ]]; then
+                echo "ERROR: Hash verification failed for $part_name" >&2
+                exit 1
+              fi
+              
+              echo "$part_name: $part_hash (split part)" >> "$manifest"
+            done
 
             shred -u "$ARCHIVE_NAME" 2>/dev/null || rm -f "$ARCHIVE_NAME"
             echo "ARCHIVE_PATH=${split_dir}" >> $GITHUB_OUTPUT
@@ -170,7 +177,7 @@ jobs:
     name: Publish Release
     needs: [prepare, build]
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     permissions:
       contents: write
     steps:
@@ -185,6 +192,33 @@ jobs:
         with:
           path: ./artifacts
 
+      - name: Verify artifacts
+        run: |
+          set -euo pipefail
+          declare -a workflows=("国家法律法规数据库" "新闻联播" "Sukka Ruleset")
+          missing=0
+          
+          for workflow in "${workflows[@]}"; do
+            artifact_dir="./artifacts/${workflow}"
+            if [[ ! -d "$artifact_dir" ]]; then
+              echo "::error::Missing artifact directory for ${workflow}"
+              missing=$((missing + 1))
+              continue
+            fi
+            
+            if [[ -z "$(find "$artifact_dir" -type f 2>/dev/null)" ]]; then
+              echo "::error::No files found in artifact directory for ${workflow}"
+              missing=$((missing + 1))
+            fi
+          done
+          
+          if [[ $missing -gt 0 ]]; then
+            echo "::error::${missing} required artifacts are missing. Cannot proceed with release."
+            exit 1
+          fi
+          
+          echo "All required artifacts are present."
+
       - name: Prepare files for release
         run: |
           set -euo pipefail
@@ -194,36 +228,55 @@ jobs:
 
           exec {fd_log}>&1
 
-          find ./artifacts -type f -print0 | LC_ALL=C sort -z > /dev/shm/artifact_list.txt
-
           for workflow in "${workflows[@]}"; do
             artifact_dir="./artifacts/${workflow}"
             [[ ! -d "$artifact_dir" ]] && continue
 
+            ascii_name=""
+            case "$workflow" in
+              "国家法律法规数据库") ascii_name="National-Database-of-Laws-and-Regulations" ;;
+              "新闻联播") ascii_name="Xinwen-Lianbo" ;;
+              "Sukka Ruleset") ascii_name="Sukka-Ruleset" ;;
+            esac
+
             find "$artifact_dir" -type f -name "*.tar.zst" -print0 |
             while IFS= read -r -d '' file; do
-              cp -a --reflink=auto --sparse=always "$file" "./release-files/"
+              if [[ -n "$ascii_name" && "$workflow" != "Sukka Ruleset" ]]; then
+                cp -a --reflink=auto --sparse=always "$file" "./release-files/${ascii_name}.tar.zst"
+              else
+                cp -a --reflink=auto --sparse=always "$file" "./release-files/"
+              fi
             done
 
             split_dir="$artifact_dir/${workflow}_split"
             if [[ -d "$split_dir" ]]; then
-              [[ -f "$split_dir/manifest.txt" ]] &&
-                cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${workflow}_manifest.txt"
+              if [[ -f "$split_dir/manifest.txt" ]]; then
+                if [[ -n "$ascii_name" && "$workflow" != "Sukka Ruleset" ]]; then
+                  cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${ascii_name}_manifest.txt"
+                else
+                  cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${workflow}_manifest.txt"
+                fi
+              fi
 
               find "$split_dir" -name "${workflow}_*.tar.zst" -type f -print0 |
               LC_ALL=C sort -z |
-              xargs -0 -P $(nproc) -I{} bash -c '
-                src="$1"
-                dst="./release-files/$(basename "$src")"
+              while IFS= read -r -d '' src; do
+                basename_src=$(basename "$src")
+                
+                if [[ -n "$ascii_name" && "$workflow" != "Sukka Ruleset" ]]; then
+                  dst_name="${basename_src//${workflow}_/${ascii_name}_}"
+                  dst="./release-files/$dst_name"
+                else
+                  dst="./release-files/$(basename "$src")"
+                fi
+                
                 cp -a --reflink=auto --sparse=always "$src" "$dst"
-              ' _ {}
+              done
             fi
           done
 
           echo "Files to be uploaded:"
           find ./release-files -type f -print0 | LC_ALL=C sort -z | xargs -0 -n1 basename
-
-          rm -f /dev/shm/artifact_list.txt
 
       - name: Generate release notes
         id: generate_notes
@@ -238,10 +291,11 @@ jobs:
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: v${{ needs.prepare.outputs.year }}.${{ needs.prepare.outputs.month }}.${{ needs.prepare.outputs.day }}
-          name: Release ${{ needs.prepare.outputs.date }}
+          name: ${{ needs.prepare.outputs.date }}
           body_path: release_notes.md
           draft: false
           prerelease: false
           generate_release_notes: false
           files: |
             ./release-files/*
+          fail_on_unmatched_files: false
