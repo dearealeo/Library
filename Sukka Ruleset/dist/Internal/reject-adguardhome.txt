@@ -1,5 +1,5 @@
 ! Title: Sukka's Ruleset - AdGuardHome Blocklist
-! Last modified: Tue, 17 Jun 2025 12:42:33 GMT
+! Last modified: Wed, 18 Jun 2025 12:42:28 GMT
 ! Expires: 6 hours
 ! License: https://github.com/SukkaW/Surge/blob/master/LICENSE
 ! Homepage: https://github.com/SukkaW/Surge
@@ -126,6 +126,7 @@
 ||rhllmitjfxcvg.website^
 ||retpzsuxpahbf.website^
 ||qybnxoylbgukf.website^
+||qsrvzbuhumwow.website^
 ||qndjbwryjeraj.website^
 ||qmefcejujmezq.website^
 ||qguusmmvndeor.website^
@@ -154,6 +155,7 @@
 ||jkqiweqrxsieb.website^
 ||ixjqjoscayasz.website^
 ||ibcaupqfvtnsz.website^
+||gvdjmcztiqwhw.website^
 ||ghpgtibxzldsh.website^
 ||fjndjvxuyzshy.website^
 ||fidhkhqccgqkh.website^
@@ -451,6 +453,7 @@
 ||oghsbdelcftbx.online^
 ||obzpubutiwfeq.online^
 ||oahvmrbvqsuey.online^
+||nzpaigzzpkowv.online^
 ||nexjzgqalrtgq.online^
 ||mzhdcgwoqgnpc.online^
 ||track.myquotehealth.online^
@@ -488,6 +491,7 @@
 ||gagjrgkvtsjnj.online^
 ||fwcavwstvmekw.online^
 ||fsvgheuiakdrf.online^
+||fskyfdhejmvov.online^
 ||fryrurzfmbrhi.online^
 ||feijsojvphjqh.online^
 ||eubobpzucyagl.online^
@@ -509,6 +513,7 @@
 ||brcjvwooqneol.online^
 ||bqwfemjlhxpia.online^
 ||blwviknoqfpij.online^
+||biaqghckapnum.online^
 ||bczmrdfjkesgf.online^
 ||awaidxotovdoe.online^
 ||apdcekrulrpjd.online^
@@ -980,6 +985,8 @@
 ||lfelnkxiazxkx.store^
 ||load.gtm.lacariaricami.store^
 ||kzqjctpvdjmwc.store^
+||kphiezfoqfwcp.store^
+||kdqrmysexuhqt.store^
 ||kbmetcacunqgq.store^
 ||jeqpqqqqwkmxk.store^
 ||ighrpmbwdrzoy.store^
@@ -1090,9 +1097,11 @@
 ||rwxpkychnthdx.space^
 ||rpkqrutejizju.space^
 ||rffbxktvxmcje.space^
+||qyxqrwpxdvtzy.space^
 ||qgpiphehhrcvl.space^
 ||qbljkbmhpybdl.space^
 ||pyghwgyjuuaht.space^
+||ptecrzwnxmksx.space^
 ||psbksjnkacikm.space^
 ||prlazithizuuu.space^
 ||porzhbcbxgdsu.space^
@@ -1106,6 +1115,7 @@
 ||obkrwyfmsoajc.space^
 ||nwvulrmtxesqh.space^
 ||nvxbjvswajhug.space^
+||ntmknjlcfdmqw.space^
 ||nqgokpyktbkbm.space^
 ||nmgwoawuwbnsj.space^
 ||nkhgheadrrrbt.space^
@@ -1142,6 +1152,7 @@
 ||fkklcqmeqoerb.space^
 ||fhjrpcmkyrkvi.space^
 ||fgcurevocpkmh.space^
+||eutecnimzptot.space^
 ||dlzuocvcjdqvq.space^
 ||dkpvbyvscxraq.space^
 ||czwgftuwfitha.space^
@@ -1596,6 +1607,7 @@
 ||minez.zone^
 ||fraud.adjoe.zone^
 ||prod.adjoe.zone^
+|view.html.zone^
 |umm.html.zone^
 |cwa.html.zone^
 ||somni.rkt.zone^
@@ -1951,6 +1963,7 @@
 ||bjdsmnjybmjdl.site^
 ||bhivpvsbhskzv.site^
 ||bbjqvwbdozgcf.site^
+||awiqjcfwgywqm.site^
 ||aviiivsxdmbgc.site^
 ||ff.sweetconnect.site^
 ||lp.primetimemen.site^
@@ -2002,6 +2015,7 @@
 ||rbp-gen1.site^
 ||s.playvids.site^
 ||news-cdn.site^
+||mobuppsx.site^
 ||api.kickoffo.site^
 ||hilerant.site^
 ||ff.charmduo.site^
@@ -4600,6 +4614,7 @@
 ||sensorsdata.glowapp.vip^
 ||n55cpw.vip^
 ||majile.vip^
+|static.javcdn.vip^
 ||best-u.vip^
 ||always.vip^
 ||vamqt.vip^
@@ -4657,6 +4672,7 @@
 ||unaflowbustler.top^
 ||trioecsdespeed.top^
 ||toffiesinsecta.top^
+||tealeryinsurer.top^
 ||squiresbruting.top^
 ||soutenugiantly.top^
 ||shimmeyenfonce.top^
@@ -4948,6 +4964,7 @@
 ||lmqvowejalyqm.top^
 ||lmoozvlklrrrk.top^
 ||llykjmzkqvvqy.top^
+||llvlzvroqokmj.top^
 ||llozybojzojvj.top^
 ||ljybybyerzoev.top^
 ||ljvmokwyromeq.top^
@@ -4968,6 +4985,7 @@
 ||jzbvwqeowwvob.top^
 ||jyvkwqjremqll.top^
 ||jyqekzzlmymab.top^
+||jyozavobzrekb.top^
 ||jybaekaqbmvyw.top^
 ||jxbpanpbplamf.top^
 ||jrvrkzrjrmoyy.top^
@@ -5224,6 +5242,7 @@
 ||stretsynced.top^
 ||stagedswots.top^
 ||speiledwhau.top^
+||spartollage.top^
 ||smartdating.top^
 ||sergeigagor.top^
 ||screensnaps.top^
@@ -6122,6 +6141,7 @@
 ||profitablearticle.pro^
 ||newoneinoldoneout.pro^
 ||inexperienced-end.pro^
+||homelyrecognition.pro^
 ||complicated-scale.pro^
 ||bathshowerexperts.pro^
 ||annualcombination.pro^
@@ -6228,6 +6248,7 @@
 ||scrawnywhole.pro^
 ||sad-sandwich.pro^
 ||pungent-coat.pro^
+||plasticquiet.pro^
 ||phechiptupti.pro^
 ||past-concern.pro^
 ||nathanaeldan.pro^
@@ -8199,6 +8220,7 @@
 ||kaimegloagribok.net^
 ||jousteevoofooge.net^
 ||jootuteeloobour.net^
+||jausheewhocoary.net^
 ||hetchoujaltituz.net^
 ||heeboalupauweem.net^
 ||greepseedrobouk.net^
@@ -8504,6 +8526,7 @@
 ||csp.secureserver.net^
 ||events.api.secureserver.net^
 ||da.schwabenholz.net^
+||sahotchilape.net^
 ||tracking.retailrocket.net^
 ||glassmoni.researchgate.net^
 ||reepsotograg.net^
@@ -9340,6 +9363,7 @@
 ||d21rpkgy8pahcu.cloudfront.net^
 ||d21o24qxwf7uku.cloudfront.net^
 ||d219kvfj8xp5vh.cloudfront.net^
+||d20vwa69zln1wj.cloudfront.net^
 ||d20nuqz94uw3np.cloudfront.net^
 ||d20kffh39acpue.cloudfront.net^
 ||d20903hof2l33q.cloudfront.net^
@@ -16974,6 +16998,7 @@
 ||effervescentvista.com^
 ||effervescentcoral.com^
 ||effectscouncilman.com^
+||edukicationandasm.com^
 ||widget.educationdynamics.com^
 ||et.educationdynamics.com^
 ||tr.info.ecole-de-savignac.com^
@@ -19648,6 +19673,7 @@
 ||hystericalcloth.com^
 ||hypertrackeraff.com^
 ||hyperlinksecure.com^
+||hyimemediatesup.com^
 ||huskypartydance.com^
 ||app.humanaresponses.com^
 ||track.hubdoequilibrio.com^
@@ -19831,6 +19857,7 @@
 ||filingattenuate.com^
 ||fgglmbniqymcrqr.com^
 ||ferukentaspects.com^
+||femininequarter.com^
 ||feedyourheadmag.com^
 ||sgtm.federicisistemi.com^
 ||dr.federconsulting.com^
@@ -19920,6 +19947,7 @@
 ||dwwxnmpkjrgohll.com^
 ||dwouxrufulchwar.com^
 ||tracking.durathermwindow.com^
+||druoctualyuomdg.com^
 ||ad.droptheknowhere.com^
 ||ads.dreamjobcompany.com^
 ||qfcxpa.dreamcloudsleep.com^
@@ -21634,6 +21662,7 @@
 ||get.hydrosystemsco.com^
 ||bitify.hydroetculture.com^
 ||hxedkrujowgojy.com^
+||hvvwidsyjqeppt.com^
 ||hurrieranilide.com^
 ||hurkarubypaths.com^
 ||ensighten.huntingtonbank.com^
@@ -23359,6 +23388,7 @@
 ||track.realtimeboard.com^
 ||realizerecess.com^
 ||data.reactandshare.com^
+||rcdzwigpbbcxx.com^
 ||raunoaptotoaw.com^
 ||ratingtoplist.com^
 ||raspedexsculp.com^
@@ -23393,6 +23423,7 @@
 ||qqosk05020llo.com^
 ||qqosk05011llo.com^
 ||qqosk05010llo.com^
+||qmjrlbwnlmram.com^
 ||qjinyuopnitjq.com^
 ||qhyahomlcloih.com^
 ||pyriticpremie.com^
@@ -24202,6 +24233,7 @@
 ||info.igloosoftware.com^
 ||nl.ifuckedyourgf.com^
 ||ar.ifuckedyourgf.com^
+||ieccuxwjccmcw.com^
 ||idovhqjupirbo.com^
 ||app.info.idgenterprise.com^
 ||la.idgenterprise.com^
@@ -25188,6 +25220,7 @@
 ||tracking.bettingexpert.com^
 ||hqfthz.betterlifeuae.com^
 ||hop.betterdaytips.com^
+||betrothfrison.com^
 ||beterrakionan.com^
 ||bestshoesboot.com^
 ||starget.bestoforlando.com^
@@ -27506,6 +27539,7 @@
 ||counter.hyipexplorer.com^
 ||njpnbe.hydrobuilder.com^
 ||hydraconcept.com^
+||hybcqajfbxky.com^
 ||hvtsxseblxie.com^
 ||gdknnd.hushblankets.com^
 ||hurarwjrirti.com^
@@ -28215,6 +28249,7 @@
 ||sp.courierpress.com^
 ||trk.countrycrock.com^
 ||affiliate.couleur-labo.com^
+||cotchcopyboy.com^
 ||costranchill.com^
 ||aiq-in.cosmopolitan.com^
 ||td.cosmopolitan.com^
@@ -28988,6 +29023,12 @@
 ||xjhvrktmjtu.com^
 ||w.xiaopiaoyou.com^
 ||spider-tracker.xiaohongshu.com^
+||apm-native.xiaohongshu.com^
+||edith-seb.xiaohongshu.com^
+||apm-track.xiaohongshu.com^
+||apm-fe.xiaohongshu.com^
+||flash.xiaohongshu.com^
+||edith.xiaohongshu.com^
 ||an.xavierrosee.com^
 ||utiq.xatakamovil.com^
 ||xameleonads.com^
@@ -33786,6 +33827,7 @@
 ||publicsofa.com^
 ||pto-slb-09.com^
 ||ptelastaxo.com^
+||pteefoagha.com^
 ||ptaphilera.com^
 ||psuptyweze.com^
 ||psunseewhu.com^
@@ -37688,6 +37730,7 @@
 ||link.stockviva.com^
 ||agoqaa.stockmann.com^
 ||marketing.stockcero.com^
+||stmnfilur.com^
 ||jnloar.stitchery.com^
 ||stiffstem.com^
 ||stiffgame.com^
@@ -38080,6 +38123,7 @@
 ||a.ricevosrl.com^
 ||a8.ricafrosh.com^
 ||girlgirl2131.rhsy174op.com^
+||rhoovhcti.com^
 ||rfbxbstrk.com^
 ||hiuplq.rezultati.com^
 ||go.rex-bac-t.com^
@@ -38180,6 +38224,8 @@
 ||qnp16tstw.com^
 ||qkcgorbrs.com^
 ||gtm.qinclinic.com^
+||qfirgakpv.com^
+||qduttornm.com^
 ||qdheqraln.com^
 ||qdgfcrifm.com^
 ||qcogiellq.com^
@@ -40302,6 +40348,7 @@
 ||efreecode.com^
 ||efnjfbkge.com^
 ||eelkeageg.com^
+||edxymyepu.com^
 ||testsocial.eduthrill.com^
 ||educrated.com^
 ||edition25.com^
@@ -41089,6 +41136,7 @@
 ||stats.beatricew.com^
 ||bealanews.com^
 ||metrics.beachbody.com^
+||bcugzudit.com^
 ||bcmonster.com^
 ||stats.bcdtravel.com^
 ||ccgnuq.bbqgalore.com^
@@ -42344,6 +42392,7 @@
 ||struhuts.com^
 ||dt.strollme.com^
 ||strenots.com^
+||stream27.com^
 ||marketing.strattam.com^
 ||organizations.stratfor.com^
 ||app.response.stratfor.com^
@@ -49504,6 +49553,7 @@
 ||sst.bibione.com^
 ||track.biaskin.com^
 ||ensighten.bhphoto.com^
+|affportal.bhphoto.com^
 ||bhelzun.com^
 ||bhcumsc.com^
 ||xrnyhc.bgeilbo.com^
@@ -50293,6 +50343,7 @@
 ||becode.xiao84.com^
 ||b1.xiao84.com^
 ||cluster.xhspot.com^
+||ads-img-al.xhscdn.com^
 ||xevaix.com^
 ||analyticswritenew.xerevo.com^
 ||xdiwbc.com^
@@ -52267,6 +52318,7 @@
 ||static.hyprmx.com^
 ||live.hyprmx.com^
 ||doclen.hypedc.com^
+||hyhnas.com^
 ||fiowtf.hyggee.com^
 ||analytics.hyckes.com^
 ||dm.hxzdhn.com^

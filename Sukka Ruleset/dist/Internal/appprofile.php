@@ -1,6 +1,6 @@
 <?php
 
-// # Build 2025-06-17T12:42:27.866Z
+// # Build 2025-06-18T12:42:23.761Z
 
 declare(strict_types=1);
 
@@ -1711,6 +1711,7 @@ $_ENV['Clash_Group_Config'] = [
         'DOMAIN-SUFFIX,sc-cdn.net,Global',
         'DOMAIN-SUFFIX,osmand.net,Global',
         'DOMAIN-SUFFIX,nitter.net,Global',
+        'DOMAIN-SUFFIX,komoot.net,Global',
         'DOMAIN-SUFFIX,ipleak.net,Global',
         'DOMAIN-SUFFIX,fastly.net,Global',
         'DOMAIN-SUFFIX,dnsleak.asn247.net,Global',
@@ -2179,6 +2180,7 @@ $_ENV['Clash_Group_Config'] = [
         'DOMAIN-SUFFIX,ledger.com,Global',
         'DOMAIN-SUFFIX,kucoin.com,Global',
         'DOMAIN-SUFFIX,kraken.com,Global',
+        'DOMAIN-SUFFIX,komoot.com,Global',
         'DOMAIN-SUFFIX,javbus.com,Global',
         'DOMAIN-SUFFIX,edns.ip-api.com,Global',
         'DOMAIN-SUFFIX,iheart.com,Global',
@@ -2301,6 +2303,7 @@ $_ENV['Clash_Group_Config'] = [
         'DOMAIN-SUFFIX,okex.com,Global',
         'DOMAIN-SUFFIX,note.com,Global',
         'DOMAIN-SUFFIX,noip.com,Global',
+        'DOMAIN-SUFFIX,njav.com,Global',
         'DOMAIN-SUFFIX,nest.com,Global',
         'DOMAIN-SUFFIX,ndtv.com,Global',
         'DOMAIN-SUFFIX,mexc.com,Global',
@@ -3255,6 +3258,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR,45.125.12.0/22,Domestic',
         'IP-CIDR,45.125.18.0/23,Domestic',
         'IP-CIDR,45.125.32.0/22,Domestic',
+        'IP-CIDR,45.125.56.0/22,Domestic',
         'IP-CIDR,45.126.112.0/22,Domestic',
         'IP-CIDR,45.126.120.0/22,Domestic',
         'IP-CIDR,45.127.129.0/24,Domestic',
@@ -4135,6 +4139,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR,103.192.252.0/22,Domestic',
         'IP-CIDR,103.193.148.0/22,Domestic',
         'IP-CIDR,103.193.188.0/22,Domestic',
+        'IP-CIDR,103.193.192.0/22,Domestic',
         'IP-CIDR,103.195.148.0/22,Domestic',
         'IP-CIDR,103.196.64.0/23,Domestic',
         'IP-CIDR,103.196.88.0/21,Domestic',
@@ -4818,10 +4823,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR,116.196.8.0/22,Domestic',
         'IP-CIDR,116.196.12.0/23,Domestic',
         'IP-CIDR,116.196.64.0/18,Domestic',
-        'IP-CIDR,116.196.129.0/24,Domestic',
-        'IP-CIDR,116.196.130.0/23,Domestic',
-        'IP-CIDR,116.196.132.0/22,Domestic',
-        'IP-CIDR,116.196.136.0/21,Domestic',
+        'IP-CIDR,116.196.128.0/20,Domestic',
         'IP-CIDR,116.196.144.0/21,Domestic',
         'IP-CIDR,116.196.152.0/22,Domestic',
         'IP-CIDR,116.196.157.0/24,Domestic',
@@ -8158,7 +8160,6 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,240a:40c1:2000::/43,Domestic',
         'IP-CIDR6,240a:40c1:4000::/43,Domestic',
         'IP-CIDR6,240a:40c1:6000::/43,Domestic',
-        'IP-CIDR6,240a:40c1:8000::/43,Domestic',
         'IP-CIDR6,240a:40c1:a000::/43,Domestic',
         'IP-CIDR6,240a:40c1:c000::/43,Domestic',
         'IP-CIDR6,240a:40c1:e000::/43,Domestic',
@@ -8322,6 +8323,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2a0e:aa07:e030::/48,Domestic',
         'IP-CIDR6,2a0e:aa07:e035::/48,Domestic',
         'IP-CIDR6,2a0e:aa07:e039::/48,Domestic',
+        'IP-CIDR6,2a0e:aa07:e044::/48,Domestic',
         'IP-CIDR6,2a0e:aa07:e0e0::/44,Domestic',
         'IP-CIDR6,2a0e:aa07:e151::/48,Domestic',
         'IP-CIDR6,2a0e:aa07:e160::/47,Domestic',
@@ -8427,6 +8429,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2a14:67c1:a100::/43,Domestic',
         'IP-CIDR6,2a14:67c1:a120::/47,Domestic',
         'IP-CIDR6,2a14:67c1:a127::/48,Domestic',
+        'IP-CIDR6,2a14:67c1:a142::/48,Domestic',
         'IP-CIDR6,2a14:67c1:b000::/48,Domestic',
         'IP-CIDR6,2a14:67c1:b065::/48,Domestic',
         'IP-CIDR6,2a14:67c1:b066::/47,Domestic',
@@ -8456,6 +8459,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2a14:7581:b72::/48,Domestic',
         'IP-CIDR6,2a14:7581:bbb::/48,Domestic',
         'IP-CIDR6,2a14:7581:bcd::/48,Domestic',
+        'IP-CIDR6,2a14:7581:3100::/40,Domestic',
         'IP-CIDR6,2a14:7581:9010::/44,Domestic',
         'IP-CIDR6,2a14:7584::/36,Domestic',
         'IP-CIDR6,2a14:7584:9000::/36,Domestic',
