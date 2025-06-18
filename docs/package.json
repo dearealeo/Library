@@ -14,7 +14,7 @@
     "analyze": "astro build --analyze"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^4.3.0",
+    "@astrojs/markdown-remark": "^6.3.2",
     "astro": "^5.9.4",
     "rehype-stringify": "^10.0.0",
     "remark-gfm": "^4.0.0",
