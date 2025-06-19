@@ -1,0 +1,35 @@
+#########################################
+# Sukka's Ruleset - Reject No Drop
+# Last Updated: 2025-06-15T14:04:50.661Z
+# Size: 24
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This file This file contains rules for domain should be used with REJECT-NO-DROP policy.
+#########################################
+DOMAIN,th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe
+DOMAIN-SUFFIX,ppio.cloud
+DOMAIN-SUFFIX,yfp2p.net
+DOMAIN-SUFFIX,yfcdn.net
+DOMAIN-SUFFIX,onethingpcs.com
+DOMAIN-SUFFIX,tianwenca.com
+DOMAIN-SUFFIX,pkoplink.com
+DOMAIN-SUFFIX,kuiniuca.com
+DOMAIN-SUFFIX,yfcloud.com
+DOMAIN-SUFFIX,saxysec.com
+DOMAIN-SUFFIX,pcdn.yximgs.com
+DOMAIN-SUFFIX,szbdyd.com
+DOMAIN-SUFFIX,xycdn.com
+DOMAIN-SUFFIX,uhabo.com
+DOMAIN-SUFFIX,p2cdn.com
+DOMAIN-SUFFIX,p2p.huya.com
+DOMAIN-SUFFIX,p2ptun.qq.com
+DOMAIN-SUFFIX,p2pupgrade.gamedl.qq.com
+DOMAIN-SUFFIX,p2pupdate.gamedl.qq.com
+DOMAIN-SUFFIX,p2p.qq.com
+DOMAIN-SUFFIX,cdnnodedns.cn
+DOMAIN-SUFFIX,mcdn.bilivideo.cn
+DOMAIN-SUFFIX,p2perrorlog.douyucdn.cn
+DOMAIN-SUFFIX,p2plog.douyucdn.cn
+################## EOF ##################

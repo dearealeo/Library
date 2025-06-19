@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": ["th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe"],
+      "domain_suffix": ["th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe"],
+      "ip_cidr": [
+        "66.203.126.0/23",
+        "94.24.36.0/23",
+        "162.208.16.0/24",
+        "185.206.24.0/22",
+        "2a0b:e40:1::/48",
+        "2a0b:e40:2::/47",
+        "2a0b:e41:1::/48",
+        "2a0b:e42:1::/48",
+        "2a0b:e43:1::/48",
+        "2a0b:e44:1::/48",
+        "2a0b:e45:1::/48"
+      ]
+    }
+  ]
+}

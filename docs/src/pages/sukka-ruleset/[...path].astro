@@ -1,0 +1,258 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const categories = ["rules", "scripts", "modules", "providers", "config", "snippets", "Clash", "LegacyClashPremium", "Modules", "sing-box", "List"];
+  
+  return [
+    ...categories.flatMap(category => [
+      { params: { path: category } },
+      { params: { path: `${category}/` } }
+    ]),
+    { params: { path: undefined } }
+  ];
+}
+
+const { path: urlPath } = Astro.params;
+const pathSegments = urlPath?.split("/").filter(Boolean) || [];
+const title = pathSegments.length === 0 
+  ? "Sukka Ruleset" 
+  : `Sukka Ruleset - ${pathSegments.length === 1 ? pathSegments[0] : `${pathSegments[0]}/${pathSegments.slice(1).join("/")}`}`;
+---
+
+<BaseLayout title={title}>
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading content...</p>
+  </div>
+
+  <div id="content" class="content" style="display: none;"></div>
+
+  <div id="error" class="error" style="display: none;">
+    <h1>Content Not Found</h1>
+    <p>The requested content could not be found.</p>
+    <p><a href="/Library/sukka-ruleset/">Return to Ruleset Index</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 50px 0;
+  }
+
+  .spinner {
+    border: 4px solid var(--gray-5);
+    border-top: 4px solid var(--color-secondary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .error {
+    text-align: center;
+    padding: 50px 0;
+    color: var(--color-secondary);
+  }
+
+  .directory-list, .file-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 20px 0;
+  }
+
+  .directory-item, .file-item {
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .directory-item {
+    border-left: 4px solid var(--color-secondary);
+  }
+
+  .file-item {
+    border-left: 4px solid var(--color-accent);
+  }
+
+  .directory-item:hover, .file-item:hover {
+    transform: translateX(2px);
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    font-weight: 500;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  a:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .file-content {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    overflow-x: auto;
+  }
+
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+  }
+</style>
+
+<script define:vars={{ urlPath }}>
+  const DISPLAYABLE_EXTENSIONS = new Set([".yml", ".yaml", ".json", ".conf", ".txt", ".list"]);
+  
+  const escapeHtml = (() => {
+    const escapeMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    };
+    const escapeRegex = /[&<>"']/g;
+    return text => text.replace(escapeRegex, m => escapeMap[m]);
+  })();
+
+  function isDisplayableFileType(filename) {
+    const ext = filename.substring(filename.lastIndexOf(".")).toLowerCase();
+    return DISPLAYABLE_EXTENSIONS.has(ext);
+  }
+
+  const NON_EMPTY_SEGMENTS_REGEX = /[^/]+/g;
+  
+  async function loadContent() {
+    const contentEl = document.getElementById("content");
+    const loadingEl = document.getElementById("loading");
+    const errorEl = document.getElementById("error");
+
+    if (!urlPath) {
+      location.replace("/Library/sukka-ruleset/");
+      return;
+    }
+
+    try {
+      const pathSegments = Array.from(urlPath.matchAll(NON_EMPTY_SEGMENTS_REGEX), m => m[0]);
+      
+      let requestPath = `/Library/sukka-ruleset/${pathSegments.join("/")}`;
+      
+      if (!requestPath.endsWith("/")) {
+        const fileResponse = await fetch(requestPath, { method: 'HEAD' }).catch(() => ({ ok: false }));
+        
+        if (fileResponse.ok) {
+          const fileContentResponse = await fetch(requestPath);
+          const fileContent = await fileContentResponse.text();
+          const fileName = pathSegments[pathSegments.length - 1];
+          
+          const parentPath = pathSegments.length > 1 
+            ? `/Library/sukka-ruleset/${pathSegments.slice(0, -1).join("/")}/` 
+            : "/Library/sukka-ruleset/";
+          
+          const displayable = isDisplayableFileType(fileName);
+          const fileContentHTML = displayable 
+            ? `<div class="file-content"><pre><code>${escapeHtml(fileContent)}</code></pre></div>`
+            : `<div class="file-content"><p>This file type cannot be displayed in the browser. <a href="https://github.com/dearealeo/Library/blob/main/Sukka%20Ruleset/dist/${encodeURIComponent(urlPath)}" target="_blank">View on GitHub</a></p></div>`;
+          
+          contentEl.innerHTML = `<h1>${fileName}</h1><p><a href="${parentPath}">Back</a></p>${fileContentHTML}`;
+          contentEl.style.display = "block";
+          loadingEl.style.display = "none";
+          return;
+        }
+        
+        requestPath += "/";
+      }
+      
+      const response = await fetch(requestPath);
+      
+      if (!response.ok) {
+        throw new Error("Resource not available");
+      }
+      
+      const html = await response.text();
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      
+      const links = Array.from(tempDiv.querySelectorAll("a[href]"));
+      const directories = [];
+      const files = [];
+      
+      const baseURL = new URL(requestPath, window.location.origin);
+      
+      for (const link of links) {
+        const href = link.getAttribute("href");
+        
+        if (href === "../" || href.endsWith("index.html") || href.includes("://")) {
+          continue;
+        }
+        
+        const resolvedHref = href.startsWith("/") ? href : new URL(href, baseURL).pathname;
+        const isDir = resolvedHref.endsWith("/");
+        
+        const displayName = resolvedHref.split("/").filter(Boolean).pop() + (isDir ? "/" : "");
+        
+        (isDir ? directories : files).push({ name: displayName, href: resolvedHref });
+      }
+      
+      const parentPath = pathSegments.length > 1
+        ? `/Library/sukka-ruleset/${pathSegments.slice(0, -1).join("/")}/`
+        : "/Library/sukka-ruleset/";
+      
+      let content = `<h1>${urlPath}</h1>`;
+      content += pathSegments.length > 1
+        ? `<p><a href="${parentPath}">Back</a></p>`
+        : `<p><a href="/Library/sukka-ruleset/">Back to Sukka Ruleset</a></p>`;
+      
+      if (directories.length) {
+        content += `<h2>Directories</h2><ul class="directory-list section-group">`;
+        content += directories.map(dir => 
+          `<li class="directory-item section-item"><a href="${dir.href}">${dir.name}</a></li>`
+        ).join('');
+        content += `</ul>`;
+      }
+      
+      if (files.length) {
+        content += `<h2>Files</h2><ul class="file-list section-group">`;
+        content += files.map(file => 
+          `<li class="file-item section-item"><a href="${file.href}">${file.name}</a></li>`
+        ).join('');
+        content += `</ul>`;
+      }
+      
+      contentEl.innerHTML = content;
+      contentEl.style.display = "block";
+      loadingEl.style.display = "none";
+      
+    } catch (e) {
+      errorEl.style.display = "block";
+      loadingEl.style.display = "none";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => requestAnimationFrame(loadContent));
+</script>

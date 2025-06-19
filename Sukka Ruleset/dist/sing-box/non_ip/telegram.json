@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": ["th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe"],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "telegram.space",
+        "cdn-telegram.org",
+        "telegram.org",
+        "graph.org",
+        "telega.one",
+        "telegram.dog",
+        "tg.dev",
+        "tdesktop.com",
+        "telegra.ph",
+        "legra.ph",
+        "telesco.pe",
+        "telegram.me",
+        "tx.me",
+        "t.me"
+      ]
+    }
+  ]
+}

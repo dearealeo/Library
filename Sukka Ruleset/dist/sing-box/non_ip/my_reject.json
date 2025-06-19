@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "daisydiskapp.com",
+        "userlocation.googleapis.com"
+      ],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "0.0.198.in-addr.arpa",
+        "genuine.autodesk.com",
+        "cool3c.com",
+        "look.163.com",
+        "adobestats.io",
+        "adobe.io"
+      ],
+      "domain_keyword": ["bahoom"],
+      "process_name": [
+        "Tencent Lemon",
+        "LemonMonitor",
+        "LemonDaemon",
+        "LemonAgent",
+        "LemonService"
+      ],
+      "port": [7680]
+    }
+  ]
+}

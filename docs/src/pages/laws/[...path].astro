@@ -1,0 +1,362 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export const categoryMap = {
+  constitution: "宪法",
+  statutes: "法律",
+  "administrative-regulations": "行政法规",
+  "local-regulations": "地方性法规",
+  "judicial-interpretations": "司法解释",
+  "supervisory-regulations": "监察法规",
+};
+
+export async function getStaticPaths() {
+  const validCategories = Object.keys(categoryMap);
+  const paths = [];
+  
+  validCategories.forEach(category => {
+    paths.push({ params: { path: category } });
+    paths.push({ params: { path: `${category}/` } });
+  });
+  
+  paths.push({ params: { path: undefined } });
+  
+  return paths;
+}
+
+const { path: urlPath } = Astro.params;
+const pathSegments = urlPath ? urlPath.split("/").filter(Boolean) : [];
+
+let title = "Laws";
+
+if (pathSegments.length > 0) {
+  const englishCategory = pathSegments[0];
+  const chineseCategory = categoryMap[englishCategory] || englishCategory;
+  title = pathSegments.length > 1 
+    ? `Laws - ${decodeURIComponent(pathSegments[1])}`
+    : `Laws - ${chineseCategory}`;
+}
+---
+
+<BaseLayout title={title}>
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading content...</p>
+  </div>
+
+  <div id="content" class="content" style="display: none;"></div>
+
+  <div id="error" class="error" style="display: none;">
+    <h1>Content Not Found</h1>
+    <p>The requested content could not be found.</p>
+    <p><a href="/Library/laws/">Return to Laws Index</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    contain: content;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 50px 0;
+  }
+
+  .spinner {
+    border: 4px solid var(--gray-5);
+    border-top: 4px solid var(--color-secondary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+    will-change: transform;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .error {
+    text-align: center;
+    padding: 50px 0;
+    color: var(--color-secondary);
+  }
+
+  .statutes-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 20px 0;
+    contain: layout style;
+  }
+
+  .law-item {
+    padding: 15px;
+    margin-bottom: 8px;
+    background-color: var(--gray-6);
+    border-radius: 5px;
+    border-left: 4px solid var(--color-secondary);
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  .law-item:hover {
+    transform: translateX(2px);
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    font-weight: 500;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    touch-action: manipulation;
+  }
+
+  a:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .markdown {
+    line-height: 1.6;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+</style>
+
+<script define:vars={{ urlPath }}>
+  class LRUCache {
+    #capacity;
+    #cache = new Map();
+    
+    constructor(capacity = 50) {
+      this.#capacity = capacity;
+    }
+    
+    get(key) {
+      if (!this.#cache.has(key)) return undefined;
+      
+      const value = this.#cache.get(key);
+      this.#cache.delete(key);
+      this.#cache.set(key, value);
+      return value;
+    }
+    
+    set(key, value) {
+      if (this.#cache.has(key)) {
+        this.#cache.delete(key);
+      } else if (this.#cache.size >= this.#capacity) {
+        this.#cache.delete(this.#cache.keys().next().value);
+      }
+      this.#cache.set(key, value);
+    }
+    
+    has(key) {
+      return this.#cache.has(key);
+    }
+  }
+
+  const cache = new LRUCache(50);
+
+  const categoryMap = {
+    constitution: "宪法",
+    statutes: "法律",
+    "administrative-regulations": "行政法规",
+    "local-regulations": "地方性法规",
+    "judicial-interpretations": "司法解释",
+    "supervisory-regulations": "监察法规",
+  };
+
+  const sanitizer = (() => {
+    const element = document.createElement('div');
+    
+    return {
+      sanitize(text) {
+        if (!text) return '';
+        element.textContent = text;
+        return element.innerHTML;
+      }
+    };
+  })();
+
+  const markdownConverter = (() => {
+    const scriptTagRegex = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+    const paragraphRegex = /\n\n/g;
+    const lineBreakRegex = /\n/g;
+    const entityMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    const entityRegex = /[&<>"']/g;
+    
+    return {
+      convert(markdown) {
+        if (!markdown) return "";
+        
+        markdown = markdown.replace(scriptTagRegex, "");
+        markdown = markdown.replace(entityRegex, match => entityMap[match]);
+        
+        return markdown
+          .replace(paragraphRegex, "</p><p>")
+          .replace(lineBreakRegex, "<br />")
+          .replace(/^/, "<p>")
+          .replace(/$/, "</p>");
+      }
+    };
+  })();
+
+  async function fetchWithTimeout(url, options = {}, timeout = 3000) {
+    if (cache.has(url)) return cache.get(url);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) throw new Error(`${response.status}`);
+
+      const data = await response.text();
+      cache.set(url, data);
+      return data;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      throw error;
+    }
+  }
+
+  async function loadContent() {
+    const contentEl = document.getElementById("content");
+    const loadingEl = document.getElementById("loading");
+    const errorEl = document.getElementById("error");
+
+    if (!urlPath) {
+      location.replace("/Library/laws/");
+      return;
+    }
+
+    const pathSegments = urlPath.split("/").filter(Boolean);
+    
+    try {
+      if (pathSegments.length === 1) {
+        await loadCategoryPage(pathSegments[0], contentEl);
+      } else if (pathSegments.length >= 2) {
+        await loadLawPage(pathSegments[0], pathSegments[1], contentEl);
+      } else {
+        throw new Error("Invalid path");
+      }
+      
+      contentEl.style.display = "block";
+      loadingEl.style.display = "none";
+      
+      setupLazyPrefetch();
+    } catch (e) {
+      errorEl.style.display = "block";
+      loadingEl.style.display = "none";
+    }
+  }
+
+  async function loadCategoryPage(englishCategory, contentEl) {
+    const chineseCategory = categoryMap[englishCategory] || englishCategory;
+    const listingUrl = `/Library/laws/${englishCategory}/`;
+    
+    const html = await fetchWithTimeout(listingUrl);
+    
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    
+    const baseUrl = `/Library/laws/${englishCategory}/`;
+    const links = Array.from(doc.querySelectorAll("a[href]")).filter(a => {
+      const href = a.getAttribute("href");
+      return href.startsWith(baseUrl) && 
+             !href.endsWith("/") && 
+             href !== `${listingUrl}index.html`;
+    });
+
+    contentEl.innerHTML = `
+      <h1>${sanitizer.sanitize(chineseCategory)}</h1>
+      <p><a href="/Library/laws/">Back to Laws</a></p>
+      <ul class="statutes-list section-group">
+        ${links.map(link => `
+          <li class="law-item section-item">
+            <a href="${sanitizer.sanitize(link.getAttribute("href"))}">${sanitizer.sanitize(link.textContent.trim())}</a>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  }
+
+  async function loadLawPage(englishCategory, encodedLawName, contentEl) {
+    const chineseCategory = categoryMap[englishCategory] || englishCategory;
+    const lawName = decodeURIComponent(encodedLawName);
+    
+    const fileContent = await fetchWithTimeout(
+      `/Library/laws/${englishCategory}/${encodedLawName}.md`
+    );
+
+    contentEl.innerHTML = `
+      <h1>${sanitizer.sanitize(lawName)}</h1>
+      <p><a href="/Library/laws/${englishCategory}/">Back to ${sanitizer.sanitize(chineseCategory)}</a></p>
+      <div class="markdown">
+        ${markdownConverter.convert(fileContent)}
+      </div>
+    `;
+  }
+
+  function setupLazyPrefetch() {
+    if (!("IntersectionObserver" in window)) return;
+    
+    const links = document.querySelectorAll(".law-item a");
+    if (!links.length) return;
+    
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          
+          const link = entry.target;
+          const href = link.getAttribute("href");
+          
+          if (!href || cache.has(href)) {
+            observer.unobserve(link);
+            return;
+          }
+          
+          const prefetchLink = document.createElement("link");
+          prefetchLink.rel = "prefetch";
+          prefetchLink.href = href;
+          prefetchLink.as = "document";
+          document.head.appendChild(prefetchLink);
+          
+          observer.unobserve(link);
+        });
+      },
+      { rootMargin: "200px", threshold: 0.1 }
+    );
+    
+    links.forEach(link => observer.observe(link));
+  }
+
+  document.readyState === "loading" 
+    ? document.addEventListener("DOMContentLoaded", loadContent) 
+    : loadContent();
+</script>

@@ -1,0 +1,165 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const categories = [
+  { id: "constitution", name: "宪法" },
+  { id: "statutes", name: "法律" },
+  { id: "administrative-regulations", name: "行政法规" },
+  { id: "local-regulations", name: "地方性法规" },
+  { id: "judicial-interpretations", name: "司法解释" },
+  { id: "supervisory-regulations", name: "监察法规" },
+];
+---
+
+<BaseLayout title="National Database of Laws and Regulations">
+  <div class="h">
+    <h1>National Database of Laws and Regulations</h1>
+    <p><a href="/Library/">Back to Index</a></p>
+  </div>
+
+  <div class="c">
+    <div class="g">
+      {categories.map(({id, name}) => (
+        <div class="k" key={id}>
+          <h3>{name}</h3>
+          <a href={`/Library/laws/${id}/`} class="b">View</a>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="c">
+    <h2>Disclaimer</h2>
+    <p>
+      This project employs publicly accessible legal texts from the National
+      Database of Laws and Regulations (国家法律法规数据库) solely for
+      non-commercial purposes, with all rights thereto reserved by the General
+      Office of the Standing Committee of the National People's Congress
+      (全国人大常委会办公厅). Pursuant to Article 5(1) of the *Copyright Law of
+      the People's Republic of China* (《中华人民共和国著作权法》), such legal
+      texts constitute public domain materials exempt from copyright protection,
+      and the authoritative source for verification remains <a
+        href="http://flk.npc.gov.cn"
+        rel="noopener noreferrer">flk.npc.gov.cn</a
+      >.
+    </p>
+    <p>
+      View the <a
+        href="https://github.com/dearealeo/Library/tree/main/%E5%9B%BD%E5%AE%B6%E6%B3%95%E5%BE%8B%E6%B3%95%E8%A7%84%E6%95%B0%E6%8D%AE%E5%BA%93"
+        target="_blank"
+        rel="noopener noreferrer">source code</a
+      > for more information.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .h {
+    margin-bottom: 30px;
+  }
+  
+  .h a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    font-weight: 500;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.2s ease;
+    touch-action: manipulation;
+    will-change: transform, color;
+  }
+  
+  .h a:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+  
+  .g {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 20px;
+    margin-top: 20px;
+    contain: layout style;
+    will-change: transform;
+    content-visibility: auto;
+  }
+  
+  .k {
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid var(--color-secondary);
+    will-change: transform;
+    transform: translateZ(0);
+    transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    contain: content;
+    overscroll-behavior: none;
+  }
+  
+  .k h3 {
+    margin-top: 0;
+    color: var(--color-secondary);
+  }
+  
+  .b {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-top: 10px;
+    text-decoration: none;
+    color: var(--color-secondary);
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    border: 0;
+    touch-action: manipulation;
+    transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.2s ease;
+    will-change: transform, color;
+  }
+  
+  .b:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+</style>
+
+<script>
+  const initLinks = () => {
+    const links = document.querySelectorAll('a[href^="http"]');
+    const io = new IntersectionObserver(
+      (entries, observer) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const link = entry.target;
+            if (link.hostname !== location.hostname) {
+              const preconnect = document.createElement("link");
+              preconnect.rel = "preconnect";
+              preconnect.href = new URL(link.href).origin;
+              preconnect.crossOrigin = "anonymous";
+              document.head.appendChild(preconnect);
+              observer.unobserve(link);
+            }
+          }
+        }
+      },
+      { rootMargin: "200px 0px", threshold: 0.1 }
+    );
+
+    links.forEach(link => io.observe(link));
+  };
+
+  const initTouchHandlers = () => {
+    const cards = document.querySelectorAll(".k");
+    for (let i = 0; i < cards.length; i++) {
+      cards[i].addEventListener("touchstart", () => {}, { passive: true });
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      initLinks();
+      initTouchHandlers();
+    });
+  } else {
+    initLinks();
+    initTouchHandlers();
+  }
+</script>

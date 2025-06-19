@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "mirrorbits.lineageos.org"
+      ],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "torrentmac.net",
+        "engage.cloudflareclient.com",
+        "download.555mac.com"
+      ],
+      "domain_keyword": ["mac-torrent-download"],
+      "process_name": ["AdGuardHome", "nmap"]
+    }
+  ]
+}

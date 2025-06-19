@@ -1,0 +1,45 @@
+name: Update today Xinwen Lianbo
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 14 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-news:
+    name: Update today Xinwen Lianbo
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Enable long paths
+        run: git config --global core.longpaths true
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 1
+      - name: Set up Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: "3.13"
+          cache: "pip"
+      - name: Install dependencies
+        run: pip install -r 新闻联播/requirements.txt
+      - name: Generate content
+        run: python 新闻联播/main.py
+      - name: Lint Markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v20.0.0
+        with:
+          globs: "新闻联播/**/*.md"
+          fix: true
+          config: ".markdownlint.json"
+        continue-on-error: true
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet || git commit -m "feat(news): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]" && git push origin ${{ github.ref_name }}
