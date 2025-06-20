@@ -1,6 +1,6 @@
 #########################################
 # Sukka's Ruleset - Reject No Drop
-# Last Updated: 2025-06-15T14:04:50.661Z
+# Last Updated: 2025-06-20T12:41:38.407Z
 # Size: 29
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
@@ -32,9 +32,9 @@ DOMAIN-SUFFIX,cdnnodedns.cn
 DOMAIN-SUFFIX,mcdn.bilivideo.cn
 DOMAIN-SUFFIX,p2perrorlog.douyucdn.cn
 DOMAIN-SUFFIX,p2plog.douyucdn.cn
-DOMAIN-REGEX,^p2p-[\w.-]*?\.douyucdn\.cn$
-DOMAIN-REGEX,^p2pchunk-[\w.-]*?\.douyucdn\.cn$
-DOMAIN-REGEX,^dyp2p-[\w.-]*?\.douyucdn\.cn$
-DOMAIN-REGEX,^p2plive-[\w.-]*?\.douyucdn\.cn$
 DOMAIN-REGEX,^p2p[\w.-]*?-ws\.douyucdn\.cn$
+DOMAIN-REGEX,^p2plive-[\w.-]*?\.douyucdn\.cn$
+DOMAIN-REGEX,^dyp2p-[\w.-]*?\.douyucdn\.cn$
+DOMAIN-REGEX,^p2pchunk-[\w.-]*?\.douyucdn\.cn$
+DOMAIN-REGEX,^p2p-[\w.-]*?\.douyucdn\.cn$
 ################## EOF ##################

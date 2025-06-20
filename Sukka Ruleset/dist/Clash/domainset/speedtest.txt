@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-06-19T12:41:49.318Z
-# Size: 1077
+# Last Updated: 2025-06-20T12:41:38.111Z
+# Size: 1080
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -727,6 +727,7 @@ spdms.twincher.ru
 speedtest.starlink.ru
 speedtest.spacenet.ru
 speedtest.gatchina.ru
+msk.speedtest.timeweb.ru
 speedtest.netrack.ru
 speedtest.myarena.ru
 speedtest-msk.megafon.ru
@@ -970,6 +971,7 @@ speedtest.roraimanet.com.br
 teste.reatelecom.com.br
 velocimetro.proveinter.com.br
 medidor.nortelecom.com.br
+velocidade.niktelecom.com.br
 speedtest.nbntelecom.com.br
 teste.mwhtelecom.com.br
 velocidade.exytelecom.com.br
@@ -1015,6 +1017,7 @@ speed.sdmnet.com.br
 speedtest.inforr.com.br
 speedtest.snnet.com.br
 speedtest.mixam.com.br
+spd79.claro.com.br
 spd76.claro.com.br
 spd53.claro.com.br
 spd49.claro.com.br
