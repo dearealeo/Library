@@ -1,6 +1,6 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-06-20T12:41:38.383Z
+# Last Updated: 2025-06-21T12:39:24.413Z
 # Size: 68
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
@@ -13,6 +13,20 @@ DOMAIN,cdn-msp.18comic.vip
 DOMAIN,cdn-msp.18comic.org
 DOMAIN,cdn-msp.jmcomic-zzz.one
 DOMAIN,cdn-msp.jmcomic.me
+DOMAIN-KEYWORD,-files.gitbook.io
+DOMAIN-KEYWORD,vod-adaptive.akamaized.net
+DOMAIN-KEYWORD,web-assets.zendesk
+DOMAIN-KEYWORD,-res.cloudinary.com
+DOMAIN-KEYWORD,dsn.algolia.net
+DOMAIN-KEYWORD,-thumbs.pornhost.com
+DOMAIN-KEYWORD,-cdn.eporner.com
+DOMAIN-KEYWORD,cdn.adultempire.com
+DOMAIN-KEYWORD,-assets.worldsex.com
+DOMAIN-KEYWORD,-thumbs.worldsex.com
+DOMAIN-KEYWORD,99avcdn
+DOMAIN-KEYWORD,-images.disco-api.com
+DOMAIN-KEYWORD,vdownload.hanime1
+DOMAIN-KEYWORD,fonts.hanime1
 DOMAIN-REGEX,^s[\w.-]*?\.hanime1$
 DOMAIN-REGEX,^[\w.-]*?\.skyearth[\w.-]\.xyz$
 DOMAIN-REGEX,^v\.rn[\w.-][\w.-][\w.-]\.xyz$
@@ -62,18 +76,5 @@ DOMAIN-REGEX,^t[\w.-]\.nhentai\.net$
 DOMAIN-REGEX,^i[\w.-]\.nhentai\.net$
 DOMAIN-REGEX,^object-storage-[\w.-]*?\.vexxhost\.net$
 DOMAIN-REGEX,^appcenter-filemanagement-[\w.-]*?\.cloudapp\.net$
-DOMAIN-KEYWORD,-files.gitbook.io
-DOMAIN-KEYWORD,vod-adaptive.akamaized.net
-DOMAIN-KEYWORD,web-assets.zendesk
-DOMAIN-KEYWORD,-res.cloudinary.com
-DOMAIN-KEYWORD,dsn.algolia.net
-DOMAIN-KEYWORD,-thumbs.pornhost.com
-DOMAIN-KEYWORD,-cdn.eporner.com
-DOMAIN-KEYWORD,cdn.adultempire.com
-DOMAIN-KEYWORD,-assets.worldsex.com
-DOMAIN-KEYWORD,-thumbs.worldsex.com
-DOMAIN-KEYWORD,99avcdn
-DOMAIN-KEYWORD,-images.disco-api.com
-DOMAIN-KEYWORD,vdownload.hanime1
-DOMAIN-KEYWORD,fonts.hanime1
 ################## EOF ##################
+

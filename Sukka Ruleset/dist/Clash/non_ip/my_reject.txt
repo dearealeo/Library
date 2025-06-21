@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject (REJECT-DROP)
-# Last Updated: 2025-06-15T14:04:50.656Z
-# Size: 16
+# Last Updated: 2025-06-21T12:39:24.429Z
+# Size: 17
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -11,6 +11,7 @@ DOMAIN-SUFFIX,0.0.198.in-addr.arpa
 DOMAIN,daisydiskapp.com
 DOMAIN,userlocation.googleapis.com
 DOMAIN-SUFFIX,genuine.autodesk.com
+DOMAIN-SUFFIX,mibi.xiaomi.com
 DOMAIN-SUFFIX,cool3c.com
 DOMAIN-SUFFIX,look.163.com
 DOMAIN-SUFFIX,adobestats.io
@@ -23,3 +24,4 @@ PROCESS-NAME,LemonAgent
 PROCESS-NAME,LemonService
 DST-PORT,7680
 ################## EOF ##################
+

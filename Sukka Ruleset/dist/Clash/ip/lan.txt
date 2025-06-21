@@ -1,6 +1,6 @@
 #########################################
 # Sukka's Ruleset - LAN
-# Last Updated: 2025-05-24T14:06:05.300Z
+# Last Updated: 2025-06-21T12:39:24.408Z
 # Size: 12
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
@@ -21,3 +21,4 @@ IP-CIDR6,::1/128
 IP-CIDR6,fc00::/7
 IP-CIDR6,fe80::/10
 ################## EOF ##################
+

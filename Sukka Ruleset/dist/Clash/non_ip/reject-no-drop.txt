@@ -1,6 +1,6 @@
 #########################################
 # Sukka's Ruleset - Reject No Drop
-# Last Updated: 2025-06-20T12:41:38.407Z
+# Last Updated: 2025-06-21T12:39:24.432Z
 # Size: 29
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
@@ -38,3 +38,4 @@ DOMAIN-REGEX,^dyp2p-[\w.-]*?\.douyucdn\.cn$
 DOMAIN-REGEX,^p2pchunk-[\w.-]*?\.douyucdn\.cn$
 DOMAIN-REGEX,^p2p-[\w.-]*?\.douyucdn\.cn$
 ################## EOF ##################
+

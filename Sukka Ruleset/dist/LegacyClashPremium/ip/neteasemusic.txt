@@ -1,6 +1,6 @@
 #########################################
 # Sukka's Ruleset - Netease Music IPs
-# Last Updated: 2025-05-24T14:06:05.301Z
+# Last Updated: 2025-06-21T12:39:24.408Z
 # Size: 18
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
@@ -27,3 +27,4 @@ IP-CIDR,118.24.63.156/32,no-resolve
 IP-CIDR,193.112.159.225/32,no-resolve
 IP-CIDR,223.252.199.66/31,no-resolve
 ################## EOF ##################
+

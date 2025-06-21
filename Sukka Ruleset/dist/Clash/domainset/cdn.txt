@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-06-20T12:41:40.985Z
-# Size: 3632
+# Last Updated: 2025-06-21T12:39:25.517Z
+# Size: 3636
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -70,6 +70,7 @@ cdn.bullwhip.cloud
 resources-live.sketch.cloud
 +.gateway.pinata.cloud
 patterns.hiive.cloud
+cdn.tiny.cloud
 fscdn.eppo.cloud
 +.dsc.cloud
 static.bit.cloud
@@ -222,6 +223,7 @@ publicsuffix.org
 proxy.joinmastodon.org
 cdn-media-2.freecodecamp.org
 cdn-media-1.freecodecamp.org
+cdn-media-0.freecodecamp.org
 cdn.freecodecamp.org
 embed.culturalspot.org
 +.cdn-telegram.org
@@ -991,6 +993,7 @@ static.cloudcachetci.com
 +.cdn-centaurus.com
 +.cbsnewsstatic.com
 files.buildwithfern.com
++.brightspotcdn.com
 +.aweber-static.com
 +.cdn.autoevolution.com
 +.assets-yammer.com
@@ -2591,6 +2594,7 @@ assets.fastly.com
 s3.envato.com
 creative.eizzih.com
 videos2.edclub.com
++.dubcdn.com
 media.dlsite.com
 +.dilcdn.com
 cdn.cxense.com
@@ -3641,3 +3645,4 @@ limitless.cmax.ai
 bot.ivy.ai
 rules.ac
 ################## EOF ##################
+

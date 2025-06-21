@@ -1,6 +1,6 @@
 #########################################
 # Sukka's Ruleset - CDN
-# Last Updated: 2025-05-24T14:06:05.297Z
+# Last Updated: 2025-06-21T12:39:24.405Z
 # Size: 4
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
@@ -13,3 +13,4 @@ IP-CIDR,162.159.200.1/32
 IP-CIDR,162.159.200.123/32
 IP-CIDR,185.199.108.0/22
 ################## EOF ##################
+
