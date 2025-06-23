@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.2",
-    "astro": "^5.10.0",
+    "astro": "^5.10.1",
     "rehype-stringify": "^10.0.0",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
@@ -36,7 +36,7 @@
     "@sukka/markdown.css": "^0.1.5",
     "@tailwindcss/vite": "^4.1.10",
     "astro-icon": "^1.1.5",
-    "basecoat-css": "^0.2.4",
+    "basecoat-css": "^0.2.5",
     "dayjs": "^1.11.13",
     "isomorphic-dompurify": "^2.25.0",
     "katex": "^0.16.22",
