@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Non-IP
-# Last Updated: 2025-06-24T12:42:12.557Z
-# Size: 672
+# Last Updated: 2025-06-25T12:42:51.300Z
+# Size: 677
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -267,7 +267,9 @@ DOMAIN-REGEX,^basvformu[\w.-]*?\.xyz$
 DOMAIN-REGEX,^www\.fuze-sea[\w.-]*?\.xyz$
 DOMAIN-REGEX,^v\.tzbox[\w.-]*?\.xyz$
 DOMAIN-REGEX,^evri\.[\w.-]*?\.xyz$
+DOMAIN-REGEX,^bitvavo[\w.-]*?\.vip$
 DOMAIN-REGEX,^baoviet[\w.-]*?\.vip$
+DOMAIN-REGEX,^bitvavo[\w.-]*?\.top$
 DOMAIN-REGEX,^baoviet[\w.-]*?\.top$
 DOMAIN-REGEX,^press-continue\.[\w.-]*?\.top$
 DOMAIN-REGEX,^vincomplaza\.[\w.-]*?\.top$
@@ -410,6 +412,7 @@ DOMAIN-REGEX,^install[\w.-]*?\.zonastat\.com$
 DOMAIN-REGEX,^polaris[\w.-]*?-normal-[\w.-]*?\.zijieapi\.com$
 DOMAIN-REGEX,^ads[\w.-]*?-normal-lq\.zijieapi\.com$
 DOMAIN-REGEX,^ads[\w.-]*?-normal-[\w.-]*?\.zijieapi\.com$
+DOMAIN-REGEX,^ads[\w.-]*?-normal[\w.-]*?\.zijieapi\.com$
 DOMAIN-REGEX,^mssdk[\w.-]*?\.zijieapi\.com$
 DOMAIN-REGEX,^tnc[\w.-]*?\.zijieapi\.com$
 DOMAIN-REGEX,^log[\w.-]*?\.zijieapi\.com$
@@ -469,6 +472,7 @@ DOMAIN-REGEX,^ana[\w.-]*?\.inews24\.com$
 DOMAIN-REGEX,^events-[\w.-]*?\.op\.hicloud\.com$
 DOMAIN-REGEX,^ulog[\w.-]*?\.gifshow\.com$
 DOMAIN-REGEX,^mon[\w.-]*?-misc-lf\.fqnovel\.com$
+DOMAIN-REGEX,^mon[\w.-]*?-misc\.fqnovel\.com$
 DOMAIN-REGEX,^[\w.-]*?-applog[\w.-]*?\.fqnovel\.com$
 DOMAIN-REGEX,^stats2\.[\w.-]*?\.fdnames\.com$
 DOMAIN-REGEX,^mgbsdk[\w.-]*?\.matrix\.easebar\.com$
@@ -645,6 +649,7 @@ DOMAIN-REGEX,^gcw[\w.-]*?\.2liang\.cn$
 DOMAIN-REGEX,^bdcpro[\w.-]*?\.techweb\.com\.cn$
 DOMAIN-REGEX,^ysdm[\w.-]*?\.ys137\.com\.cn$
 DOMAIN-REGEX,^newmall[\w.-]*?\.cc$
+DOMAIN-REGEX,^bitvavo[\w.-]*?\.cc$
 DOMAIN-REGEX,^ad[\w.-]*?\.on\.cc$
 DOMAIN-REGEX,^vssid\.[\w.-]*?\.cc$
 DOMAIN-REGEX,^banner[\w.-]*?\.kinogo\.by$
