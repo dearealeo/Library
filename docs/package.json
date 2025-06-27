@@ -41,7 +41,7 @@
     "isomorphic-dompurify": "^2.25.0",
     "katex": "^0.16.22",
     "lodash.kebabcase": "^4.1.1",
-    "marked": "^15.0.12",
+    "marked": "^16.0.0",
     "mdast-util-to-string": "^4.0.0",
     "reading-time": "^1.5.0",
     "rehype-katex": "^7.0.1",
