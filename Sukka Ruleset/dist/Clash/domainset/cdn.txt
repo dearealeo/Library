@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-06-25T12:42:52.217Z
-# Size: 3664
+# Last Updated: 2025-06-28T12:37:52.622Z
+# Size: 3667
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -1767,6 +1767,7 @@ wac-cdn.atlassian.com
 +.aspnetcdn.com
 +.appmifile.com
 s-cdn.anthropic.com
+a-cdn.anthropic.com
 +.ipfs.anonymize.com
 images.anandtech.com
 ip-ranges.amazonaws.com
@@ -1874,6 +1875,8 @@ thumbs.onlyfans.com
 static.onlyfans.com
 cdn3.onlyfans.com
 cdn2.onlyfans.com
+gstatic.olympics.com
+img.olympics.com
 edge.nodeseek.com
 +.nitrocdn.com
 cdn.accounts.nintendo.com

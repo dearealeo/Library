@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - General Global Services
-# Last Updated: 2025-06-24T12:42:12.846Z
-# Size: 1057
+# Last Updated: 2025-06-28T12:37:50.196Z
+# Size: 1058
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -478,6 +478,7 @@ DOMAIN-SUFFIX,porntube.com
 DOMAIN-SUFFIX,porntrex.com
 DOMAIN-SUFFIX,pornpics.com
 DOMAIN-SUFFIX,pastebin.com
+DOMAIN-SUFFIX,olympics.com
 DOMAIN-SUFFIX,nytstyle.com
 DOMAIN-SUFFIX,nodeseek.com
 DOMAIN-SUFFIX,nicehash.com
