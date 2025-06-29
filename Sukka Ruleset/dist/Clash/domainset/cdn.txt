@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-06-28T12:37:52.622Z
-# Size: 3667
+# Last Updated: 2025-06-29T12:39:54.917Z
+# Size: 3671
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -198,6 +198,7 @@ content.any.run
 badbits.dwebops.pub
 gfx-data.news-engineering.aws.wapo.pub
 ca.nfs.pub
+static.themebuilder.aws.arc.pub
 cms-assets.webediamovies.pro
 img.foresightnews.pro
 pics.x-n-x-x.pro
@@ -343,6 +344,7 @@ static.ietf.org
 +.ehgt.org
 +.ipfs.busy.org
 +.4cdn.org
+audio.rfa.org
 jaws.pbs.org
 +.cdn.pbs.org
 +.tile.osm.org
@@ -1611,7 +1613,9 @@ media.shopimind.com
 +.sendspace.com
 forest-mt-s3.seekrtech.com
 images.scrolller.com
+interwiki.scpwikicn.com
 sigma9.scpwikicn.com
+bhl.scpwikicn.com
 data.schemaapp.com
 cdn.schemaapp.com
 assets.scaleflex.com

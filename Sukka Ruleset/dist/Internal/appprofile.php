@@ -1,6 +1,6 @@
 <?php
 
-// # Build 2025-06-28T12:37:51.845Z
+// # Build 2025-06-29T12:39:54.144Z
 
 declare(strict_types=1);
 
@@ -2111,6 +2111,7 @@ $_ENV['Clash_Group_Config'] = [
         'DOMAIN-SUFFIX,gstatic.com,Global',
         'DOMAIN-SUFFIX,gooogle.com,Global',
         'DOMAIN-SUFFIX,godaddy.com,Global',
+        'DOMAIN-SUFFIX,gitbook.com,Global',
         'DOMAIN-SUFFIX,gartner.com,Global',
         'DOMAIN-SUFFIX,freepik.com,Global',
         'DOMAIN-SUFFIX,foxnews.com,Global',
@@ -8301,7 +8302,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2a06:1281:8000::/36,Domestic',
         'IP-CIDR6,2a06:3606::/31,Domestic',
         'IP-CIDR6,2a06:9f81:4600::/44,Domestic',
-        'IP-CIDR6,2a06:9f81:4640::/43,Domestic',
+        'IP-CIDR6,2a06:9f81:4640::/44,Domestic',
         'IP-CIDR6,2a06:9f81:4660::/44,Domestic',
         'IP-CIDR6,2a06:a005:260::/43,Domestic',
         'IP-CIDR6,2a06:a005:280::/43,Domestic',
@@ -8466,6 +8467,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2a14:67c1:b4f0::/44,Domestic',
         'IP-CIDR6,2a14:67c1:b500::/48,Domestic',
         'IP-CIDR6,2a14:67c1:b563::/48,Domestic',
+        'IP-CIDR6,2a14:67c1:b566::/48,Domestic',
         'IP-CIDR6,2a14:67c5:1100::/40,Domestic',
         'IP-CIDR6,2a14:67c5:1900::/40,Domestic',
         'IP-CIDR6,2a14:7580:9205::/48,Domestic',

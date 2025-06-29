@@ -467,6 +467,7 @@
         "^r\\.reklam[\\w.-]*?\\.com$",
         "^events-api[\\w.-]*?\\.outfit7\\.com$",
         "^customerevents\\.us-east-[\\w.-]*?\\.internal\\.dradis\\.netflix\\.com$",
+        "^cs[\\w.-]*?\\.mp3bars\\.com$",
         "^dn[\\w.-]*?\\.ixinwei\\.com$",
         "^ana[\\w.-]*?\\.inews24\\.com$",
         "^events-[\\w.-]*?\\.op\\.hicloud\\.com$",
