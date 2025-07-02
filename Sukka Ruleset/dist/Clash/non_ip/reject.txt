@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Non-IP
-# Last Updated: 2025-07-01T12:43:37.389Z
-# Size: 679
+# Last Updated: 2025-07-02T12:41:39.077Z
+# Size: 678
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -537,7 +537,6 @@ DOMAIN-REGEX,^beacons[\w.-]*?\.gvt[\w.-]\.com$
 DOMAIN-REGEX,^beacons[\w.-]*?\.gvt3\.com$
 DOMAIN-REGEX,^analytics\.[\w.-]*?\.sky\.com$
 DOMAIN-REGEX,^i-[\w.-]*?\.ci360\.sas\.com$
-DOMAIN-REGEX,^analyzer[\w.-]*?\.fc2\.com$
 DOMAIN-REGEX,^report\.[\w.-]*?\.qq\.com$
 DOMAIN-REGEX,^apple-[\w.-]*?\.le\.com$
 DOMAIN-REGEX,^c\.blue\.[\w.-]*?\.com$
