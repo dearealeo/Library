@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-07-02T12:41:39.082Z
-# Size: 1101
+# Last Updated: 2025-07-03T12:41:15.596Z
+# Size: 1102
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -114,6 +114,7 @@ lg-dfw.fdcservers.net
 lg-ams.fdcservers.net
 lon-hex-speedtest.cloudconnx.net
 speed.alsalamnet.net
+speedtest.viperhost.net
 speedtest.viberlink.net
 speedtest-lon.veloxserv.net
 +.speedtest.net
