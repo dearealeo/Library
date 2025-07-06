@@ -1,0 +1,16 @@
+#########################################
+# Sukka's Ruleset - CDN
+# Last Updated: 2025-06-21T12:39:24.405Z
+# Size: 4
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This file contains CDN IP addresses for object storage and static assets CDN.
+#########################################
+DOMAIN,th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe
+IP-CIDR,162.159.200.1/32
+IP-CIDR,162.159.200.123/32
+IP-CIDR,185.199.108.0/22
+################## EOF ##################
+

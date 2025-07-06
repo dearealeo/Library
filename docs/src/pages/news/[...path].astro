@@ -1,0 +1,358 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({length: currentYear - 2017}, (_, i) => String(i + 2018)).concat(String(currentYear + 1));
+  
+  const paths = [];
+  years.forEach(year => {
+    paths.push({params: {path: year}}, {params: {path: `${year}/`}});
+    for (let month = 1; month <= 12; month++) {
+      const monthStr = month.toString().padStart(2, '0');
+      paths.push(
+        {params: {path: `${year}/${monthStr}`}},
+        {params: {path: `${year}/${monthStr}/`}}
+      );
+    }
+  });
+  
+  paths.push({params: {path: undefined}});
+  
+  return paths;
+}
+
+const { path: urlPath } = Astro.params;
+const pathSegments = urlPath?.split("/").filter(Boolean) || [];
+
+const title = pathSegments.length === 0 
+  ? "News" 
+  : pathSegments.length === 1 
+    ? `News ${pathSegments[0]}` 
+    : pathSegments.length === 2 
+      ? `News ${pathSegments[0]}-${pathSegments[1]}` 
+      : `News ${pathSegments[0]}-${pathSegments[1]}-${pathSegments[2]}`;
+---
+
+<BaseLayout title={title}>
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading content...</p>
+  </div>
+
+  <div id="content" class="content" style="display: none;"></div>
+
+  <div id="error" class="error" style="display: none;">
+    <h1>Content Not Found</h1>
+    <p>The requested content could not be found.</p>
+    <p><a href="/Library/news/">Return to News Index</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 50px 0;
+  }
+
+  .spinner {
+    border: 4px solid var(--gray-5);
+    border-top: 4px solid var(--color-secondary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .error {
+    text-align: center;
+    padding: 50px 0;
+    color: var(--color-secondary);
+  }
+
+  .months-list {
+    list-style-type: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+  }
+
+  .month-item {
+    padding: 15px;
+    border-radius: 5px;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .month-item a {
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .month-item a:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+  
+  .month-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .article-count {
+    font-size: 0.85em;
+    color: var(--color-accent);
+  }
+
+  .has-content {
+    border-left: 4px solid var(--color-secondary);
+  }
+
+  .has-content:hover {
+    transform: translateX(2px);
+  }
+
+  .no-content {
+    color: var(--gray-4);
+    border-left: 4px solid var(--gray-5);
+  }
+
+  .news-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 20px 0;
+  }
+
+  .news-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border-left: 4px solid var(--color-secondary);
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .news-date {
+    font-size: 0.9em;
+    color: var(--color-accent);
+    margin-bottom: 5px;
+  }
+
+  .news-item:hover {
+    transform: translateX(2px);
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    font-weight: 500;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  a:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .markdown {
+    line-height: 1.6;
+  }
+</style>
+
+<script define:vars={{ urlPath }}>
+  const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  
+  const markdownToHtml = md => 
+    `<p>${md.replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br />")}</p>`;
+  
+  const getMonthName = (() => {
+    const cache = {};
+    return idx => cache[idx] || (cache[idx] = MONTH_NAMES[idx]);
+  })();
+  
+  const logError = () => {};
+
+  async function loadContent() {
+    const contentEl = document.getElementById("content");
+    const loadingEl = document.getElementById("loading");
+    const errorEl = document.getElementById("error");
+    
+    if (!urlPath) {
+      window.location.href = "/Library/news/";
+      return;
+    }
+    
+    const pathSegments = urlPath.split("/").filter(Boolean);
+    
+    try {
+      let content = "";
+      
+      if (pathSegments.length === 1) {
+        await handleYearView(pathSegments[0]);
+      } else if (pathSegments.length === 2) {
+        await handleMonthView(pathSegments[0], pathSegments[1]);
+      } else if (pathSegments.length === 3) {
+        await handleDayView(pathSegments[0], pathSegments[1], pathSegments[2]);
+      }
+      
+      contentEl.style.display = "block";
+      loadingEl.style.display = "none";
+    } catch (error) {
+      logError();
+      errorEl.style.display = "block";
+      loadingEl.style.display = "none";
+    }
+    
+    async function handleYearView(year) {
+      const listingUrl = `/Library/news/${year}/`;
+      const response = await fetch(listingUrl);
+      
+      if (!response.ok) throw new Error("Directory unavailable");
+      
+      const html = await response.text();
+      const doc = (new DOMParser()).parseFromString(html, "text/html");
+      
+      const fileRegex = new RegExp(`^${year}(\\d{2})\\d{2}\\.md$`);
+      const months = new Set();
+      const monthCounts = new Map();
+      const links = Array.from(doc.querySelectorAll("a[href]"));
+      
+      links.forEach(link => {
+        const href = link.getAttribute("href");
+        const match = href.match(fileRegex);
+        if (match) {
+          const monthStr = match[1];
+          months.add(monthStr);
+          monthCounts.set(monthStr, (monthCounts.get(monthStr) || 0) + 1);
+        }
+      });
+      
+      let content = `<h1>News ${year}</h1>
+      <p><a href="/Library/news/">Back to News</a></p>
+      <ul class="months-list section-group">`;
+      
+      for (let i = 1; i <= 12; i++) {
+        const monthStr = String(i).padStart(2, "0");
+        const hasContent = months.has(monthStr);
+        const count = monthCounts.get(monthStr) || 0;
+        
+        content += `<li class="month-item ${hasContent ? "has-content section-item" : "no-content"}">
+          ${hasContent 
+            ? `<a href="/Library/news/${year}/${monthStr}/">
+                <span class="month-name">${getMonthName(i - 1)}</span>
+                <span class="article-count">${count} article${count !== 1 ? 's' : ''}</span>
+               </a>` 
+            : `<span class="month-name">${getMonthName(i - 1)}</span>`}
+        </li>`;
+      }
+      
+      content += `</ul>`;
+      document.getElementById("content").innerHTML = content;
+    }
+    
+    async function handleMonthView(year, month) {
+      const monthIndex = parseInt(month, 10) - 1;
+      const listingUrl = `/Library/news/${year}/`;
+      
+      const response = await fetch(listingUrl);
+      if (!response.ok) throw new Error("Directory unavailable");
+      
+      const html = await response.text();
+      const doc = (new DOMParser()).parseFromString(html, "text/html");
+      
+      const fileRegex = new RegExp(`^${year}${month}(\\d{2})\\.md$`);
+      const links = Array.from(doc.querySelectorAll("a[href]"));
+      
+      const newsItemPromises = links
+        .map(link => {
+          const href = link.getAttribute("href");
+          const match = href.match(fileRegex);
+          if (!match) return null;
+          
+          const day = match[1];
+          return fetchNewsItemDetails(year, month, day);
+        })
+        .filter(Boolean);
+      
+      const newsItems = (await Promise.allSettled(newsItemPromises))
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value)
+        .sort((a, b) => b.day.localeCompare(a.day));
+      
+      let content = `<h1>News ${getMonthName(monthIndex)} ${year}</h1>
+      <p><a href="/Library/news/${year}/">Back to ${year}</a></p>
+      <ul class="news-list section-group">`;
+      
+      newsItems.forEach(item => {
+        content += `<li class="news-item section-item">
+          <span class="news-date">${year}-${month}-${item.day}</span>
+          <a href="${item.href}">${item.title}</a>
+        </li>`;
+      });
+      
+      content += `</ul>`;
+      document.getElementById("content").innerHTML = content;
+    }
+    
+    async function fetchNewsItemDetails(year, month, day) {
+      try {
+        const response = await fetch(`/Library/news/${year}/${year}${month}${day}.md`);
+        if (response.ok) {
+          const content = await response.text();
+          const firstLine = content.split('\n')[0].replace(/^#\s*/, '').trim();
+          return {
+            day,
+            title: firstLine || `News for ${year}-${month}-${day}`,
+            href: `/Library/news/${year}/${month}/${day}/`
+          };
+        }
+      } catch (e) {}
+      
+      return {
+        day,
+        title: `News for ${year}-${month}-${day}`,
+        href: `/Library/news/${year}/${month}/${day}/`
+      };
+    }
+    
+    async function handleDayView(year, month, day) {
+      const filePath = `/Library/news/${year}/${year}${month}${day}.md`;
+      const response = await fetch(filePath);
+      
+      if (!response.ok) throw new Error("News file not found");
+      
+      const fileContent = await response.text();
+      const content = `<h1>News ${year}-${month}-${day}</h1>
+      <p><a href="/Library/news/${year}/${month}/">Back to ${year}-${month}</a></p>
+      <div class="markdown">
+        ${markdownToHtml(fileContent)}
+      </div>`;
+      
+      document.getElementById("content").innerHTML = content;
+    }
+  }
+
+  document.readyState === "loading" 
+    ? document.addEventListener("DOMContentLoaded", loadContent)
+    : loadContent();
+</script>

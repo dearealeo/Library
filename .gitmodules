@@ -1,0 +1,9 @@
+[submodule "Sukka Ruleset/upstream"]
+	path = Sukka Ruleset/upstream
+	url = git@github.com:SukkaW/Surge.git
+[submodule "Sukka Ruleset/parser"]
+	path = Sukka Ruleset/parser
+	url = git@github.com:SukkaW/nodelistparser.git
+[submodule "Sukka Ruleset/chnroutes"]
+	path = Sukka Ruleset/chnroutes
+	url = git@github.com:SukkaW/chnroutes2-optimized.git

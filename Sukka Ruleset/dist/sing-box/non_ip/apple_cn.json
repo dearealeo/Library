@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "gs-loc-cn.apple.com",
+        "api.smoot.apple.cn"
+      ],
+      "domain_suffix": [
+        "th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe",
+        "gspe19-cn-ssl.ls.apple.com",
+        "cn-ssl.ls.apple.com",
+        "cn.ls.apple.com",
+        "cn.apple.com",
+        "icloud.com.cn",
+        "apple.com.cn"
+      ]
+    }
+  ]
+}
