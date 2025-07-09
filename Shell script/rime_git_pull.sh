@@ -8,6 +8,7 @@ readonly LOGFILE="$HOME/Library/Logs/rime_git_pull.log"
 readonly LOCK_F="/tmp/rime_git_pull.lock"
 readonly MAX_LOG_SIZE=1048576
 readonly MAX_ROTATED_LOGS=1
+# shellcheck disable=SC2155
 readonly GIT_BIN="$(command -v git)"
 
 log() { printf '[%s] %s\n' "$(date +%FT%T)" "$*" >&2; }
@@ -29,6 +30,7 @@ rotate_log() {
             size=$(wc -c < "$LOGFILE" 2>/dev/null || echo 0)
         fi
         if [[ $size -ge $MAX_LOG_SIZE ]]; then
+            # shellcheck disable=SC2004
             for ((i=$MAX_ROTATED_LOGS; i>=1; i--)); do
                 [[ $i -eq $MAX_ROTATED_LOGS && -f "$LOGFILE.$i" ]] && rm -f "$LOGFILE.$i"
                 [[ -f "$LOGFILE.$((i-1))" ]] && mv -f "$LOGFILE.$((i-1))" "$LOGFILE.$i"
@@ -48,7 +50,7 @@ if command -v flock >/dev/null 2>&1; then
     exec 200>"$LOCK_F"
     flock -n 200 || exit 0
 else
-    [[ -f "$LOCK_F" ]] && { 
+    [[ -f "$LOCK_F" ]] && {
         pid=$(cat "$LOCK_F" 2>/dev/null || true)
         if [[ -n "$pid" ]]; then
             if ps -p "$pid" &>/dev/null; then
@@ -69,6 +71,6 @@ exec &> >(tee -a "$LOGFILE")
     cd -- "$RIME_DIR" || { log "Failed to cd to $RIME_DIR"; exit 1; }
     export GIT_TERMINAL_PROMPT=0
     export GIT_SSH_COMMAND="ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new"
-    LC_ALL=C "$GIT_BIN" pull --quiet --ff-only
+    LC_ALL=C "$GIT_BIN" pull
     log "Operation completed"
 } || handle_error

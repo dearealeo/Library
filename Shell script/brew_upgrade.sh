@@ -28,6 +28,7 @@ rotate_log() {
             size=$(wc -c < "$LOGFILE" 2>/dev/null || echo 0)
         fi
         if [[ $size -ge $MAX_LOG_SIZE ]]; then
+            # shellcheck disable=SC2004
             for ((i=$MAX_ROTATED_LOGS; i>=1; i--)); do
                 [[ $i -eq $MAX_ROTATED_LOGS && -f "$LOGFILE.$i" ]] && rm -f "$LOGFILE.$i"
                 [[ -f "$LOGFILE.$((i-1))" ]] && mv -f "$LOGFILE.$((i-1))" "$LOGFILE.$i"
@@ -44,7 +45,7 @@ if command -v flock >/dev/null 2>&1; then
     exec 200>"$LOCK_F"
     flock -n 200 || exit 0
 else
-    [[ -f "$LOCK_F" ]] && { 
+    [[ -f "$LOCK_F" ]] && {
         pid=$(cat "$LOCK_F" 2>/dev/null || true)
         if [[ -n "$pid" ]]; then
             if ps -p "$pid" &>/dev/null; then
@@ -71,14 +72,14 @@ export HOMEBREW_NO_INSTALL_UPGRADE=1
 
 {
     log "brew update"
-    LC_ALL=C "$BREW_BIN" update --quiet
+    LC_ALL=C "$BREW_BIN" update
     log "brew upgrade"
-    LC_ALL=C "$BREW_BIN" upgrade --quiet
+    LC_ALL=C "$BREW_BIN" upgrade
     log "brew upgrade --cask"
-    LC_ALL=C "$BREW_BIN" upgrade --cask --quiet
+    LC_ALL=C "$BREW_BIN" upgrade --cask
     log "brew cu (cask upgrade)"
-    LC_ALL=C "$BREW_BIN" cu -a -y --quiet
+    LC_ALL=C "$BREW_BIN" cu -a -y
     log "brew cleanup"
-    LC_ALL=C "$BREW_BIN" cleanup -s --prune=all --quiet
+    LC_ALL=C "$BREW_BIN" cleanup -s --prune=all
     log "Operation completed"
 } || handle_error
