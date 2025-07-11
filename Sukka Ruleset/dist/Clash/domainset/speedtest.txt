@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-07-08T12:42:36.784Z
-# Size: 1107
+# Last Updated: 2025-07-11T12:41:29.529Z
+# Size: 1114
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -143,6 +143,7 @@ speedtest03.srv.whplny.alticeusa.net
 speedtest01.srv.snjsca.alticeusa.net
 speedtest01.srv.hcvlny.alticeusa.net
 speedtest01.srv.dllstx.alticeusa.net
+st0.dal.tularosa.net
 speedtest.polycomm.net
 +.speedtest.ozarksgo.net
 speedtest.sea1.nitelusa.net
@@ -280,6 +281,7 @@ speedtest-binghamton.greenlightnetworks.com
 speedtest-buffalo.greenlightnetworks.com
 speedtest-albany.greenlightnetworks.com
 speedtest.greenlightnetworks.com
+speedtest.absolutevalidation.com
 cugspeed.chinaunicomglobal.com
 sgspeed.chinaunicomglobal.com
 suntechspeedtest.com
@@ -294,6 +296,7 @@ speedtest-aus.chainlinkhosting.com
 speedtest.parishbroadband.com
 speedtest2.pacificinternet.com
 speedtest.naturalwireless.com
+speedtest.masteritsupport.com
 digital-net-isp.com
 ookla-london.briantbroadband.com
 speedtest.unlimitedfiber.com
@@ -677,6 +680,7 @@ st-bolu-1.turksatkablo.com.tr
 umr1speedtest.turktelekom.com.tr
 uls1speedtest.turktelekom.com.tr
 sam1speedtest.turktelekom.com.tr
+kay1speedtest.turktelekom.com.tr
 izm1speedtest.turktelekom.com.tr
 gay1speedtest.turktelekom.com.tr
 esn1speedtest.turktelekom.com.tr
@@ -794,6 +798,7 @@ speed.udx.icscoe.jp
 speedtest.ddps.jp
 speedtest-xg-oki.glbb.ne.jp
 speedtest.softether.co.jp
+speedtest.ot01.zaq.ad.jp
 speed.coe.ad.jp
 sig-speedtest.moratelindo.io
 sp.tulipgroup.io
@@ -829,6 +834,7 @@ ookla3.1und1-mobilfunk.de
 speedtest.creolineserver.de
 speedtest.ip-projects.de
 speedtest.fra01.datascheune.de
+speed2.netlixor.de
 speed.netlixor.de
 speedtest1.synlinq.de
 speedtest.fra.plusnet.de
@@ -849,6 +855,7 @@ cesu-nb.zjtelecom.com.cn
 cesu-hz.zjtelecom.com.cn
 speedtest.bmcc.com.cn
 speedtest.asymptote.cc
+speedtest.alexf.cc
 speedtest.redbirdcommunications.ca
 sp1.voyageurinternet.ca
 west-speedtest.frontiernetworks.ca

@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Non-IP
-# Last Updated: 2025-07-02T12:41:39.077Z
-# Size: 678
+# Last Updated: 2025-07-11T12:41:29.525Z
+# Size: 677
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -471,7 +471,6 @@ DOMAIN-REGEX,^customerevents\.us-east-[\w.-]*?\.internal\.dradis\.netflix\.com$
 DOMAIN-REGEX,^cs[\w.-]*?\.mp3bars\.com$
 DOMAIN-REGEX,^dn[\w.-]*?\.ixinwei\.com$
 DOMAIN-REGEX,^ana[\w.-]*?\.inews24\.com$
-DOMAIN-REGEX,^events-[\w.-]*?\.op\.hicloud\.com$
 DOMAIN-REGEX,^ulog[\w.-]*?\.gifshow\.com$
 DOMAIN-REGEX,^mon[\w.-]*?-misc-lf\.fqnovel\.com$
 DOMAIN-REGEX,^mon[\w.-]*?-misc\.fqnovel\.com$
