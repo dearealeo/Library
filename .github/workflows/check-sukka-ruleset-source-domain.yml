@@ -1,4 +1,4 @@
-name: Check Sukka Rulesets Domain Availability
+name: Check Rulesets Domain Availability
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: SukkaW/Surge
-          path: Sukka Ruleset/upstream
+          path: Ruleset/upstream
           persist-credentials: false
 
       - uses: pnpm/action-setup@v4
@@ -30,9 +30,9 @@ jobs:
           run_install: false
       - uses: actions/setup-node@v4
         with:
-          node-version-file: "Sukka Ruleset/upstream/.node-version"
+          node-version-file: "Ruleset/upstream/.node-version"
           cache: "pnpm"
-          cache-dependency-path: "Sukka Ruleset/upstream/pnpm-lock.yaml"
+          cache-dependency-path: "Ruleset/upstream/pnpm-lock.yaml"
 
       - name: Get current date
         id: date
@@ -49,22 +49,22 @@ jobs:
         uses: actions/cache/restore@v4
         id: cache-db-restore
         with:
-          path: Sukka Ruleset/upstream/.cache
-          key: ${{ runner.os }}-check-cache-v1-${{ hashFiles('Sukka Ruleset/upstream/pnpm-lock.yaml') }}
+          path: Ruleset/upstream/.cache
+          key: ${{ runner.os }}-check-cache-v1-${{ hashFiles('Ruleset/upstream/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-check-cache-v1-
 
       - name: Install dependencies
         run: pnpm install
-        working-directory: Sukka Ruleset/upstream
+        working-directory: Ruleset/upstream
 
       - name: Run domain check script
         run: pnpm run node Build/validate-domain-alive.ts
-        working-directory: Sukka Ruleset/upstream
+        working-directory: Ruleset/upstream
 
       - name: Save check process cache
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: Sukka Ruleset/upstream/.cache
-          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-check-cache-v1-{1}', runner.os, hashFiles('Sukka Ruleset/upstream/pnpm-lock.yaml')) }}
+          path: Ruleset/upstream/.cache
+          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-check-cache-v1-{1}', runner.os, hashFiles('Ruleset/upstream/pnpm-lock.yaml')) }}

@@ -16,10 +16,10 @@ node_modules/
 
 # Excluded content directories
 news/
-sukka-ruleset/
+ruleset/
 laws/
 **/news/
-**/sukka-ruleset/
+**/ruleset/
 **/laws/
 
 # Allow specific files/directories to be formatted

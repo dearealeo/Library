@@ -184,9 +184,9 @@ database.db-journal
 .pypirc
 *.sage.py
 
-# ----- Sukka Ruleset Build Output -----
-!Sukka\ Ruleset/dist/
-Sukka\ Ruleset/dist/404.html
-Sukka\ Ruleset/dist/_headers
-Sukka\ Ruleset/dist/index.html
-Sukka\ Ruleset/dist/README.md
+# ----- Ruleset Build Output -----
+!Ruleset/dist/
+Ruleset/dist/404.html
+Ruleset/dist/_headers
+Ruleset/dist/index.html
+Ruleset/dist/README.md

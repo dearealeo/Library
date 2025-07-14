@@ -1,6 +1,6 @@
+import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { createHash } from "node:crypto";
 
 const processedFilesCache = new Map();
 const dirCache = new Set();
@@ -20,7 +20,7 @@ export function contentIntegration() {
           await Promise.all([
             ensureDir("./public/laws"),
             ensureDir("./public/news"),
-            ensureDir("./public/sukka-ruleset"),
+            ensureDir("./public/ruleset"),
             ensureDir("./public/assets"),
           ]);
 
@@ -260,8 +260,8 @@ async function processNewsFile(sourceDir, targetDir, file) {
 }
 
 async function processRulesets() {
-  const sourceDir = "../Sukka Ruleset/dist";
-  const targetDir = "./public/sukka-ruleset";
+  const sourceDir = "../Ruleset/dist";
+  const targetDir = "./public/ruleset";
 
   try {
     await fs.access(sourceDir);
@@ -270,7 +270,7 @@ async function processRulesets() {
     const stats = await fs.stat(sourceDir);
     const manifest = {
       lastUpdated: new Date(stats.mtime).toISOString(),
-      description: "Sukka Ruleset distribution files",
+      description: "Ruleset distribution files",
       version: new Date().toISOString().slice(0, 10),
     };
 
@@ -279,8 +279,7 @@ async function processRulesets() {
       JSON.stringify(manifest, null, 2)
     );
   } catch (error) {
-    if (error.code !== "ENOENT")
-      logError("Error processing Sukka Ruleset:", error);
+    if (error.code !== "ENOENT") logError("Error processing Ruleset:", error);
   }
 }
 
@@ -336,7 +335,7 @@ async function generateJsonIndex(filePath, data) {
 async function generateContentIndex() {
   try {
     const indexData = {
-      collections: ["laws", "news", "sukka-ruleset"],
+      collections: ["laws", "news", "ruleset"],
       generated: new Date().toISOString(),
       description: "Content index for Library",
     };
@@ -381,7 +380,7 @@ async function generateContentIndex() {
     </ul>
   </div>
   <div class="collection">
-    <h2><a href="/Library/sukka-ruleset/">Sukka Ruleset</a></h2>
+    <h2><a href="/Library/ruleset/">Ruleset</a></h2>
   </div>
   <footer>
     <p>Generated on ${new Date().toLocaleString("zh-CN")}</p>

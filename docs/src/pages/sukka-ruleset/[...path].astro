@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
   const categories = ["rules", "scripts", "modules", "providers", "config", "snippets", "Clash", "LegacyClashPremium", "Modules", "sing-box", "List"];
-  
+
   return [
     ...categories.flatMap(category => [
       { params: { path: category } },
@@ -15,9 +15,9 @@ export async function getStaticPaths() {
 
 const { path: urlPath } = Astro.params;
 const pathSegments = urlPath?.split("/").filter(Boolean) || [];
-const title = pathSegments.length === 0 
-  ? "Sukka Ruleset" 
-  : `Sukka Ruleset - ${pathSegments.length === 1 ? pathSegments[0] : `${pathSegments[0]}/${pathSegments.slice(1).join("/")}`}`;
+const title = pathSegments.length === 0
+  ? "Ruleset"
+  : `Ruleset - ${pathSegments.length === 1 ? pathSegments[0] : `${pathSegments[0]}/${pathSegments.slice(1).join("/")}`}`;
 ---
 
 <BaseLayout title={title}>
@@ -31,7 +31,7 @@ const title = pathSegments.length === 0
   <div id="error" class="error" style="display: none;">
     <h1>Content Not Found</h1>
     <p>The requested content could not be found.</p>
-    <p><a href="/Library/sukka-ruleset/">Return to Ruleset Index</a></p>
+    <p><a href="/Library/ruleset/">Return to Ruleset Index</a></p>
   </div>
 </BaseLayout>
 
@@ -127,7 +127,7 @@ const title = pathSegments.length === 0
 
 <script define:vars={{ urlPath }}>
   const DISPLAYABLE_EXTENSIONS = new Set([".yml", ".yaml", ".json", ".conf", ".txt", ".list"]);
-  
+
   const escapeHtml = (() => {
     const escapeMap = {
       '&': '&amp;',
@@ -146,108 +146,108 @@ const title = pathSegments.length === 0
   }
 
   const NON_EMPTY_SEGMENTS_REGEX = /[^/]+/g;
-  
+
   async function loadContent() {
     const contentEl = document.getElementById("content");
     const loadingEl = document.getElementById("loading");
     const errorEl = document.getElementById("error");
 
     if (!urlPath) {
-      location.replace("/Library/sukka-ruleset/");
+      location.replace("/Library/ruleset/");
       return;
     }
 
     try {
       const pathSegments = Array.from(urlPath.matchAll(NON_EMPTY_SEGMENTS_REGEX), m => m[0]);
-      
-      let requestPath = `/Library/sukka-ruleset/${pathSegments.join("/")}`;
-      
+
+      let requestPath = `/Library/ruleset/${pathSegments.join("/")}`;
+
       if (!requestPath.endsWith("/")) {
         const fileResponse = await fetch(requestPath, { method: 'HEAD' }).catch(() => ({ ok: false }));
-        
+
         if (fileResponse.ok) {
           const fileContentResponse = await fetch(requestPath);
           const fileContent = await fileContentResponse.text();
           const fileName = pathSegments[pathSegments.length - 1];
-          
-          const parentPath = pathSegments.length > 1 
-            ? `/Library/sukka-ruleset/${pathSegments.slice(0, -1).join("/")}/` 
-            : "/Library/sukka-ruleset/";
-          
+
+          const parentPath = pathSegments.length > 1
+            ? `/Library/ruleset/${pathSegments.slice(0, -1).join("/")}/`
+            : "/Library/ruleset/";
+
           const displayable = isDisplayableFileType(fileName);
-          const fileContentHTML = displayable 
+          const fileContentHTML = displayable
             ? `<div class="file-content"><pre><code>${escapeHtml(fileContent)}</code></pre></div>`
-            : `<div class="file-content"><p>This file type cannot be displayed in the browser. <a href="https://github.com/dearealeo/Library/blob/main/Sukka%20Ruleset/dist/${encodeURIComponent(urlPath)}" target="_blank">View on GitHub</a></p></div>`;
-          
+            : `<div class="file-content"><p>This file type cannot be displayed in the browser. <a href="https://github.com/dearealeo/Library/blob/main/Ruleset/dist/${encodeURIComponent(urlPath)}" target="_blank">View on GitHub</a></p></div>`;
+
           contentEl.innerHTML = `<h1>${fileName}</h1><p><a href="${parentPath}">Back</a></p>${fileContentHTML}`;
           contentEl.style.display = "block";
           loadingEl.style.display = "none";
           return;
         }
-        
+
         requestPath += "/";
       }
-      
+
       const response = await fetch(requestPath);
-      
+
       if (!response.ok) {
         throw new Error("Resource not available");
       }
-      
+
       const html = await response.text();
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
-      
+
       const links = Array.from(tempDiv.querySelectorAll("a[href]"));
       const directories = [];
       const files = [];
-      
+
       const baseURL = new URL(requestPath, window.location.origin);
-      
+
       for (const link of links) {
         const href = link.getAttribute("href");
-        
+
         if (href === "../" || href.endsWith("index.html") || href.includes("://")) {
           continue;
         }
-        
+
         const resolvedHref = href.startsWith("/") ? href : new URL(href, baseURL).pathname;
         const isDir = resolvedHref.endsWith("/");
-        
+
         const displayName = resolvedHref.split("/").filter(Boolean).pop() + (isDir ? "/" : "");
-        
+
         (isDir ? directories : files).push({ name: displayName, href: resolvedHref });
       }
-      
+
       const parentPath = pathSegments.length > 1
-        ? `/Library/sukka-ruleset/${pathSegments.slice(0, -1).join("/")}/`
-        : "/Library/sukka-ruleset/";
-      
+        ? `/Library/ruleset/${pathSegments.slice(0, -1).join("/")}/`
+        : "/Library/ruleset/";
+
       let content = `<h1>${urlPath}</h1>`;
       content += pathSegments.length > 1
         ? `<p><a href="${parentPath}">Back</a></p>`
-        : `<p><a href="/Library/sukka-ruleset/">Back to Sukka Ruleset</a></p>`;
-      
+        : `<p><a href="/Library/ruleset/">Back to Ruleset</a></p>`;
+
       if (directories.length) {
         content += `<h2>Directories</h2><ul class="directory-list section-group">`;
-        content += directories.map(dir => 
+        content += directories.map(dir =>
           `<li class="directory-item section-item"><a href="${dir.href}">${dir.name}</a></li>`
         ).join('');
         content += `</ul>`;
       }
-      
+
       if (files.length) {
         content += `<h2>Files</h2><ul class="file-list section-group">`;
-        content += files.map(file => 
+        content += files.map(file =>
           `<li class="file-item section-item"><a href="${file.href}">${file.name}</a></li>`
         ).join('');
         content += `</ul>`;
       }
-      
+
       contentEl.innerHTML = content;
       contentEl.style.display = "block";
       loadingEl.style.display = "none";
-      
+
     } catch (e) {
       errorEl.style.display = "block";
       loadingEl.style.display = "none";

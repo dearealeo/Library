@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows:
       [
-        "Update today Sukka Rulesets",
+        "Update today Rulesets",
         "Update today National Database of Laws and Regulations",
         "Update today Xinwen Lianbo",
       ]

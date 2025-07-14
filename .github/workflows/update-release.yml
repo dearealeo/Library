@@ -61,7 +61,7 @@ jobs:
       - name: Set workflow matrix
         id: set-matrix
         run: |
-          echo "workflows=[\"国家法律法规数据库\",\"新闻联播\",\"Sukka Ruleset\"]" >> $GITHUB_OUTPUT
+          echo "workflows=[\"国家法律法规数据库\",\"新闻联播\",\"Ruleset\"]" >> $GITHUB_OUTPUT
 
   build:
     name: Build Archive for ${{ matrix.workflow }}
@@ -97,7 +97,7 @@ jobs:
           ZSTD_NBTHREADS: 0
         run: |
           set -euo pipefail
-          declare -A DIR_MAP=( ["国家法律法规数据库"]="./国家法律法规数据库" ["新闻联播"]="./新闻联播" ["Sukka Ruleset"]="./Sukka Ruleset" )
+          declare -A DIR_MAP=( ["国家法律法规数据库"]="./国家法律法规数据库" ["新闻联播"]="./新闻联播" ["Ruleset"]="./Ruleset" )
           SOURCE_DIR="${DIR_MAP[$WORKFLOW_NAME]}"
 
           [[ -z "$SOURCE_DIR" ]] && { echo "Unknown workflow: $WORKFLOW_NAME"; exit 1; }
@@ -195,7 +195,7 @@ jobs:
       - name: Verify artifacts
         run: |
           set -euo pipefail
-          declare -a workflows=("国家法律法规数据库" "新闻联播" "Sukka Ruleset")
+          declare -a workflows=("国家法律法规数据库" "新闻联播" "Ruleset")
           missing=0
 
           for workflow in "${workflows[@]}"; do
@@ -224,7 +224,7 @@ jobs:
           set -euo pipefail
           mkdir -p ./release-files
 
-          declare -a workflows=("国家法律法规数据库" "新闻联播" "Sukka Ruleset")
+          declare -a workflows=("国家法律法规数据库" "新闻联播" "Ruleset")
 
           exec {fd_log}>&1
 
@@ -236,12 +236,12 @@ jobs:
             case "$workflow" in
               "国家法律法规数据库") ascii_name="National-Database-of-Laws-and-Regulations" ;;
               "新闻联播") ascii_name="Xinwen-Lianbo" ;;
-              "Sukka Ruleset") ascii_name="Sukka-Ruleset" ;;
+              "Ruleset") ascii_name="Ruleset" ;;
             esac
 
             find "$artifact_dir" -type f -name "*.tar.zst" -print0 |
             while IFS= read -r -d '' file; do
-              if [[ -n "$ascii_name" && "$workflow" != "Sukka Ruleset" ]]; then
+              if [[ -n "$ascii_name" && "$workflow" != "Ruleset" ]]; then
                 cp -a --reflink=auto --sparse=always "$file" "./release-files/${ascii_name}.tar.zst"
               else
                 cp -a --reflink=auto --sparse=always "$file" "./release-files/"
@@ -251,7 +251,7 @@ jobs:
             split_dir="$artifact_dir/${workflow}_split"
             if [[ -d "$split_dir" ]]; then
               if [[ -f "$split_dir/manifest.txt" ]]; then
-                if [[ -n "$ascii_name" && "$workflow" != "Sukka Ruleset" ]]; then
+                if [[ -n "$ascii_name" && "$workflow" != "Ruleset" ]]; then
                   cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${ascii_name}_manifest.txt"
                 else
                   cp -a --reflink=auto "$split_dir/manifest.txt" "./release-files/${workflow}_manifest.txt"
@@ -263,7 +263,7 @@ jobs:
               while IFS= read -r -d '' src; do
                 basename_src=$(basename "$src")
 
-                if [[ -n "$ascii_name" && "$workflow" != "Sukka Ruleset" ]]; then
+                if [[ -n "$ascii_name" && "$workflow" != "Ruleset" ]]; then
                   dst_name="${basename_src//${workflow}_/${ascii_name}_}"
                   dst="./release-files/$dst_name"
                 else

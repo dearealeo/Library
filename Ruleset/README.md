@@ -1,4 +1,4 @@
-# Sukka Ruleset
+# Ruleset
 
 ## Disclaimer
 
