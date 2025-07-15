@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Non-IP
-# Last Updated: 2025-07-11T12:41:29.525Z
-# Size: 677
+# Last Updated: 2025-07-15T12:37:10.530Z
+# Size: 678
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -555,6 +555,7 @@ DOMAIN-REGEX,^pancake-nft[\w.-]*?\.vercel\.app$
 DOMAIN-REGEX,^azuki-[\w.-]*?\.vercel\.app$
 DOMAIN-REGEX,^authsignonstaff[\w.-]*?\.softr\.app$
 DOMAIN-REGEX,^tracking-v[\w.-]*?\.a\.run\.app$
+DOMAIN-REGEX,^tw-726620180914\.[\w.-]*?\.run\.app$
 DOMAIN-REGEX,^log[\w.-]*?\.vietnamplus\.vn$
 DOMAIN-REGEX,^admicro[\w.-]*?\.vcmedia\.vn$
 DOMAIN-REGEX,^log-[\w.-]*?\.zadn\.vn$
