@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Non-IP
-# Last Updated: 2025-07-15T12:37:10.530Z
-# Size: 678
+# Last Updated: 2025-07-18T12:37:33.056Z
+# Size: 682
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -270,11 +270,13 @@ DOMAIN-REGEX,^v\.tzbox[\w.-]*?\.xyz$
 DOMAIN-REGEX,^evri\.[\w.-]*?\.xyz$
 DOMAIN-REGEX,^bitvavo[\w.-]*?\.vip$
 DOMAIN-REGEX,^baoviet[\w.-]*?\.vip$
+DOMAIN-REGEX,^informed\.delivery[\w.-]*?\.top$
 DOMAIN-REGEX,^bitvavo[\w.-]*?\.top$
 DOMAIN-REGEX,^baoviet[\w.-]*?\.top$
 DOMAIN-REGEX,^press-continue\.[\w.-]*?\.top$
 DOMAIN-REGEX,^vincomplaza\.[\w.-]*?\.top$
 DOMAIN-REGEX,^govuk\.[\w.-]*?\.top$
+DOMAIN-REGEX,^usps\.[\w.-]*?\.sbs$
 DOMAIN-REGEX,^ad[\w.-]*?\.bilgin\.pro$
 DOMAIN-REGEX,^geoloc[\w.-]*?\.geovisite\.ovh$
 DOMAIN-REGEX,^geoloc[\w.-]*?\.geostats\.ovh$
@@ -540,6 +542,7 @@ DOMAIN-REGEX,^report\.[\w.-]*?\.qq\.com$
 DOMAIN-REGEX,^apple-[\w.-]*?\.le\.com$
 DOMAIN-REGEX,^c\.blue\.[\w.-]*?\.com$
 DOMAIN-REGEX,^irs\.gov\.[\w.-]*?\.com$
+DOMAIN-REGEX,^plum-binder-[\w.-]*?\.typedream\.app$
 DOMAIN-REGEX,^support-metahelpcenter-id[\w.-]*?\.netlify\.app$
 DOMAIN-REGEX,^govern-assessment-validation-[\w.-]*?\.vercel\.app$
 DOMAIN-REGEX,^safety-profiles-fb-ads-[\w.-]*?\.vercel\.app$
@@ -649,6 +652,7 @@ DOMAIN-REGEX,^icloud\.apple-[\w.-]*?\.cn$
 DOMAIN-REGEX,^gcw[\w.-]*?\.2liang\.cn$
 DOMAIN-REGEX,^bdcpro[\w.-]*?\.techweb\.com\.cn$
 DOMAIN-REGEX,^ysdm[\w.-]*?\.ys137\.com\.cn$
+DOMAIN-REGEX,^info-tracking[\w.-]*?\.cc$
 DOMAIN-REGEX,^newmall[\w.-]*?\.cc$
 DOMAIN-REGEX,^bitvavo[\w.-]*?\.cc$
 DOMAIN-REGEX,^ad[\w.-]*?\.on\.cc$

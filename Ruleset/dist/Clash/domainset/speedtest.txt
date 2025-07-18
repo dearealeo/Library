@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-07-16T12:37:30.548Z
-# Size: 1124
+# Last Updated: 2025-07-18T12:37:33.058Z
+# Size: 1128
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -233,6 +233,7 @@ speedtest-bne.vocus.net
 speedtest.sjc.sonic.net
 speedtest.rfnow.net
 +.nperf.net
+spdms.mytpn.net
 perf.keyyo.net
 ookla.idnet.net
 +.speed.hinet.net
@@ -274,6 +275,7 @@ speedtest.hay.net
 ipl3pt.syd.ops.aspac.uu.net
 ipl3pt.fft.ops.eu.uu.net
 speedtest-cbr.cdn.on.net
+speedtest.nt.net
 th1s_rule5et_1s_m4d3_by_5ukk4w_ruleset.skk.moe
 speedtest1.net.rochester.edu
 speedtest.clarkson.edu
@@ -636,6 +638,7 @@ gd-speedtest.homeplus.net.tw
 custom.tbcnet.net.tw
 speedtest.tinp.net.tw
 seednet-ty1.seed.net.tw
+seednet-tn1.seed.net.tw
 seednet-tc1.seed.net.tw
 fetzl1.seed.net.tw
 fetnt1.seed.net.tw
@@ -1095,6 +1098,7 @@ speedtest.mirror.serversaustralia.com.au
 speed.syd.aussiebroadband.com.au
 speed.mel.aussiebroadband.com.au
 speed.bne.aussiebroadband.com.au
+speed.ade.aussiebroadband.com.au
 speedtest.mirror.digitalpacific.com.au
 speedtest-mel.vic.au.hostuniversal.com.au
 speedtest-syd.nsw.au.hostuniversal.com.au
