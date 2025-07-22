@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Non-IP
-# Last Updated: 2025-07-21T12:37:44.194Z
-# Size: 683
+# Last Updated: 2025-07-22T12:38:34.578Z
+# Size: 687
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -492,6 +492,7 @@ DOMAIN-REGEX,^invenio_tracking_[\w.-]*?\.sgnapps\.com$
 DOMAIN-REGEX,^block\.s[\w.-]*?block\.com$
 DOMAIN-REGEX,^host[\w.-]*?\.rvshare\.com$
 DOMAIN-REGEX,^r\.reklam[\w.-]*?\.com$
+DOMAIN-REGEX,^dhl\.[\w.-]*?\.potabox\.com$
 DOMAIN-REGEX,^events-api[\w.-]*?\.outfit7\.com$
 DOMAIN-REGEX,^customerevents\.us-east-[\w.-]*?\.internal\.dradis\.netflix\.com$
 DOMAIN-REGEX,^cs[\w.-]*?\.mp3bars\.com$
@@ -644,6 +645,9 @@ DOMAIN-REGEX,^f-log-[\w.-]*?\.grammarly\.io$
 DOMAIN-REGEX,^f-log[\w.-]*?\.grammarly\.io$
 DOMAIN-REGEX,^c[\w.-]*?hit\.zerkalo\.io$
 DOMAIN-REGEX,^metamask[\w.-]*?\.webflow\.io$
+DOMAIN-REGEX,^[\w.-]*?-ndax-[\w.-]*?\.webflow\.io$
+DOMAIN-REGEX,^[\w.-]*?-sso-[\w.-]*?\.webflow\.io$
+DOMAIN-REGEX,^sso-[\w.-]*?\.webflow\.io$
 DOMAIN-REGEX,^eum[\w.-]*?\.instana\.io$
 DOMAIN-REGEX,^report\.[\w.-]*?\.gbqofs\.io$
 DOMAIN-REGEX,^pixel[\w.-]*?\.production-public\.tubi\.io$
