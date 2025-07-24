@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.3",
-    "astro": "^5.12.2",
+    "astro": "^5.12.3",
     "rehype-stringify": "^10.0.0",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
