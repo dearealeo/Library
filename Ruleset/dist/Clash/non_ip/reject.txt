@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Non-IP
-# Last Updated: 2025-07-22T12:38:34.578Z
-# Size: 687
+# Last Updated: 2025-07-25T15:11:00.543Z
+# Size: 689
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -378,6 +378,7 @@ DOMAIN-REGEX,^sam[\w.-]*?\.baby-kingdom\.com$
 DOMAIN-REGEX,^agripro-fr-[\w.-]*?\.com$
 DOMAIN-REGEX,^mob[\w.-]*?\.novanewsapp\.com$
 DOMAIN-REGEX,^hstats[\w.-]*?\.hepsiburada\.com$
+DOMAIN-REGEX,^hba[\w.-]*?\.hepsiburada\.com$
 DOMAIN-REGEX,^geoloc[\w.-]*?\.geo20120530\.com$
 DOMAIN-REGEX,^lcldetecthumainweb[\w.-]*?\.firebaseapp\.com$
 DOMAIN-REGEX,^ac[\w.-]*?\.faxingchina\.com$
@@ -567,6 +568,7 @@ DOMAIN-REGEX,^report\.[\w.-]*?\.qq\.com$
 DOMAIN-REGEX,^apple-[\w.-]*?\.le\.com$
 DOMAIN-REGEX,^c\.blue\.[\w.-]*?\.com$
 DOMAIN-REGEX,^irs\.gov\.[\w.-]*?\.com$
+DOMAIN-REGEX,^vietcombank[\w.-]*?\.cfd$
 DOMAIN-REGEX,^plum-binder-[\w.-]*?\.typedream\.app$
 DOMAIN-REGEX,^support-metahelpcenter-id[\w.-]*?\.netlify\.app$
 DOMAIN-REGEX,^govern-assessment-validation-[\w.-]*?\.vercel\.app$

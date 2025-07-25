@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-07-23T12:37:36.250Z
-# Size: 1133
+# Last Updated: 2025-07-25T15:11:00.545Z
+# Size: 1138
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -397,6 +397,7 @@ speed09.gonetspeed.com
 speed08.gonetspeed.com
 speed07.gonetspeed.com
 speed06.gonetspeed.com
+speedtest-tac1.gigabitnow.com
 speedtest.la2.gigabitnow.com
 speedtest.deltacable.com
 +.speed.cloudflare.com
@@ -654,6 +655,7 @@ speedtest.taifo.com.tw
 speedtest.twds.com.tw
 speedtest.host.com.tw
 +.speedtest.aptg.com.tw
+speedtestacibadem.netspeed.tr
 speedtest.pulse.web.tr
 ookla-server.vim.web.tr
 speedtest.sarnettelekom.net.tr
@@ -938,6 +940,7 @@ speedtest.syscom.manaus.br
 teste.jsnet.manaus.br
 ookla-ita.asanet.tec.br
 velocimetro.esolution.srv.br
+teste.mov.pro.br
 +.linknetspeedtest.net.br
 ookla.playmaisreverso.net.br
 speedtest.pinguimtelecom.net.br
@@ -1005,6 +1008,7 @@ velocidade.idnetttelecom.com.br
 ookla.araujotelecom.com.br
 speedtest.uptelecom-ro.com.br
 stest.ultraconnect.com.br
+speedtest.nexinternett.com.br
 velocimetro.fibernetwork.com.br
 velocimetro.wiretelecom.com.br
 teste.wificonnect.com.br
@@ -1057,6 +1061,7 @@ speedtest.jetspeed.com.br
 speedtest.apnet-rr.com.br
 ookla.xponnet.com.br
 teste.wsfibra.com.br
+ookla.slimnet.com.br
 veloteste.mrjomar.com.br
 speedtest.jvswifi.com.br
 speedtest.intlink.com.br
