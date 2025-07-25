@@ -14,6 +14,7 @@ The software herein is licensed under the [MIT](./LICENSE) by [@dearealeo](https
 
 <!-- INSERT -->
 - [20250725](./2025/20250725.md)
+- [20250724](./2025/20250724.md)
 - [20250723](./2025/20250723.md)
 - [20250722](./2025/20250722.md)
 - [20250721](./2025/20250721.md)
