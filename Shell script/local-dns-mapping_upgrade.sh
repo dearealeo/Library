@@ -1,7 +1,8 @@
 #!/bin/zsh
 emulate -L zsh
 setopt err_exit no_unset pipe_fail warn_create_global local_options local_traps
-setopt extended_glob numeric_glob_sort null_glob multios
+setopt extended_glob numeric_glob_sort null_glob multios auto_cd
+setopt glob_dots glob_star_short hist_subst_pattern
 umask 077
 
 typeset -gr WORKDIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/SmartDNS"
@@ -32,9 +33,11 @@ rotate_log() {
     
     local -i size
     if (( $+builtins[stat] )); then
-        size=$(stat +size $LOGFILE 2>/dev/null || 0)
+        size=$(stat +size $LOGFILE 2>/dev/null || print 0)
     elif (( $+commands[stat] )); then
-        size=$(stat -f%z $LOGFILE 2>/dev/null || stat -c%s $LOGFILE 2>/dev/null || 0)
+        local stat_output
+        stat_output=$(stat -f%z $LOGFILE 2>/dev/null || stat -c%s $LOGFILE 2>/dev/null || print 0)
+        size=${stat_output%% *}
     else
         size=${#$(<$LOGFILE)}
     fi
@@ -87,9 +90,24 @@ fetch_ruleset() {
     )
     
     if $commands[curl] $curl_opts; then
-        mv "$file.tmp" "$file" && return 0
+        mv "$file.tmp" "$file" && {
+            local smartdns_file="${file%.conf}.smartdns.conf"
+            local -a lines domains
+            lines=("${(@f)$(<$file)}")
+            local line domain
+            for line in $lines; do
+                [[ $line != (DOMAIN|DOMAIN-SUFFIX),* ]] && continue
+                domain=${line#*,}
+                domain=${domain## ##}
+                domain=${domain%% ##}
+                [[ -z $domain || $domain == *.skk.moe ]] && continue
+                domains+=($domain)
+            done
+            (( ${#domains} > 0 )) && print -l $domains > "$smartdns_file"
+            rm -f "$file"
+        }
+        return 0
     fi
-    
     [[ -f "$file.tmp" ]] && rm -f "$file.tmp"
     return 1
 }
@@ -109,60 +127,43 @@ download() {
     )
     
     local -A active_pids pid_to_url pid_to_file
-    local -a pending_urls pending_files completed_pids
+    local -a pending_urls pending_files
     local -i completed=0 failed=0
-    
     pending_urls=(${(k)rulesets})
     pending_files=(${(v)rulesets})
-    
     local -i total=${#pending_urls}
-    
     while (( ${#pending_urls} > 0 || ${#active_pids} > 0 )); do
-        
         while (( ${#pending_urls} > 0 && ${#active_pids} < MAX_CONCURRENT )); do
             local url=$pending_urls[1] filename=$pending_files[1]
             local filepath="$WORKDIR/$filename"
-            
             pending_urls[1]=()
             pending_files[1]=()
-            
             log "Starting download: $filename"
             { fetch_ruleset "$url" "$filepath" } &
             local pid=$!
-            
             active_pids[$pid]=1
             pid_to_url[$pid]=$url
             pid_to_file[$pid]=$filename
         done
-        
-        completed_pids=()
         for pid in ${(k)active_pids}; do
             if ! kill -0 $pid 2>/dev/null; then
-                completed_pids+=($pid)
+                if [[ -n ${pid_to_file[$pid]-} ]]; then
+                    wait $pid
+                    local -i exit_code=$?
+                    local filename=$pid_to_file[$pid]
+                    unset "active_pids[$pid]" "pid_to_url[$pid]" "pid_to_file[$pid]"
+                    if (( exit_code == 0 )); then
+                        log "Completed: $filename"
+                        (( completed++ ))
+                    else
+                        log "Failed: $filename"
+                        (( failed++ ))
+                    fi
+                fi
+                unset "active_pids[$pid]" "pid_to_url[$pid]" "pid_to_file[$pid]"
             fi
         done
-        
-        if (( ${#completed_pids} > 0 )); then
-            for pid in $completed_pids; do
-                wait $pid
-                local -i exit_code=$?
-                local filename=$pid_to_file[$pid]
-                
-                unset "active_pids[$pid]" "pid_to_url[$pid]" "pid_to_file[$pid]"
-                
-                if (( exit_code == 0 )); then
-                    log "Completed: $filename"
-                    (( completed++ ))
-                else
-                    log "Failed: $filename"
-                    (( failed++ ))
-                fi
-            done
-        else
-            read -t 0.1 -k 1 </dev/null 2>/dev/null || true
-        fi
     done
-    
     log "Download summary: $completed completed, $failed failed"
     return $(( failed > 0 ? 1 : 0 ))
 }
@@ -183,9 +184,7 @@ typeset -gx LC_ALL=C
 
 {
     [[ ! -d $WORKDIR ]] && mkdir -p $WORKDIR
-    
     log "Starting concurrent ruleset downloads"
     download
-    
     log "All RULE-SETs processed"
 } || handle_error
