@@ -1,0 +1,70 @@
+name: Check Rulesets Domain Availability
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: read
+
+jobs:
+  check:
+    name: Check upstream source domains
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Enable long paths
+        run: git config --global core.longpaths true
+      - name: Checkout own repository
+        uses: actions/checkout@v4
+
+      - name: Checkout SukkaW/Surge source
+        uses: actions/checkout@v4
+        with:
+          repository: SukkaW/Surge
+          path: Ruleset/upstream
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "Ruleset/upstream/.node-version"
+          cache: "pnpm"
+          cache-dependency-path: "Ruleset/upstream/pnpm-lock.yaml"
+
+      - name: Get current date
+        id: date
+        run: |
+          echo "date=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+          echo "year=$(date +'%Y')" >> $GITHUB_OUTPUT
+          echo "month=$(date +'%m')" >> $GITHUB_OUTPUT
+          echo "day=$(date +'%d')" >> $GITHUB_OUTPUT
+          echo "hour=$(date +'%H')" >> $GITHUB_OUTPUT
+          echo "minute=$(date +'%M')" >> $GITHUB_OUTPUT
+          echo "second=$(date +'%S')" >> $GITHUB_OUTPUT
+
+      - name: Restore check process cache
+        uses: actions/cache/restore@v4
+        id: cache-db-restore
+        with:
+          path: Ruleset/upstream/.cache
+          key: ${{ runner.os }}-check-cache-v1-${{ hashFiles('Ruleset/upstream/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-check-cache-v1-
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: Ruleset/upstream
+
+      - name: Run domain check script
+        run: pnpm run node Build/validate-domain-alive.ts
+        working-directory: Ruleset/upstream
+
+      - name: Save check process cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: Ruleset/upstream/.cache
+          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-check-cache-v1-{1}', runner.os, hashFiles('Ruleset/upstream/pnpm-lock.yaml')) }}

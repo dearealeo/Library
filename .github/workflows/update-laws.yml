@@ -1,0 +1,45 @@
+name: Update today National Database of Laws and Regulations
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 12 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-laws:
+    name: Update today National Database of Laws and Regulations
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Enable long paths
+        run: git config --global core.longpaths true
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 1
+      - name: Set up Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: "3.13"
+          cache: "pip"
+      - name: Install dependencies
+        run: pip install -r 国家法律法规数据库/requirements.txt
+      - name: Generate content
+        run: python 国家法律法规数据库/main.py -c
+      - name: Lint Markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v20.0.0
+        with:
+          globs: "国家法律法规数据库/**/*.md"
+          fix: true
+          config: ".markdownlint.json"
+        continue-on-error: true
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet || (git commit -m "feat(laws): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]" && git pull --rebase origin ${{ github.ref_name }} && git push origin ${{ github.ref_name }})

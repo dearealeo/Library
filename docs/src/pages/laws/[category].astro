@@ -1,0 +1,138 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { readdir } from 'node:fs/promises';
+import { join } from 'node:path';
+
+export async function getStaticPaths() {
+  const categories = [
+    { id: "constitution", name: "宪法" },
+    { id: "statutes", name: "法律" },
+    { id: "administrative-regulations", name: "行政法规" },
+    { id: "local-regulations", name: "地方性法规" },
+    { id: "judicial-interpretations", name: "司法解释" },
+    { id: "supervisory-regulations", name: "监察法规" }
+  ];
+
+  const paths = [];
+
+  for (const category of categories) {
+    let files = [];
+    try {
+      const categoryPath = join(process.cwd(), 'public', 'laws', category.id);
+      const dirContents = await readdir(categoryPath);
+      files = dirContents.filter(file => file.endsWith('.md'));
+    } catch (error) {
+      // Directory might not exist or be empty
+      console.log(`No files found for category: ${category.id}`);
+    }
+
+    paths.push({
+      params: { category: category.id },
+      props: {
+        categoryId: category.id,
+        categoryName: category.name,
+        files: files
+      }
+    });
+  }
+
+  return paths;
+}
+
+const { categoryId, categoryName, files } = Astro.props;
+---
+
+<BaseLayout title={`${categoryName} - Laws`}>
+  <div class="content">
+    <p><a href="/Library/laws/">Back to Laws</a></p>
+    <h1>{categoryName}</h1>
+
+    {files.length > 0 ? (
+      <div class="laws-list">
+        {files.map(file => {
+          const fileName = file.replace('.md', '');
+          const fileUrl = `/Library/laws/${categoryId}/${encodeURIComponent(file)}`;
+          return (
+            <div class="law-item">
+              <a href={fileUrl}>{fileName}</a>
+            </div>
+          );
+        })}
+      </div>
+    ) : (
+      <div class="placeholder">
+        <p>No documents found in this category yet.</p>
+        <p>Category: {categoryName}</p>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .content p:first-child {
+    margin-bottom: 30px;
+  }
+
+  .content a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .content a:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .placeholder {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--color-secondary);
+    background: var(--color-bg);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+  }
+
+  h1 {
+    color: var(--color-primary);
+    margin-bottom: 30px;
+  }
+
+  .laws-list {
+    display: grid;
+    gap: 15px;
+  }
+
+  .law-item {
+    padding: 15px 20px;
+    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .law-item:hover {
+    border-color: var(--color-secondary);
+    background: var(--color-badge-bg);
+    transform: translateY(-1px);
+  }
+
+  .law-item a {
+    display: block;
+    text-decoration: none;
+    color: var(--color-primary);
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+
+  .law-item a:hover {
+    color: var(--color-secondary);
+    transform: none;
+  }
+</style>

@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Ruleset">
+  <div class="h">
+    <h1>Ruleset</h1>
+    <p><a href="/Library/">Back to Index</a></p>
+  </div>
+
+  <div class="c">
+    <div class="w">
+      <a href="/Library/ruleset/Clash/" class="b">Clash</a>
+      <a href="/Library/ruleset/LegacyClashPremium/" class="b">Clash Premium</a>
+      <a href="/Library/ruleset/Modules/" class="b">Modules</a>
+      <a href="/Library/ruleset/sing-box/" class="b">Sing-Box</a>
+      <a href="/Library/ruleset/List/" class="b">Surge</a>
+    </div>
+  </div>
+
+  <div class="c">
+    <h2>Disclaimer</h2>
+    <p>
+      This project employs publicly accessible ruleset excerpts sourced from <a
+        href="https://github.com/SukkaW">@SukkaW</a
+      > solely for non-commercial purposes, with all rights thereto reserved by <a
+        href="https://github.com/SukkaW">@SukkaW</a
+      >, and the definitive source for verification remains <a
+        href="https://ruleset.skk.moe">ruleset.skk.moe</a
+      >.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .h {
+    margin-bottom: var(--fib-8);
+  }
+
+  .h a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .h a:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .w {
+    margin-top: var(--fib-8);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--fib-5);
+  }
+
+  .b {
+    padding: var(--fib-3) var(--fib-5);
+    text-decoration: none;
+    color: var(--color-secondary);
+    border-radius: var(--fib-1);
+    font-size: 1rem;
+    font-weight: 500;
+    background: var(--color-badge-bg);
+    border: 1px solid var(--color-border);
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+    touch-action: manipulation;
+  }
+
+  .b:hover {
+    color: var(--color-primary);
+    background: var(--color-border);
+    border-color: var(--color-secondary);
+    transform: translateY(-1px);
+  }
+</style>

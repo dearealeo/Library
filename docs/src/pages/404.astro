@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page Not Found">
+  <main aria-labelledby="errorTitle" class="c">
+    <p aria-hidden="true" class="e">404</p>
+    <h1 id="errorTitle">Page Not Found</h1>
+    <div class="m">
+      <p>
+        Sorry, the page you are looking for does not exist or has been removed.
+      </p>
+      <p>Please check the URL or return to the homepage.</p>
+    </div>
+    <a href="/Library/" class="b" rel="nofollow">Return to Homepage</a>
+  </main>
+</BaseLayout>
+
+<style>
+  .e {
+    font-size: 8em;
+    color: var(--color-secondary);
+    margin: 0;
+    line-height: 1;
+    font-weight: 700;
+  }
+  .c {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+  }
+  .m {
+    font-size: 1.2em;
+    margin-bottom: 2em;
+    max-width: 36rem;
+  }
+  .b {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--color-secondary);
+    border-radius: 4px;
+    font-size: 16px;
+    transition:
+      transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      color 0.15s ease,
+      border-color 0.15s ease;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid var(--color-secondary);
+    will-change: transform;
+    position: relative;
+    overflow: hidden;
+  }
+  .b:hover {
+    transform: scale(1.05);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+  .b:focus {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .b {
+      transition: none;
+    }
+    .b:hover {
+      transform: none;
+    }
+  }
+</style>

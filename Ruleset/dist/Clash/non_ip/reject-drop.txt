@@ -1,0 +1,17 @@
+#########################################
+# Sukka's Ruleset - Reject And Drop
+# Last Updated: 2025-07-21T12:37:44.520Z
+# Size: 5
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This file This file contains rules for domain should be used with REJECT-DROP policy.
+#########################################
+DOMAIN,7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe
+DOMAIN-SUFFIX,undefined
+DOMAIN-SUFFIX,null
+DOMAIN-SUFFIX,in.applicationinsights.azure.com
+DOMAIN-SUFFIX,geo2.adobe.com
+################## EOF ##################
+
