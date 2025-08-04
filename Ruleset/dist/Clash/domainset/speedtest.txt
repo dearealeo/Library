@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-08-03T12:39:33.272Z
-# Size: 1330
+# Last Updated: 2025-08-04T12:43:19.906Z
+# Size: 1331
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -511,6 +511,7 @@ speedtestmiabr.telxius.com
 speedtest.sercomm.com
 sydspeedtest.rackdog.com
 ldnspeedtest.rackdog.com
+speedtest.netravo.com
 speedtest.mhcable.com
 speedtest.ams1.macarne.com
 speedtest.100g.macarne.com
