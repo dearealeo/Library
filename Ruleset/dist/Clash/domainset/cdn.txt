@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-08-02T12:39:13.019Z
-# Size: 3734
+# Last Updated: 2025-08-06T12:43:20.163Z
+# Size: 3744
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -410,6 +410,8 @@ oct8neproxy.azurewebsites.net
 d4.alternativeto.net
 +.vusercontent.net
 +.vscode-unpkg.net
+static.vesselfinder.net
+map.vesselfinder.net
 cdn.tokyo-motion.net
 blacklist.tampermonkey.net
 static.edge.microsoftapp.net
@@ -1264,6 +1266,8 @@ logos.kiwibrowser.com
 i.kickstarter.com
 a.kickstarter.com
 +.jpgjingpinx.com
+asset.jamieoliver.com
+cdn.jamieoliver.com
 media.istockphoto.com
 content.invisioncic.com
 media.invisioncic.com
@@ -3150,6 +3154,9 @@ avatar2.bahamut.com.tw
 truth.bahamut.com.tw
 p2.bahamut.com.tw
 i2.bahamut.com.tw
+puku-dist.4gamers.com.tw
+thumbor.4gamers.com.tw
+img.4gamers.com.tw
 event.ithome.com.tw
 static.cnbeta.com.tw
 pgw.udn.com.tw
@@ -3352,6 +3359,7 @@ osint.digitalside.it
 +.place-hold.it
 cdn.scaleflex.it
 +.unsplash.it
+st.transfer.it
 cdn.download.it
 +.redd.it
 assets.garr.it
@@ -3705,6 +3713,8 @@ pic.imge.cc
 images.ptt.cc
 static-cache.k2s.cc
 static.k2s.cc
+images.tg.cc
+img.tg.cc
 +.1passwordusercontent.ca
 cdn.adsninja.ca
 +.abc-cdn.net.au
