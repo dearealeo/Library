@@ -17,7 +17,7 @@ permissions:
 jobs:
   build_and_commit:
     name: Build upstream and commit
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Enable long paths
@@ -62,7 +62,7 @@ jobs:
           echo "second=$(date +'%S')" >> $GITHUB_OUTPUT
 
       - name: Restore build process cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         id: cache-db-restore
         with:
           path: Ruleset/upstream/.cache
@@ -153,7 +153,7 @@ jobs:
     needs:
       - build_and_commit
     name: Diff output
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/download-artifact@v5
         with:
