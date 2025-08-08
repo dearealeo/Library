@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-08-07T12:42:56.881Z
-# Size: 1340
+# Last Updated: 2025-08-08T12:43:18.125Z
+# Size: 1342
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -183,6 +183,7 @@ ookla.as400442.net
 lon.as214402.net
 speedtest.as214243.net
 speedtest.as214199.net
+speedtest.as212683.net
 speedtest.as210667.net
 speedtest.as203446.net
 speedtest.thn.lon.network.as201838.net
@@ -735,6 +736,7 @@ speedtest01.tek.net.tr
 speedtest.spd.net.tr
 speedtest.ph.net.tr
 speedtest.toros.edu.tr
+speedtest1.kablosuzonline.com.tr
 st-balikesirbandirma-1.turksatkablo.com.tr
 st-zonguldakeregli-1.turksatkablo.com.tr
 st-tekirdagcorlu-1.turksatkablo.com.tr
