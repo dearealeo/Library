@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-08-08T12:43:19.374Z
-# Size: 3754
+# Last Updated: 2025-08-08T17:44:44.844Z
+# Size: 3760
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -128,6 +128,7 @@ busuanzi.ibruce.info
 +.assets-servd.host
 cdn.masto.host
 +.usercontent.goog
+c.pki.goog
 +.nel.goog
 +.ipfs.cyou
 sfiles.cnyes.cool
@@ -1209,6 +1210,11 @@ c.s-microsoft.com
 assets.redbullshop.com
 cached.rebuyengine.com
 cdn.rebuyengine.com
+assets-www.readspeaker.com
+vte-us.readspeaker.com
+vte-eu.readspeaker.com
+cdn-us.readspeaker.com
+cdn-eu.readspeaker.com
 assets.raspberrypi.com
 +.qooqlevideo.com
 api.producthunt.com
