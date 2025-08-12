@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-08-10T12:39:03.914Z
-# Size: 1347
+# Last Updated: 2025-08-12T12:39:28.886Z
+# Size: 1349
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -172,6 +172,7 @@ speedtest-ams.melbicom.net
 +.speedtest.seattle.wa.limewave.net
 ookla.lanetcie.net
 velocimetrostm.interlig.net
+speedtest.hostabil.net
 speed.golddata.net
 speedtest5.fybercom.net
 ookla.delhitel.net
@@ -1070,6 +1071,7 @@ speedtestro.vtal.net.br
 speedtestce.vtal.net.br
 speedtestap.vtal.net.br
 speedtestac.vtal.net.br
+teste.i9va.net.br
 speedam.wsp.net.br
 speedtest.mia.upx.net.br
 sp1.virtualnet.log.br
