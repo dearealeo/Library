@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Enable long paths
         run: git config --global core.longpaths true
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
       - name: Set up Python
