@@ -23,13 +23,13 @@ jobs:
       - name: Enable long paths
         run: git config --global core.longpaths true
       - name: Checkout own repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: "recursive"
 
       # - name: Checkout SukkaW/Surge source
-      #   uses: actions/checkout@v4
+      #   uses: actions/checkout@v5
       #   with:
       #     repository: SukkaW/Surge
       #     path: Ruleset/upstream
