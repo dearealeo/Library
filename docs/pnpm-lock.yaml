@@ -63,8 +63,8 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5
       basecoat-css:
-        specifier: ^0.2.8
-        version: 0.2.8
+        specifier: ^0.3.1
+        version: 0.3.1
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -885,12 +885,6 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@resvg/resvg-js-android-arm-eabi@2.6.2':
-    resolution: {integrity: sha512-FrJibrAk6v29eabIPgcTUMPXiEz8ssrAk7TXxsiZzww9UTQ1Z5KAbFJs+Z0Ez+VZTYgnE5IQJqBcoSiMebtPHA==}
-    engines: {node: '>= 10'}
-    cpu: [arm]
-    os: [android]
-
   '@resvg/resvg-js-android-arm64@2.6.2':
     resolution: {integrity: sha512-VcOKezEhm2VqzXpcIJoITuvUS/fcjIw5NA/w3tjzWyzmvoCdd+QXIqy3FBGulWdClvp4g+IfUemigrkLThSjAQ==}
     engines: {node: '>= 10'}
@@ -1484,8 +1478,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  basecoat-css@0.2.8:
-    resolution: {integrity: sha512-mJPgpasQpviqQhXwIkfmlMCPdOhRJymxUAHktxcRZRfjJWsu8Z/3mU7VpwKCSo3TqfOVWniI/kZ3DnP7s6BeCA==}
+  basecoat-css@0.3.1:
+    resolution: {integrity: sha512-cotAERreWNNjOD0NVfBRHPKa1UtDB97vF/IlLcpjZBFIATQyTrytnIKoqTCpQ4blYZAZkGXQZOoqdtVtKITMBA==}
 
   blob-to-buffer@1.2.9:
     resolution: {integrity: sha512-BF033y5fN6OCofD3vgHmNtwZWRcq9NLyyxyILx9hfMy1sXYy4ojFl765hJ2lP0YaN2fuxPaLO2Vzzoxy0FLFFA==}
@@ -4582,9 +4576,6 @@ snapshots:
     dependencies:
       dotenv: 16.6.1
 
-  '@resvg/resvg-js-android-arm-eabi@2.6.2':
-    optional: true
-
   '@resvg/resvg-js-android-arm64@2.6.2':
     optional: true
 
@@ -4620,7 +4611,6 @@ snapshots:
 
   '@resvg/resvg-js@2.6.2':
     optionalDependencies:
-      '@resvg/resvg-js-android-arm-eabi': 2.6.2
       '@resvg/resvg-js-android-arm64': 2.6.2
       '@resvg/resvg-js-darwin-arm64': 2.6.2
       '@resvg/resvg-js-darwin-x64': 2.6.2
@@ -5284,7 +5274,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  basecoat-css@0.2.8: {}
+  basecoat-css@0.3.1: {}
 
   blob-to-buffer@1.2.9: {}
 
