@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Large Files Hosting Domains
-# Last Updated: 2025-08-12T12:39:32.816Z
-# Size: 1175
+# Last Updated: 2025-08-17T12:36:44.795Z
+# Size: 1176
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -843,6 +843,7 @@ download.xbox.com
 +.swupdate.vray.com
 +.mirrors.pair.com
 cpan.pair.com
+cdnorg.d.miui.com
 cdn.kagi.com
 +.mirror.iweb.com
 edgedl.me.gvt1.com
