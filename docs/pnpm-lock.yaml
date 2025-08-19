@@ -63,8 +63,8 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5
       basecoat-css:
-        specifier: ^0.3.1
-        version: 0.3.1
+        specifier: ^0.3.2
+        version: 0.3.2
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1499,8 +1499,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  basecoat-css@0.3.1:
-    resolution: {integrity: sha512-cotAERreWNNjOD0NVfBRHPKa1UtDB97vF/IlLcpjZBFIATQyTrytnIKoqTCpQ4blYZAZkGXQZOoqdtVtKITMBA==}
+  basecoat-css@0.3.2:
+    resolution: {integrity: sha512-WLdyYnyLU4kr3rZNl5n4YG0i3YUamYIISjpip0ipah9l4wwbmEEB/3v/K3l4tKCYg3PaEaallnvs04ZfxHZ7YQ==}
 
   blob-to-buffer@1.2.9:
     resolution: {integrity: sha512-BF033y5fN6OCofD3vgHmNtwZWRcq9NLyyxyILx9hfMy1sXYy4ojFl765hJ2lP0YaN2fuxPaLO2Vzzoxy0FLFFA==}
@@ -5318,7 +5318,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  basecoat-css@0.3.1: {}
+  basecoat-css@0.3.2: {}
 
   blob-to-buffer@1.2.9: {}
 

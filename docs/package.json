@@ -32,7 +32,7 @@
     "@tailwindcss/vite": "^4.1.12",
     "astro": "^5.13.2",
     "astro-icon": "^1.1.5",
-    "basecoat-css": "^0.3.1",
+    "basecoat-css": "^0.3.2",
     "dayjs": "^1.11.13",
     "isomorphic-dompurify": "^2.26.0",
     "katex": "^0.16.22",
