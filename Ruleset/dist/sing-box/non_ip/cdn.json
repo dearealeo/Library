@@ -58,6 +58,7 @@
         "^ocsp\\.[\\w.-]*?\\.amazontrust\\.com$",
         "^cdn[\\w.-]\\.18girlssex\\.com$",
         "^s3\\.[\\w.-]*?\\.wasabisys\\.com$",
+        "^cdn-[\\w.-]*?\\.microsoft\\.com$",
         "^cdn\\.[\\w.-]*?\\.microsoft\\.com$",
         "^assets[\\w.-]*?\\.freshdesk\\.com$",
         "^[\\w.-]*?\\.img\\.[\\w.-]*?\\.sendibm[\\w.-]\\.com$",
