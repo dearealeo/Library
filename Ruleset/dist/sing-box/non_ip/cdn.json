@@ -84,7 +84,8 @@
         "^static[\\w.-][\\w.-]\\.tgstat\\.ru$",
         "^static[\\w.-]\\.tgstat\\.ru$",
         "^cdn-msp[\\w.-]\\.jmcomic\\.me$",
-        "^sdk\\.[\\w.-]*?\\.braze\\.eu$"
+        "^sdk\\.[\\w.-]*?\\.braze\\.eu$",
+        "^assets\\.[\\w.-]*?\\.imaga\\.co$"
       ]
     }
   ]
