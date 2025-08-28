@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Reject Non-IP
-# Last Updated: 2025-08-26T12:42:22.221Z
-# Size: 764
+# Last Updated: 2025-08-28T12:37:01.943Z
+# Size: 766
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -403,6 +403,8 @@ DOMAIN-WILDCARD,counter*-yadro*-ru.unblocked.lol
 DOMAIN-WILDCARD,telezelm-*.icu
 DOMAIN-WILDCARD,whatsapp*.icu
 DOMAIN-WILDCARD,d*wsapp.icu
+DOMAIN-WILDCARD,profile-ourtime.*.workers.dev
+DOMAIN-WILDCARD,voice-ourtime.*.workers.dev
 DOMAIN-WILDCARD,business-facebook-*.pages.dev
 DOMAIN-WILDCARD,help-for-work-*.pages.dev
 DOMAIN-WILDCARD,apples-24x7-*.pages.dev
