@@ -1,6 +1,6 @@
 <?php
 
-// # Build 2025-08-28T12:37:05.893Z
+// # Build 2025-08-29T12:36:51.241Z
 
 declare(strict_types=1);
 
@@ -7075,10 +7075,10 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2401:f860:e::/48,Domestic',
         'IP-CIDR6,2401:f860:86::/47,Domestic',
         'IP-CIDR6,2401:f860:88::/47,Domestic',
-        'IP-CIDR6,2401:f860:90::/46,Domestic',
+        'IP-CIDR6,2401:f860:90::/47,Domestic',
+        'IP-CIDR6,2401:f860:92::/48,Domestic',
         'IP-CIDR6,2401:f860:94::/48,Domestic',
         'IP-CIDR6,2401:f860:100::/40,Domestic',
-        'IP-CIDR6,2401:f860:f100::/40,Domestic',
         'IP-CIDR6,2401:fa00:40::/43,Domestic',
         'IP-CIDR6,2402:840:d000::/46,Domestic',
         'IP-CIDR6,2402:840:e000::/46,Domestic',
@@ -7254,8 +7254,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2406:840:9961::/48,Domestic',
         'IP-CIDR6,2406:840:9962::/47,Domestic',
         'IP-CIDR6,2406:840:996c::/48,Domestic',
-        'IP-CIDR6,2406:840:a7fe::/48,Domestic',
-        'IP-CIDR6,2406:840:a800::/37,Domestic',
+        'IP-CIDR6,2406:840:a000::/36,Domestic',
         'IP-CIDR6,2406:840:c100::/40,Domestic',
         'IP-CIDR6,2406:840:e080::/44,Domestic',
         'IP-CIDR6,2406:840:e0cf::/48,Domestic',
@@ -8270,6 +8269,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2a14:67c1:b4d0::/44,Domestic',
         'IP-CIDR6,2a14:67c1:b4e0::/43,Domestic',
         'IP-CIDR6,2a14:67c1:b500::/48,Domestic',
+        'IP-CIDR6,2a14:67c1:b549::/48,Domestic',
         'IP-CIDR6,2a14:67c1:b561::/48,Domestic',
         'IP-CIDR6,2a14:67c1:b563::/48,Domestic',
         'IP-CIDR6,2a14:67c1:b566::/48,Domestic',
@@ -8284,6 +8284,7 @@ $_ENV['Clash_Group_Config'] = [
         'IP-CIDR6,2a14:7580:9600::/46,Domestic',
         'IP-CIDR6,2a14:7580:d000::/37,Domestic',
         'IP-CIDR6,2a14:7580:d800::/39,Domestic',
+        'IP-CIDR6,2a14:7580:da00::/40,Domestic',
         'IP-CIDR6,2a14:7580:e200::/40,Domestic',
         'IP-CIDR6,2a14:7580:fa01::/48,Domestic',
         'IP-CIDR6,2a14:7580:fe00::/40,Domestic',
