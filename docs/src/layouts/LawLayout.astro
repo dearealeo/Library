@@ -1,0 +1,151 @@
+---
+interface Props {
+  title: string;
+  content: string;
+}
+
+const { title, content } = Astro.props;
+const currentYear = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'unsafe-inline' 'self'; script-src 'self'"
+    />
+    <title>{title}</title>
+    <style>
+      :root {
+        --gray-1: rgb(142, 142, 147);
+        --gray-2: rgb(174, 174, 178);
+        --gray-3: rgb(199, 199, 204);
+        --gray-4: rgb(209, 209, 214);
+        --gray-5: rgb(229, 229, 234);
+        --gray-6: rgb(242, 242, 247);
+        --gray-7: rgb(99, 99, 102);
+        --gray-8: rgb(72, 72, 74);
+        --gray-9: rgb(58, 58, 60);
+        --gray-10: rgb(44, 44, 46);
+        --gray-11: rgb(28, 28, 30);
+        --gray-12: rgb(0, 0, 0);
+        --white: rgb(255, 255, 255);
+
+        --color-primary: var(--gray-11);
+        --color-secondary: var(--gray-1);
+        --color-accent: var(--gray-7);
+        --color-bg: var(--white);
+        --color-badge-bg: var(--gray-3);
+        --color-border: var(--color-badge-bg);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-primary: var(--gray-6);
+          --color-secondary: var(--gray-1);
+          --color-accent: var(--gray-3);
+          --color-bg: var(--gray-12);
+          --color-badge-bg: var(--gray-8);
+          --color-border: var(--color-badge-bg);
+        }
+      }
+
+      body {
+        font-family:
+          "Inter Variable",
+          "Noto Sans SC Variable",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.6;
+        color: var(--color-primary);
+        background: var(--color-bg);
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: var(--color-primary);
+        text-rendering: optimizeLegibility;
+        font-weight: 600;
+        line-height: 1.3;
+        margin-bottom: 0.5em;
+      }
+
+      header {
+        margin-bottom: 30px;
+      }
+
+      header a {
+        text-decoration: none;
+        color: var(--color-secondary);
+        font-weight: 500;
+        transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      header a:hover {
+        color: var(--color-primary);
+        transform: scale(1.1);
+      }
+
+      article {
+        margin-top: 20px;
+        background: var(--color-bg);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      a {
+        color: var(--color-secondary);
+        font-weight: 500;
+        position: relative;
+        transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        touch-action: manipulation;
+      }
+
+      a:hover {
+        color: var(--color-primary);
+        transform: scale(1.1);
+      }
+
+      footer {
+        margin-top: 30px;
+        color: var(--color-secondary);
+        font-size: 0.9em;
+        text-align: center;
+      }
+    </style>
+    <link rel="preload" href="/Library/laws/" as="document" />
+    <link rel="dns-prefetch" href="https://github.com" />
+  </head>
+  <body>
+    <header>
+      <p>
+        <a href="/Library/laws/"
+          >Back to National Database of Laws and Regulations</a
+        >
+      </p>
+    </header>
+
+    <article>
+      <Fragment set:html={content} />
+    </article>
+
+    <footer>
+      &copy; {currentYear} Library
+    </footer>
+  </body>
+</html>

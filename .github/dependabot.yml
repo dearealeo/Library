@@ -1,0 +1,119 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+    assignees:
+      - "dearealeo"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "deps(ci)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+    assignees:
+      - "dearealeo"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "deps(submod)"
+
+  - package-ecosystem: "pip"
+    directory: "/国家法律法规数据库"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+    assignees:
+      - "dearealeo"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps(laws)"
+    groups:
+      laws-prod:
+        applies-to: version-updates
+        dependency-type: "production"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      laws-dev:
+        applies-to: version-updates
+        dependency-type: "development"
+        patterns:
+          - "*"
+      laws-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/新闻联播"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+    assignees:
+      - "dearealeo"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps(news)"
+    groups:
+      news-prod:
+        applies-to: version-updates
+        dependency-type: "production"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      news-dev:
+        applies-to: version-updates
+        dependency-type: "development"
+        patterns:
+          - "*"
+      news-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/docs"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+    assignees:
+      - "dearealeo"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps(docs)"
+    groups:
+      prod-deps:
+        applies-to: version-updates
+        dependency-type: "production"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      dev-deps:
+        applies-to: version-updates
+        dependency-type: "development"
+        patterns:
+          - "*"
+      security-deps:
+        applies-to: security-updates
+        patterns:
+          - "*"

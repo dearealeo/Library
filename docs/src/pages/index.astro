@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const projects = [
+  {
+    title: "Ruleset",
+    docPath: "/Library/ruleset/",
+    srcPath: "https://github.com/dearealeo/Library/tree/main/Ruleset",
+  },
+  {
+    title: "National Database of Laws and Regulations",
+    docPath: "/Library/laws/",
+    srcPath:
+      "https://github.com/dearealeo/Library/tree/main/%E5%9B%BD%E5%AE%B6%E6%B3%95%E5%BE%8B%E6%B3%95%E8%A7%84%E6%95%B0%E6%8D%AE%E5%BA%93",
+  },
+  {
+    title: "Xinwen Lianbo",
+    docPath: "/Library/news/",
+    srcPath:
+      "https://github.com/dearealeo/Library/tree/main/%E6%96%B0%E9%97%BB%E8%81%94%E6%92%AD",
+  },
+];
+---
+
+<BaseLayout title="Library Documentation">
+  <div class="c">
+    <h2>Disclaimer</h2>
+    <p>
+      This project expressly disclaims any storage, reproduction, or
+      distribution of copyrighted materials, and all referenced or linked
+      content remains the exclusive property of their respective rights holders,
+      with no claim of ownership or licensing asserted herein.
+    </p>
+  </div>
+
+  <div class="c">
+    <h2>Index</h2>
+    {
+      projects.map(({ title, docPath, srcPath }) => (
+        <div class="p">
+          <h3>{title}</h3>
+          <p>
+            <a href={docPath}>Documentation</a> | <a href={srcPath}>Source</a>
+          </p>
+        </div>
+      ))
+    }
+    <div class="p">
+      <h3>RSS Feed</h3>
+      <p>
+        <a href="/Library/rss.xml">Subscribe to updates</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>
