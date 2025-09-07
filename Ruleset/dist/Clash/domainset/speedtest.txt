@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-09-05T12:35:37.635Z
-# Size: 1374
+# Last Updated: 2025-09-07T12:32:27.974Z
+# Size: 1375
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -245,6 +245,7 @@ st.fratec.net
 +.speedtest.faelix.net
 warp.cronon.net
 speedtest.coreix.net
+speedtest.aquiss.net
 +.speedtest.alagas.net
 speedtest-sjc.acreto.net
 speedtest.miam.fl.wtsky.net
