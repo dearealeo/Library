@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-09-08T12:38:29.569Z
-# Size: 1376
+# Last Updated: 2025-09-09T12:39:01.512Z
+# Size: 1377
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -254,6 +254,7 @@ speedtest-pth.vocus.net
 speedtest-mel.vocus.net
 speedtest-bne.vocus.net
 speedtest.sjc.sonic.net
+lnx01.smtns.net
 speedtest.rfnow.net
 +.nperf.net
 spdms.mytpn.net
