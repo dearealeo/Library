@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-09-10T12:35:51.220Z
-# Size: 3869
+# Last Updated: 2025-09-11T12:35:28.458Z
+# Size: 3871
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -1035,6 +1035,8 @@ asset.mansionglobal.com
 +.livemediahost.com
 pbs-prod.linustechtips.com
 cwsimages.ingramcontent.com
+media-central.indianexpress.com
+images.indianexpress.com
 +.highwinds-cdn.com
 cdn.heapanalytics.com
 sig.grumpybumpers.com
