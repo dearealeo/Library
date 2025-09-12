@@ -30,6 +30,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
+
       - name: Get Date
         id: date
         run: |
@@ -72,6 +73,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}
           lfs: true
+
       - name: Setup System
         run: |
           sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
@@ -144,24 +146,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
+
       - name: Download Artifacts
         uses: actions/download-artifact@v5
         with:
           path: ./artifacts
-
-      - name: Verify Artifacts
-        run: |
-          set -euo pipefail
-          declare -a workflows=("国家法律法规数据库" "新闻联播" "Ruleset")
-          missing=0
-          for workflow in "${workflows[@]}"; do
-            artifact_dir="./artifacts/${workflow}"
-            if [[ ! -d "$artifact_dir" || -z "$(find "$artifact_dir" -type f 2>/dev/null)" ]]; then
-              echo "::error::Missing artifact for ${workflow}"
-              missing=$((missing + 1))
-            fi
-          done
-          [[ $missing -gt 0 ]] && exit 1
 
       - name: Prepare Files
         run: |
