@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Stream Services: Taiwan
-# Last Updated: 2025-08-17T12:36:43.677Z
-# Size: 32
+# Last Updated: 2025-09-12T12:36:13.446Z
+# Size: 33
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -36,6 +36,7 @@ DOMAIN-SUFFIX,linetv.tw
 DOMAIN,video.friday.tw
 DOMAIN,ana.video.friday.tw
 DOMAIN-SUFFIX,bahamut.com.tw
+DOMAIN-SUFFIX,api.gamer.com.tw
 DOMAIN-SUFFIX,ani.gamer.com.tw
 DOMAIN-SUFFIX,kktv.com.tw
 DOMAIN,www.litv.tv
