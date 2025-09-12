@@ -1,4 +1,4 @@
-name: Update today Rulesets
+name: Update Ruleset
 
 on:
   schedule:
@@ -11,161 +11,133 @@ concurrency:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   build_and_commit:
-    name: Build upstream and commit
+    name: Build Pipeline
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
 
     steps:
-      - name: Enable long paths
-        run: git config --global core.longpaths true
-      - name: Checkout own repository
+      - name: Setup Git
+        run: |
+          git config --global core.longpaths true
+          git config --global core.preloadindex true
+          git config --global core.fscache true
+          git config --global gc.auto 0
+      - name: Checkout
         uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          submodules: "recursive"
+          submodules: false
+          fetch-depth: 1
 
-      # - name: Checkout SukkaW/Surge source
-      #   uses: actions/checkout@v5
-      #   with:
-      #     repository: SukkaW/Surge
-      #     path: Ruleset/upstream
-      #     persist-credentials: false
-
-      - name: Update submodule
+      - name: Sync Submodules
         run: |
-          git submodule sync --recursive
-          git submodule update --init --recursive --remote --force "Ruleset/upstream"
+          git submodule sync --quiet --recursive
+          git submodule update --init --recursive --remote --force --depth=1 --single-branch "Ruleset/upstream"
 
-      - uses: pnpm/action-setup@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
         with:
-          version: latest
-      - uses: actions/setup-node@v4
+          version: 9
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version-file: "Ruleset/upstream/.node-version"
           cache: "pnpm"
           cache-dependency-path: "Ruleset/upstream/pnpm-lock.yaml"
 
-      - name: Get current date
+      - name: Get Timestamp
         id: date
         run: |
-          echo "date=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
-          echo "cst_time=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
-          echo "year=$(date +'%Y')" >> $GITHUB_OUTPUT
-          echo "month=$(date +'%m')" >> $GITHUB_OUTPUT
-          echo "day=$(date +'%d')" >> $GITHUB_OUTPUT
-          echo "hour=$(date +'%H')" >> $GITHUB_OUTPUT
-          echo "minute=$(date +'%M')" >> $GITHUB_OUTPUT
-          echo "second=$(date +'%S')" >> $GITHUB_OUTPUT
+          TZ='Asia/Shanghai' date +'cst_time=%Y-%m-%d %H:%M:%S' >> $GITHUB_OUTPUT
 
-      - name: Restore build process cache
+      - name: Cache Dependencies
         uses: actions/cache@v4
         id: cache-db-restore
         with:
-          path: Ruleset/upstream/.cache
-          key: ${{ runner.os }}-build-cache-v1-${{ hashFiles('Ruleset/upstream/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-build-cache-v1-
+          path: |
+            Ruleset/upstream/.cache
+            Ruleset/upstream/node_modules/.cache
+          key: ${{ runner.os }}-build-v2-${{ hashFiles('Ruleset/upstream/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-build-v2-
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
         working-directory: Ruleset/upstream
 
-      - name: Define output directory
+      - name: Setup Build Env
         id: paths
-        run: echo "output_dir=./Ruleset/dist" >> $GITHUB_OUTPUT
-
-      - name: Setup build folder
         run: |
-          mkdir -p "${{ steps.paths.outputs.output_dir }}/List/domainset"
-          touch "${{ steps.paths.outputs.output_dir }}/List/domainset/speedtest.conf"
-        shell: bash
+          OUTPUT_DIR="./Ruleset/dist"
+          echo "output_dir=${OUTPUT_DIR}" >> $GITHUB_OUTPUT
+          mkdir -p "${OUTPUT_DIR}/List/domainset"
+          touch "${OUTPUT_DIR}/List/domainset/speedtest.conf"
 
-      - name: Build rulesets
+      - name: Build Rules
         run: pnpm run build
         working-directory: Ruleset/upstream
         env:
           PUBLIC_DIR: ${{ github.workspace }}/${{ steps.paths.outputs.output_dir }}
+          NODE_ENV: production
 
-      - name: Check build output
+      - name: Validate Build
         run: |
           OUTPUT_DIR="${{ steps.paths.outputs.output_dir }}"
-          if [ ! -d "$OUTPUT_DIR" ]; then
-            echo "Output directory '$OUTPUT_DIR' not found"
-            exit 1
-          fi
-          if [ ! "$(ls -A "$OUTPUT_DIR")" ]; then
-            echo "Output directory '$OUTPUT_DIR' is empty"
-            exit 1
-          fi
-          if [ ! -f Ruleset/upstream/.BUILD_FINISHED ]; then
-            echo "Build marker 'Ruleset/upstream/.BUILD_FINISHED' not found"
-            exit 1
-          fi
-          echo "Output directory '$OUTPUT_DIR' exists and is not empty"
+          [ -d "$OUTPUT_DIR" ] && [ "$(find "$OUTPUT_DIR" -type f | wc -l)" -gt 0 ] && [ -f Ruleset/upstream/.BUILD_FINISHED ]
 
-      - name: Remove files that should not be committed
+      - name: Clean Output
         run: |
-          rm -f "${{ steps.paths.outputs.output_dir }}/404.html"
-          rm -f "${{ steps.paths.outputs.output_dir }}/_headers"
-          rm -f "${{ steps.paths.outputs.output_dir }}/index.html"
-          rm -f "${{ steps.paths.outputs.output_dir }}/README.md"
+          cd "${{ steps.paths.outputs.output_dir }}"
+          rm -f 404.html _headers index.html README.md
 
-      - name: Commit files
+      - name: Commit Changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          cd "Ruleset/upstream"
-          UPSTREAM_COMMIT_SHA=$(git rev-parse --short HEAD)
-          cd ../..
-
           git add -f "Ruleset/upstream" "${{ steps.paths.outputs.output_dir }}"
-
           if git diff --staged --quiet; then
-            echo "No changes detected in upstream submodule or rulesets. Nothing to commit."
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           else
-            echo "Changes detected. Committing"
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
             git commit -m "feat(ruleset): update [${{ steps.date.outputs.cst_time }}]"
           fi
 
-      - name: Push changes
+      - name: Push Changes
         if: env.HAS_CHANGES == 'true'
         run: |
-          echo "Pulling latest changes with rebase"
-          git pull --rebase origin ${{ github.ref_name }}
-          echo "Pushing changes"
+          git pull --rebase --autostash origin ${{ github.ref_name }}
           git push origin HEAD:${{ github.ref_name }}
 
-      - name: Save build process cache
+      - name: Save Cache
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: Ruleset/upstream/.cache
-          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-build-cache-v1-{1}', runner.os, hashFiles('Ruleset/upstream/pnpm-lock.yaml')) }}
+          path: |
+            Ruleset/upstream/.cache
+            Ruleset/upstream/node_modules/.cache
+          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-build-v2-{1}', runner.os, hashFiles('Ruleset/upstream/pnpm-lock.yaml')) }}
 
   diff_deployment_on_pr:
     if: github.event_name == 'pull_request'
-    needs:
-      - build_and_commit
-    name: Diff output
+    needs: build_and_commit
+    name: Show Changes
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
-      - uses: actions/download-artifact@v5
+      - name: Download Artifact
+        uses: actions/download-artifact@v5
         with:
           name: build-artifact-${{ github.sha }}-${{ github.run_number }}
           path: public
-      - name: Diff
+      - name: Generate Diff
         run: |
-          git clone --sparse --filter=tree:0 --no-tags https://github.com/dearealeo/Library.git ./deploy-git >/dev/null 2>&1
+          git clone --sparse --filter=tree:0 --depth=1 --no-tags https://github.com/dearealeo/Library.git ./deploy-git 2>/dev/null
           cd ./deploy-git
           git sparse-checkout set "Ruleset/dist"
-          git fetch origin main >/dev/null 2>&1
+          git fetch --depth=1 origin main 2>/dev/null
           rm -rf ./"Ruleset/dist"/*
-          mkdir -p ./"Ruleset/dist"
           cp -rf ../public/* ./"Ruleset/dist"/
-          git --no-pager diff --minimal
+          git --no-pager diff --minimal --color=never

@@ -1,4 +1,4 @@
-name: Update today Xinwen Lianbo
+name: Update News
 
 on:
   workflow_dispatch:
@@ -10,36 +10,44 @@ permissions:
 
 jobs:
   update-news:
-    name: Update today Xinwen Lianbo
+    name: News Pipeline
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
-      - name: Enable long paths
+      - name: Setup Git
         run: git config --global core.longpaths true
-      - uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5.6.0
         with:
           python-version: "3.13"
           cache: "pip"
-      - name: Install dependencies
-        run: pip install -r 新闻联播/requirements.txt
-      - name: Generate content
-        run: python 新闻联播/main.py
-      - name: Lint Markdown files
+          cache-dependency-path: "新闻联播/requirements.txt"
+      - name: Install Dependencies
+        run: pip install --no-deps -r 新闻联播/requirements.txt
+      - name: Fetch News
+        run: |
+          cd 新闻联播
+          python main.py
+      - name: Lint Markdown
         uses: DavidAnson/markdownlint-cli2-action@v20.0.0
         with:
           globs: "新闻联播/**/*.md"
           fix: true
           config: ".markdownlint.json"
         continue-on-error: true
-      - name: Commit and push changes
+      - name: Commit Changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A
-          git diff --staged --quiet || git commit -m "feat(news): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]" && git push origin ${{ github.ref_name }}
+          git diff --staged --quiet || (
+            git commit -m "feat(news): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]"
+            git push origin ${{ github.ref_name }}
+          )

@@ -1,4 +1,4 @@
-name: Update today National Database of Laws and Regulations
+name: Update Laws
 
 on:
   workflow_dispatch:
@@ -10,36 +10,48 @@ permissions:
 
 jobs:
   update-laws:
-    name: Update today National Database of Laws and Regulations
+    name: Legal Pipeline
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
-      - name: Enable long paths
+      - name: Setup Git
         run: git config --global core.longpaths true
-      - uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5.6.0
         with:
           python-version: "3.13"
           cache: "pip"
-      - name: Install dependencies
-        run: pip install -r 国家法律法规数据库/requirements.txt && playwright install
-      - name: Generate content
-        run: python 国家法律法规数据库/main.py --update-schema && python 国家法律法规数据库/main.py -c
-      - name: Lint Markdown files
+          cache-dependency-path: "国家法律法规数据库/requirements.txt"
+      - name: Install Dependencies
+        run: |
+          pip install --no-deps -r 国家法律法规数据库/requirements.txt
+          playwright install --with-deps
+      - name: Process Data
+        run: |
+          cd 国家法律法规数据库
+          python main.py --update-schema
+          python main.py -c
+      - name: Lint Markdown
         uses: DavidAnson/markdownlint-cli2-action@v20.0.0
         with:
           globs: "国家法律法规数据库/**/*.md"
           fix: true
           config: ".markdownlint.json"
         continue-on-error: true
-      - name: Commit and push changes
+      - name: Commit Changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A
-          git diff --staged --quiet || (git commit -m "feat(laws): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]" && git pull --rebase origin ${{ github.ref_name }} && git push origin ${{ github.ref_name }})
+          git diff --staged --quiet || (
+            git commit -m "feat(laws): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]"
+            git pull --rebase --autostash origin ${{ github.ref_name }}
+            git push origin ${{ github.ref_name }}
+          )
