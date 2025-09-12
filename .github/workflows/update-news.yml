@@ -30,7 +30,7 @@ jobs:
           cache: "pip"
           cache-dependency-path: "新闻联播/requirements.txt"
       - name: Install Dependencies
-        run: pip install --no-deps -r 新闻联播/requirements.txt
+        run: pip install -r 新闻联播/requirements.txt
       - name: Fetch News
         run: |
           cd 新闻联播
