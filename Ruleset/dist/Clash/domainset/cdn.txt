@@ -1,6 +1,6 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-09-12T12:36:14.247Z
+# Last Updated: 2025-09-14T13:30:41.790Z
 # Size: 3892
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
@@ -1113,7 +1113,6 @@ media.steampowered.com
 cdn.staticdelivr.com
 +.ipfs.soul-network.com
 image.shutterstock.com
-sourcemap.webfe.shopeemobile.com
 static.serverhunter.com
 +.scribdassets.com
 ak.sail-horizon.com
@@ -2377,6 +2376,7 @@ blob.jortage.com
 img4.javmost.com
 img3.javmost.com
 img2.javmost.com
+cdn.javmiku.com
 img2.javdove.com
 assets.ipstack.com
 i.insider.com
@@ -2575,6 +2575,7 @@ telemetry.vercel.com
 assets.vercel.com
 image.ship.vercel.com
 go.vercel.com
++.vancdn.com
 img.utdstc.com
 +.devrum.uptime.com
 api.unisvg.com
@@ -2733,7 +2734,6 @@ code.jquery.com
 cdn.jitbit.com
 +.jbkcdn.com
 +.javtxt.com
-cdn.javsts.com
 +.imgtbl.com
 +.imgbox.com
 static.inferno.iheart.com
@@ -3626,7 +3626,7 @@ static.status.io
 image.status.io
 media.smooch.io
 cdn.smooch.io
-files.webfe.shopee.io
++.webfe.shopee.io
 wire.shodan.io
 +.ingest.sentry.io
 +.ingest.us.sentry.io
