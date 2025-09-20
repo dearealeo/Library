@@ -1,4 +1,4 @@
-name: Update sing-box
+name: Update BrightIntosh
 
 permissions:
   contents: write
@@ -6,7 +6,7 @@ permissions:
 
 on:
   schedule:
-    - cron: "0 18 * * *"
+    - cron: "0 19 * * *"
   workflow_dispatch:
     inputs:
       sync:
@@ -17,10 +17,8 @@ on:
         description: "Build type"
         required: true
         type: choice
-        default: "ALL"
+        default: "macOS"
         options:
-          - ALL
-          - Binary
           - macOS
           - SKIP
       version:
@@ -29,12 +27,12 @@ on:
         required: false
 
 concurrency:
-  group: sync-build-sing-box
+  group: sync-build-brightintosh
   cancel-in-progress: true
 
 env:
-  UPSTREAM_REPO: "SagerNet/sing-box"
-  UPSTREAM_BRANCH: "dev-next"
+  UPSTREAM_REPO: "niklasr22/BrightIntosh"
+  UPSTREAM_BRANCH: "main"
 
 jobs:
   plan:
@@ -46,7 +44,7 @@ jobs:
       - id: set_outputs
         run: |
           SHOULD_SYNC="${{ inputs.sync || 'true' }}"
-          BUILD_MODE="${{ inputs.build || 'ALL' }}"
+          BUILD_MODE="${{ inputs.build || 'macOS' }}"
 
           if [ "$SHOULD_SYNC" != "true" ]; then
             SHOULD_SYNC=false
@@ -54,11 +52,7 @@ jobs:
             SHOULD_SYNC=true
           fi
 
-          if [ "$BUILD_MODE" == "ALL" ]; then
-            BUILD_TYPES='["binary","macos"]'
-          elif [ "$BUILD_MODE" == "Binary" ]; then
-            BUILD_TYPES='["binary"]'
-          elif [ "$BUILD_MODE" == "macOS" ]; then
+          if [ "$BUILD_MODE" == "macOS" ]; then
             BUILD_TYPES='["macos"]'
           else
             BUILD_TYPES='[]'
@@ -92,58 +86,20 @@ jobs:
 
           git clone --depth=1 --branch="${{ env.UPSTREAM_BRANCH }}" "https://github.com/${{ env.UPSTREAM_REPO }}.git" "$TEMP"
 
-          rsync -a --delete --exclude='.git' "$TEMP/" "sing-box/"
+          rsync -a --delete --exclude='.git' "$TEMP/" "BrightIntosh/"
 
-          git add sing-box/
+          git add BrightIntosh/
 
           if git diff --staged --quiet; then
             echo "changes=false" >> "$GITHUB_OUTPUT"
           else
             UPSTREAM_SHA=$(git -C "$TEMP" rev-parse HEAD)
-            git commit -m "feat(sing-box): update ${UPSTREAM_SHA:0:7} [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]"
+            git commit -m "feat(BrightIntosh): update ${UPSTREAM_SHA:0:7} [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]"
             git remote set-url origin "https://user:${{ secrets.PAT }}@github.com/${{ github.repository }}.git"
             git push origin main
             echo "changes=true" >> "$GITHUB_OUTPUT"
             echo "upstream_sha=$UPSTREAM_SHA" >> "$GITHUB_ENV"
           fi
-
-  build-binary:
-    if: contains(needs.plan.outputs.build_types, 'binary') && needs.sync.outputs.changes == 'true'
-    runs-on: macos-15
-    needs: sync
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: main
-          fetch-depth: 0
-          submodules: recursive
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "^1.24.5"
-          cache: true
-
-      - run: |
-          cd sing-box
-          VERSION='${{ inputs.version || github.sha }}'
-          TAGS='with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale'
-
-          go build -trimpath -ldflags="-s -w -buildid= -X github.com/sagernet/sing-box/constant.Version=$VERSION" -tags="$TAGS" -o sing-box ./cmd/sing-box
-
-          PKG="sing-box-$VERSION-${{ runner.os }}-$(go env GOARCH)"
-          mkdir "$PKG"
-          cp LICENSE sing-box "$PKG/"
-
-          if ! command -v zstd >/dev/null; then
-            brew install zstd gnu-tar
-          fi
-          gtar --zstd -cf "$PKG.tar.zst" "$PKG"
-
-      - uses: actions/upload-artifact@v4.6.2
-        with:
-          name: binary
-          path: sing-box/*.tar.zst
-          retention-days: 7
 
   build-macos:
     if: contains(needs.plan.outputs.build_types, 'macos') && needs.sync.outputs.changes == 'true'
@@ -156,14 +112,9 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "^1.24.5"
-          cache: true
-
       - run: |
-          cd sing-box
-          if [ ! -d "clients/apple" ]; then
+          cd BrightIntosh
+          if [ ! -d "BrightIntosh.xcodeproj" ]; then
             exit 0
           fi
 
@@ -172,36 +123,23 @@ jobs:
           fi
           sudo xcode-select -s /Applications/Xcode_16.4.app
 
-          GOPATH_BIN="$(go env GOPATH)/bin"
-          export PATH="$PATH:$GOPATH_BIN"
-          make lib_install 2>/dev/null || true
-          go run ./cmd/internal/build_libbox -target apple -platform macos && mv Libbox.xcframework clients/apple/ || true
+          xcodebuild build -scheme BrightIntosh -configuration Release -destination "generic/platform=macOS" -derivedDataPath ./DD CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO
 
-          cd clients/apple
-          if [ ! -f "sing-box.xcodeproj/project.pbxproj" ]; then
-            exit 0
-          fi
-
-          sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g; s/CODE_SIGN_IDENTITY = .*/CODE_SIGN_IDENTITY = "";/g; s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = "";/g' sing-box.xcodeproj/project.pbxproj
-
-          xcodebuild build -scheme SFM.System -configuration Release -destination "generic/platform=macOS" -derivedDataPath ./DD CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO
-
-          APP=$(find . -name "*.app" -type d -print -quit)
+          APP=$(find ./DD -name "BrightIntosh.app" -type d -print -quit)
           if [ -z "$APP" ]; then
             exit 0
           fi
 
           VERSION='${{ inputs.version || github.sha }}'
-          DMG="SFM-$VERSION.dmg"
-          create-dmg --volname "SFM" --app-drop-link 200 200 --skip-jenkins "$DMG" "$APP"
+          DMG="BrightIntosh-$VERSION.dmg"
 
-          mv "$DMG" ../../
-          cd ../..
+          create-dmg --volname "BrightIntosh" --app-drop-link 200 200 --skip-jenkins "$DMG" "$APP"
+
           gtar --zstd -cf "$DMG.tar.zst" "$DMG"
 
       - uses: actions/upload-artifact@v4.6.2
         with:
           name: macos
-          path: sing-box/*.tar.zst
+          path: BrightIntosh/*.tar.zst
           retention-days: 7
           if-no-files-found: ignore
