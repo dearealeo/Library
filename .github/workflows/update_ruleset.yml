@@ -1,0 +1,143 @@
+name: Update Ruleset
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build_and_commit:
+    name: Build Pipeline
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Setup Git
+        run: |
+          git config --global core.longpaths true
+          git config --global core.preloadindex true
+          git config --global core.fscache true
+          git config --global gc.auto 0
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: false
+          fetch-depth: 1
+
+      - name: Sync Submodules
+        run: |
+          git submodule sync --quiet --recursive
+          git submodule update --init --recursive --remote --force --depth=1 --single-branch "Ruleset/upstream"
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "Ruleset/upstream/.node-version"
+          cache: "pnpm"
+          cache-dependency-path: "Ruleset/upstream/pnpm-lock.yaml"
+
+      - name: Get Timestamp
+        id: date
+        run: |
+          TZ='Asia/Shanghai' date +'cst_time=%Y-%m-%d %H:%M:%S' >> $GITHUB_OUTPUT
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        id: cache-db-restore
+        with:
+          path: |
+            Ruleset/upstream/.cache
+            Ruleset/upstream/node_modules/.cache
+          key: ${{ runner.os }}-build-v2-${{ hashFiles('Ruleset/upstream/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-build-v2-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+        working-directory: Ruleset/upstream
+
+      - name: Setup Build Env
+        id: paths
+        run: |
+          OUTPUT_DIR="./Ruleset/dist"
+          echo "output_dir=${OUTPUT_DIR}" >> $GITHUB_OUTPUT
+          mkdir -p "${OUTPUT_DIR}/List/domainset"
+          touch "${OUTPUT_DIR}/List/domainset/speedtest.conf"
+
+      - name: Build Rules
+        run: pnpm run build
+        working-directory: Ruleset/upstream
+        env:
+          PUBLIC_DIR: ${{ github.workspace }}/${{ steps.paths.outputs.output_dir }}
+          NODE_ENV: production
+
+      - name: Validate Build
+        run: |
+          OUTPUT_DIR="${{ steps.paths.outputs.output_dir }}"
+          [ -d "$OUTPUT_DIR" ] && [ "$(find "$OUTPUT_DIR" -type f | wc -l)" -gt 0 ] && [ -f Ruleset/upstream/.BUILD_FINISHED ]
+
+      - name: Clean Output
+        run: |
+          cd "${{ steps.paths.outputs.output_dir }}"
+          rm -f 404.html _headers index.html README.md
+
+      - name: Commit Changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -f "Ruleset/upstream" "${{ steps.paths.outputs.output_dir }}"
+          if git diff --staged --quiet; then
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
+          else
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
+            git commit -m "feat(ruleset): update [${{ steps.date.outputs.cst_time }}]"
+          fi
+
+      - name: Push Changes
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          git pull --rebase --autostash origin ${{ github.ref_name }}
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Save Cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            Ruleset/upstream/.cache
+            Ruleset/upstream/node_modules/.cache
+          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-build-v2-{1}', runner.os, hashFiles('Ruleset/upstream/pnpm-lock.yaml')) }}
+
+  diff_deployment_on_pr:
+    if: github.event_name == 'pull_request'
+    needs: build_and_commit
+    name: Show Changes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: build-artifact-${{ github.sha }}-${{ github.run_number }}
+          path: public
+      - name: Generate Diff
+        run: |
+          git clone --sparse --filter=tree:0 --depth=1 --no-tags https://github.com/dearealeo/Library.git ./deploy-git 2>/dev/null
+          cd ./deploy-git
+          git sparse-checkout set "Ruleset/dist"
+          git fetch --depth=1 origin main 2>/dev/null
+          rm -rf ./"Ruleset/dist"/*
+          cp -rf ../public/* ./"Ruleset/dist"/
+          git --no-pager diff --minimal --color=never

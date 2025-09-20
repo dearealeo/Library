@@ -1,0 +1,89 @@
+name: Deploy Astro Site
+
+on:
+  workflow_run:
+    workflows: ["Update Ruleset", "Update Laws", "Update News"]
+    types: [completed]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Setup Git
+        run: git config --global core.longpaths true
+      - name: Checkout Code
+        uses: actions/checkout@v5
+        with:
+          submodules: "recursive"
+          fetch-depth: 1
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.2.0
+          cache: "pnpm"
+          cache-dependency-path: "docs/pnpm-lock.yaml"
+
+      - name: Install Dependencies
+        run: |
+          cd docs
+          pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Lint Code
+        run: |
+          cd docs
+          pnpm run lint
+        continue-on-error: true
+      - name: Sync Content
+        run: |
+          cd docs
+          pnpm run sync
+      - name: Format Code
+        run: |
+          cd docs
+          pnpm run format
+        continue-on-error: true
+      - name: Build Site
+        run: |
+          cd docs
+          pnpm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./docs/dist"
+          retention-days: 1
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 5
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 600000

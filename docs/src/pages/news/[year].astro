@@ -1,0 +1,131 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { readdir } from 'node:fs/promises';
+import { join } from 'node:path';
+
+export async function getStaticPaths() {
+  const currentYear = new Date().getFullYear();
+  const startYear = 2022;
+  const years = [];
+
+  for (let year = startYear; year <= currentYear; year++) {
+    // Check which months have content
+    const monthsWithContent = new Set();
+    try {
+      const newsPath = join(process.cwd(), 'public', 'news', year.toString());
+      const allFiles = await readdir(newsPath);
+      allFiles.forEach(file => {
+        if (file.endsWith('.md') && file.length === 12) { // YYYYMMDD.md format
+          const month = file.slice(4, 6);
+          monthsWithContent.add(month);
+        }
+      });
+    } catch (error) {
+      // Directory might not exist
+    }
+
+    years.push({
+      params: { year: year.toString() },
+      props: {
+        year,
+        monthsWithContent: Array.from(monthsWithContent).sort()
+      }
+    });
+  }
+
+  return years;
+}
+
+const { year, monthsWithContent } = Astro.props;
+
+const months = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+---
+
+<BaseLayout title={`News ${year}`}>
+  <div class="content">
+    <p><a href="/Library/news/">Back to News</a></p>
+    <h1>News {year}</h1>
+    
+    <div class="months-grid">
+      {months.map((month, index) => {
+        const monthNum = (index + 1).toString().padStart(2, '0');
+        const hasContent = monthsWithContent.includes(monthNum);
+        return (
+          <div class={`month-item ${hasContent ? 'has-content' : 'no-content'}`}>
+            {hasContent ? (
+              <a href={`/Library/news/${year}/${monthNum}/`}>{month}</a>
+            ) : (
+              <span class="disabled">{month}</span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .content p:first-child {
+    margin-bottom: 30px;
+  }
+
+  .content a {
+    text-decoration: none;
+    color: var(--color-secondary);
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .content a:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  h1 {
+    color: var(--color-primary);
+    margin-bottom: 30px;
+  }
+
+  .months-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+  }
+
+  .month-item {
+    text-align: center;
+  }
+
+  .month-item a {
+    display: block;
+    padding: 15px 10px;
+    border-radius: 5px;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .month-item a:hover {
+    background: var(--color-badge-bg);
+    transform: translateY(-2px);
+  }
+
+  .month-item.no-content {
+    opacity: 0.5;
+  }
+
+  .month-item .disabled {
+    display: block;
+    padding: 15px 10px;
+    color: var(--color-secondary);
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+</style>
