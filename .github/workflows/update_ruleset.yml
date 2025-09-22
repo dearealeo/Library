@@ -35,7 +35,7 @@ jobs:
       - name: Sync Submodules
         run: |
           git submodule sync --quiet --recursive
-          git submodule update --init --recursive --remote --force --depth=1 --single-branch "Ruleset/upstream"
+          git submodule update --init --recursive --remote --force --depth=1 --single-branch "Ruleset/ruleset"
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
@@ -45,9 +45,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: "Ruleset/upstream/.node-version"
+          node-version-file: "Ruleset/ruleset/.node-version"
           cache: "pnpm"
-          cache-dependency-path: "Ruleset/upstream/pnpm-lock.yaml"
+          cache-dependency-path: "Ruleset/ruleset/pnpm-lock.yaml"
 
       - name: Get Timestamp
         id: date
@@ -59,14 +59,14 @@ jobs:
         id: cache-db-restore
         with:
           path: |
-            Ruleset/upstream/.cache
-            Ruleset/upstream/node_modules/.cache
-          key: ${{ runner.os }}-build-v2-${{ hashFiles('Ruleset/upstream/pnpm-lock.yaml') }}
+            Ruleset/ruleset/.cache
+            Ruleset/ruleset/node_modules/.cache
+          key: ${{ runner.os }}-build-v2-${{ hashFiles('Ruleset/ruleset/pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-build-v2-
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
-        working-directory: Ruleset/upstream
+        working-directory: Ruleset/ruleset
 
       - name: Setup Build Env
         id: paths
@@ -78,7 +78,7 @@ jobs:
 
       - name: Build Rules
         run: pnpm run build
-        working-directory: Ruleset/upstream
+        working-directory: Ruleset/ruleset
         env:
           PUBLIC_DIR: ${{ github.workspace }}/${{ steps.paths.outputs.output_dir }}
           NODE_ENV: production
@@ -86,7 +86,7 @@ jobs:
       - name: Validate Build
         run: |
           OUTPUT_DIR="${{ steps.paths.outputs.output_dir }}"
-          [ -d "$OUTPUT_DIR" ] && [ "$(find "$OUTPUT_DIR" -type f | wc -l)" -gt 0 ] && [ -f Ruleset/upstream/.BUILD_FINISHED ]
+          [ -d "$OUTPUT_DIR" ] && [ "$(find "$OUTPUT_DIR" -type f | wc -l)" -gt 0 ] && [ -f Ruleset/ruleset/.BUILD_FINISHED ]
 
       - name: Clean Output
         run: |
@@ -97,7 +97,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -f "Ruleset/upstream" "${{ steps.paths.outputs.output_dir }}"
+          git add -f "Ruleset/ruleset" "${{ steps.paths.outputs.output_dir }}"
           if git diff --staged --quiet; then
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           else
@@ -116,9 +116,9 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: |
-            Ruleset/upstream/.cache
-            Ruleset/upstream/node_modules/.cache
-          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-build-v2-{1}', runner.os, hashFiles('Ruleset/upstream/pnpm-lock.yaml')) }}
+            Ruleset/ruleset/.cache
+            Ruleset/ruleset/node_modules/.cache
+          key: ${{ steps.cache-db-restore.outputs.cache-primary-key || format('{0}-build-v2-{1}', runner.os, hashFiles('Ruleset/ruleset/pnpm-lock.yaml')) }}
 
   diff_deployment_on_pr:
     if: github.event_name == 'pull_request'
