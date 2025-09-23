@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-09-20T07:04:34.475Z
-# Size: 1407
+# Last Updated: 2025-09-23T00:33:54.515Z
+# Size: 1411
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -529,6 +529,8 @@ ookla-lax.extentit.com
 +.ookla.ddnsgeek.com
 speedtest01.wowrack.com
 +.wifiman.com
+speedtest-nl.webdade.com
+speedtest-de.webdade.com
 +.speedtest.waicore.com
 speedtest.verimek.com
 speed.turbodc.com
@@ -759,6 +761,7 @@ mars-speedtest.guzel.net.tr
 +.speedtest.gibir.net.tr
 speedtest.wifi.net.tr
 tr-ist.orfi.net.tr
+karapinar.flix.net.tr
 speed.flix.net.tr
 speedtest01.tek.net.tr
 speedtest.spd.net.tr
@@ -1083,6 +1086,7 @@ velocity.softtelecom.net.br
 speedtest.provedornet.net.br
 speedtest.unitelecom.net.br
 srvteste.edntelecom.net.br
+speedtestbcl1.csmtelecom.net.br
 velocidade.rltelecom.net.br
 teste.dstelecom.net.br
 speedtest-cam1.cyberlink.net.br
