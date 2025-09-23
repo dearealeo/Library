@@ -87,19 +87,30 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global advice.detachedHead false
 
-          TEMP=$(mktemp -d)
-          trap 'rm -rf "$TEMP"' EXIT
+          cd sing-box
 
-          git clone --depth=1 --branch="${{ env.UPSTREAM_BRANCH }}" "https://github.com/${{ env.UPSTREAM_REPO }}.git" "$TEMP"
+          git remote remove upstream 2>/dev/null || true
+          git remote add upstream "https://github.com/${{ env.UPSTREAM_REPO }}.git"
 
-          rsync -a --delete --exclude='.git' "$TEMP/" "sing-box/"
+          git fetch upstream "${{ env.UPSTREAM_BRANCH }}" --depth=1
 
-          git add sing-box/
+          CURRENT_SHA=$(git rev-parse HEAD)
+          UPSTREAM_SHA=$(git rev-parse "upstream/${{ env.UPSTREAM_BRANCH }}")
+
+          if [ "$CURRENT_SHA" = "$UPSTREAM_SHA" ]; then
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git checkout "$UPSTREAM_SHA"
+
+          cd ..
+
+          git add sing-box
 
           if git diff --staged --quiet; then
             echo "changes=false" >> "$GITHUB_OUTPUT"
           else
-            UPSTREAM_SHA=$(git -C "$TEMP" rev-parse HEAD)
             git commit -m "feat(sing-box): update ${UPSTREAM_SHA:0:7} [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]"
             git remote set-url origin "https://user:${{ secrets.PAT }}@github.com/${{ github.repository }}.git"
             git push origin main
