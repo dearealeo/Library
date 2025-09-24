@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-09-23T00:33:54.515Z
-# Size: 1411
+# Last Updated: 2025-09-24T12:44:11.168Z
+# Size: 1414
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -249,6 +249,7 @@ st.fratec.net
 warp.cronon.net
 speedtest.coreix.net
 ookla.pvu.as6453.net
+ookla.nw8.as6453.net
 speedtest.aquiss.net
 +.speedtest.alagas.net
 speedtest-sjc.acreto.net
@@ -402,6 +403,7 @@ speedtest.telecablecr.com
 speedtest-stm.redeconecta.com
 speedtest-obd.redeconecta.com
 ooklaspeedtest-cdv.quebeccloud.com
+ookla.mthnetworks.com
 speed.mpvnetworks.com
 speedtest.dllstx97.metronetinc.com
 speedtest.massivemesh.com
@@ -1250,6 +1252,7 @@ teste.wspeednet.com.br
 sp1.vilanetce.com.br
 spetstmns01.timbrasil.com.br
 spetstfla04.timbrasil.com.br
+teste.stylosnet.com.br
 servidor.speedplay.com.br
 speedtest.routinger.com.br
 teste.routinger.com.br
