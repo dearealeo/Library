@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - CDN Domains
-# Last Updated: 2025-09-28T12:38:37.500Z
-# Size: 3936
+# Last Updated: 2025-09-29T12:45:40.389Z
+# Size: 3937
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -3079,6 +3079,7 @@ assets.play.xbox.com
 livemap-tiles1.waze.com
 web-assets.waze.com
 cdnstatic.w1mp.com
+cdn.vnoc.com
 tn.vjav.com
 vice-web-statics-cdn.vice.com
 video-images.vice.com
