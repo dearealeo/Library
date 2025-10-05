@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-10-04T12:37:50.926Z
-# Size: 1453
+# Last Updated: 2025-10-05T12:39:47.881Z
+# Size: 1455
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -40,6 +40,7 @@ st.bardia.tech
 speedtest2.cfoc.tech
 speedtest1.cfoc.tech
 speedtest.nehost.site
+speed.msarat.site
 +.speedtest.love
 speedtes.althuraya.live
 teste.oriontelecom.link
@@ -1124,6 +1125,7 @@ speedtest.maisnetfibra.net.br
 speedtest.iftecnologia.net.br
 speedtest.wnettelecom.net.br
 velocity.softtelecom.net.br
+redeultramf.net.br
 speedtest.provedornet.net.br
 speedtest.unitelecom.net.br
 srvteste.edntelecom.net.br
