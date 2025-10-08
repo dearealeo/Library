@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Large Files Hosting Domains
-# Last Updated: 2025-09-30T12:45:43.682Z
-# Size: 1183
+# Last Updated: 2025-10-08T12:45:12.017Z
+# Size: 1184
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -1034,6 +1034,7 @@ download.typora.io
 packages.httpie.io
 store1.gofile.io
 download.fydeos.io
+registry-1.docker.io
 +.crates.io
 rpm.xpipe.io
 apt.xpipe.io
