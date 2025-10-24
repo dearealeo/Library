@@ -38,7 +38,7 @@ jobs:
           version: 9
           run_install: false
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 24.2.0
           cache: "pnpm"
