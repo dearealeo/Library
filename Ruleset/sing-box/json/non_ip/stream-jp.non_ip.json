@@ -2,6 +2,11 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "ds-linear-abematv.akamaized.net"
+      ]
+    },
+    {
       "domain_suffix": [
         ".hayabusa.media",
         ".dmc.nico",
@@ -27,11 +32,6 @@
         ".dmm.co.jp",
         ".hayabusa.io",
         ".abema.io"
-      ]
-    },
-    {
-      "domain": [
-        "ds-linear-abematv.akamaized.net"
       ]
     }
   ]

@@ -2,6 +2,21 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "mobile.hotspot",
+        "unifi",
+        "ntt.setup",
+        "pi.hole",
+        "homerouter.cpe",
+        "setmeup.arubanetworks.com",
+        "instant.arubanetworks.com",
+        "console.gl-inet.com",
+        "repeater.asus.com",
+        "router.asus.com",
+        "aterm.me"
+      ]
+    },
+    {
       "domain_suffix": [
         ".localdomain",
         ".internal",
@@ -43,21 +58,6 @@
         ".asusrouter.com",
         ".127.0.0.1.sslip.io",
         ".tplogin.cn"
-      ]
-    },
-    {
-      "domain": [
-        "mobile.hotspot",
-        "unifi",
-        "ntt.setup",
-        "pi.hole",
-        "homerouter.cpe",
-        "setmeup.arubanetworks.com",
-        "instant.arubanetworks.com",
-        "console.gl-inet.com",
-        "repeater.asus.com",
-        "router.asus.com",
-        "aterm.me"
       ]
     }
   ]

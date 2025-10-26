@@ -36,6 +36,12 @@
       ]
     },
     {
+      "domain_keyword": [
+        "openai",
+        "alkalimakersuite-pa.clients6.google.com"
+      ]
+    },
+    {
       "domain": [
         "ai.google.dev",
         "robinfrontend-pa.googleapis.com",
@@ -45,12 +51,6 @@
         "jules.google.com",
         "api.github.com",
         "api.jetbrains.ai"
-      ]
-    },
-    {
-      "domain_keyword": [
-        "openai",
-        "alkalimakersuite-pa.clients6.google.com"
       ]
     }
   ]

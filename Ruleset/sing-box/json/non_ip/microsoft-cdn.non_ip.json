@@ -2,14 +2,6 @@
   "version": 4,
   "rules": [
     {
-      "domain": [
-        "res-h3.public.cdn.office.net",
-        "statics.teams.cdn.office.net",
-        "res-1.cdn.office.net",
-        "res.cdn.office.net"
-      ]
-    },
-    {
       "domain_suffix": [
         ".download.windowsupdate.com",
         ".ctldl.windowsupdate.com",
@@ -63,6 +55,14 @@
         ".dl.delivery.mp.microsoft.com",
         ".storeedgefd.dsx.mp.microsoft.com",
         ".fs.microsoft.com"
+      ]
+    },
+    {
+      "domain": [
+        "res-h3.public.cdn.office.net",
+        "statics.teams.cdn.office.net",
+        "res-1.cdn.office.net",
+        "res.cdn.office.net"
       ]
     },
     {

@@ -2,10 +2,17 @@
   "version": 4,
   "rules": [
     {
-      "domain_keyword": [
-        "bahoom",
-        "-flv.meituan.net",
-        "-live.meituan.net"
+      "domain_suffix": [
+        ".0.0.198.in-addr.arpa",
+        ".mtvod.meituan.net",
+        ".genuine.autodesk.com",
+        ".mibi.xiaomi.com",
+        ".cool3c.com",
+        ".look.163.com",
+        ".microfin.ele.me",
+        ".httpizza.ele.me",
+        ".adobestats.io",
+        ".adobe.io"
       ]
     },
     {
@@ -18,6 +25,13 @@
       ]
     },
     {
+      "domain_keyword": [
+        "bahoom",
+        "-flv.meituan.net",
+        "-live.meituan.net"
+      ]
+    },
+    {
       "domain": [
         "daisydiskapp.com",
         "userlocation.googleapis.com"
@@ -26,20 +40,6 @@
     {
       "port": [
         7680
-      ]
-    },
-    {
-      "domain_suffix": [
-        ".0.0.198.in-addr.arpa",
-        ".mtvod.meituan.net",
-        ".genuine.autodesk.com",
-        ".mibi.xiaomi.com",
-        ".cool3c.com",
-        ".look.163.com",
-        ".microfin.ele.me",
-        ".httpizza.ele.me",
-        ".adobestats.io",
-        ".adobe.io"
       ]
     }
   ]
