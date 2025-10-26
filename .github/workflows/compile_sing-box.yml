@@ -2,7 +2,7 @@ name: Compile sing-box
 
 on:
   workflow_run:
-    workflows: ["Update Ruleset"]
+    workflows: ["Sync Ruleset"]
     types: [completed]
     branches: [main]
   schedule:
@@ -16,7 +16,7 @@ env:
   SING_BOX_VERSION: 1.13.0-alpha.26
 
 jobs:
-  sync_and_compile:
+  compile:
     runs-on: ubuntu-latest
 
     steps:
@@ -73,8 +73,7 @@ jobs:
         run: |
           git add Ruleset/sing-box/json/ Ruleset/sing-box/srs/
 
-          if git diff-index --quiet HEAD --; then
-          else
+          if ! git diff-index --quiet HEAD --; then
             git commit -m "feat(ruleset): sing-box [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]"
             git push
           fi
