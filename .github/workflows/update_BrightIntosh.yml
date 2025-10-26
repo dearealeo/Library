@@ -137,7 +137,7 @@ jobs:
 
           gtar --zstd -cf "$DMG.tar.zst" "$DMG"
 
-      - uses: actions/upload-artifact@v4.6.2
+      - uses: actions/upload-artifact@v5
         with:
           name: macos
           path: BrightIntosh/*.tar.zst
