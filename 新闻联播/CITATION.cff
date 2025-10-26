@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+authors:
+  - family-names: "宋"
+    given-names: "彥筠"
+title: "新闻联播 (Transcript) Collection"
+version: 0.1.0
+date-released: 2025-05-06
+url: "https://github.com/dearealeo/Bibliotheca/tree/main/新闻联播"
+type: software
+license: MIT

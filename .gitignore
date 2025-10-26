@@ -1,0 +1,192 @@
+# ----- Python Specific -----
+# Byte-compiled and cached files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution and packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs and dependency files
+pip-log.txt
+pip-delete-this-directory.txt
+Pipfile.lock
+poetry.lock
+pdm.lock
+.pdm.toml
+.pdm-python
+.pdm-build/
+uv.lock
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ----- Testing and Coverage -----
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+coverage/
+
+# ----- IDEs and Editors -----
+# PyCharm
+.idea/
+# VSCode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+# History
+.history/
+
+# ----- Static Analysis -----
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# ----- Jupyter/IPython -----
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# ----- Version Management -----
+.python-version
+
+# ----- Frameworks -----
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+# Flask
+instance/
+.webassets-cache
+# Scrapy
+.scrapy
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# ----- Documentation -----
+# Sphinx
+docs/_build/
+# MkDocs
+/site
+
+# ----- Build Systems -----
+# PyBuilder
+.pybuilder/
+target/
+# PyInstaller
+*.manifest
+*.spec
+.BUILD_FINISHED
+.output/
+.astro/
+
+# ----- Node.js/NPM -----
+node_modules/
+.clinic
+.wireit
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ----- Temporary Files -----
+.cache/
+.temp/
+tmp.*
+public/
+public/pagefind/
+
+# ----- PEP 582 -----
+__pypackages__/
+
+# ----- Translations -----
+*.mo
+*.pot
+
+# ----- Cython Debug -----
+cython_debug/
+
+# ----- Project Settings -----
+# Spyder
+.spyderproject
+.spyproject
+# Rope
+.ropeproject
+
+# ----- OS Specific -----
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ----- Database -----
+database.db-shm
+database.db-wal
+database.db-journal
+
+# ----- Document Files -----
+*.pdf
+*.doc
+*.docx
+*.htm
+*.html
+!docs/**/*.html
+
+# ----- Miscellaneous -----
+.pypirc
+*.sage.py
+
+# ----- Ruleset Build Output -----
+!Ruleset/dist/
+Ruleset/dist/404.html
+Ruleset/dist/_headers
+Ruleset/dist/index.html
+Ruleset/dist/README.md

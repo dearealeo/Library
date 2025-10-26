@@ -1,0 +1,132 @@
+name: Report
+description: Submit a report for bugs, feature enhancements, questions, documentation issues, or other concerns.
+title: "[Report]: Summary of the issue"
+assignees: ["dearealeo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing by filing an issue! Please provide details to help us address it effectively.
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue Category
+      description: Select the primary category of your issue. This helps in routing and prioritization.
+      options:
+        - "Bug Report"
+        - "Feature Request"
+        - "Question"
+        - "Documentation Issue"
+        - "Typo/Wording Correction"
+        - "Security Vulnerability"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Detailed Description
+      description: Provide a description of the issue, proposal, or question.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity (for Bugs/Security Issues)
+      description: Estimate the impact of the bug or security vulnerability. Select "N/A" for other issue types.
+      options:
+        - "N/A (Not a Bug/Security Issue)"
+        - "Critical (System crash, data loss, severe security flaw)"
+        - "High (Major functionality broken, significant impact)"
+        - "Medium (Minor functionality impaired, workaround exists)"
+        - "Low (Cosmetic issue, typo, minimal impact)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce (Mandatory for Bugs)
+      description: Provide a numbered list of steps to reliably reproduce the bug. Include configuration, specific inputs, or minimal code examples if applicable. **If this is not a bug report, enter "N/A".**
+      placeholder: |
+        1. Configure system with "..." setting.
+        2. Execute command `...` with arguments `...`.
+        3. Input the following data: "..."
+        4. Observe the unexpected behavior/error message.
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior (for Bugs/Features)
+      description: Describe what you expected to happen following the steps above or what the desired outcome of the feature request is. **If not applicable, enter "N/A".**
+      placeholder: 'The system should have processed the input correctly / The feature should allow users to configure "..."'
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior (Mandatory for Bugs)
+      description: Describe what happened. Include error messages (use code blocks), relevant log excerpts, and consider linking screenshots/screencasts if helpful. **If this is not a bug report, enter "N/A".**
+      placeholder: 'The process failed with the error: "..." / The UI displayed incorrectly / See attached logs/screenshot...'
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Relevant Version(s) / Commit SHA
+      description: Specify the project version(s), branch, or commit hash where this issue occurs.
+      placeholder: "e.g., v2.1.0, main branch, commit `abc1234def`"
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Environment & System Context (Highly Recommended for Bugs)
+      description: Provide details about the environment where the issue was observed.
+
+    validations:
+      required: false
+
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: Proposed Solution / Implementation Ideas (Optional)
+      description: If you have suggestions for fixing the bug or implementing the feature, outline them here. Code snippets are welcome.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Supplementary Information (Optional)
+      description: Include any other relevant details, links to related issues/discussions, mockups, or context not covered above.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please verify the following before submitting.
+      options:
+        - label: I have searched the existing issues and discussions to ensure this is not a duplicate.
+          required: true
+        - label: I have provided sufficient information for the maintainers to reproduce and investigate the issue (if applicable).
+          required: false
+        - label: I am willing to potentially contribute a Pull Request to resolve this issue (indicate if applicable).
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        Thank you for your detailed submission! Maintainers will review it as soon as possible.

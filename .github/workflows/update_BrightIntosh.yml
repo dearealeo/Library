@@ -1,0 +1,145 @@
+name: Sync BrightIntosh
+
+permissions:
+  contents: write
+  actions: write
+
+on:
+  schedule:
+    - cron: "0 19 * * *"
+  workflow_dispatch:
+    inputs:
+      sync:
+        description: "Sync"
+        type: boolean
+        default: true
+      build:
+        description: "Build type"
+        required: true
+        type: choice
+        default: "macOS"
+        options:
+          - macOS
+          - SKIP
+      version:
+        description: "Version"
+        type: string
+        required: false
+
+concurrency:
+  group: sync-build-brightintosh
+  cancel-in-progress: true
+
+env:
+  UPSTREAM_REPO: "niklasr22/BrightIntosh"
+  UPSTREAM_BRANCH: "main"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      should_sync: ${{ steps.set_outputs.outputs.should_sync }}
+      build_types: ${{ steps.set_outputs.outputs.build_types }}
+    steps:
+      - id: set_outputs
+        run: |
+          SHOULD_SYNC="${{ inputs.sync || 'true' }}"
+          BUILD_MODE="${{ inputs.build || 'macOS' }}"
+
+          if [ "$SHOULD_SYNC" != "true" ]; then
+            SHOULD_SYNC=false
+          else
+            SHOULD_SYNC=true
+          fi
+
+          if [ "$BUILD_MODE" == "macOS" ]; then
+            BUILD_TYPES='["macos"]'
+          else
+            BUILD_TYPES='[]'
+          fi
+
+          echo "should_sync=$SHOULD_SYNC" >> "$GITHUB_OUTPUT"
+          echo "build_types=$BUILD_TYPES" >> "$GITHUB_OUTPUT"
+
+  sync:
+    if: needs.plan.outputs.should_sync == 'true'
+    runs-on: ubuntu-latest
+    needs: plan
+    outputs:
+      changes: ${{ steps.sync.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.PAT }}"
+          ref: main
+          submodules: recursive
+
+      - id: sync
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global advice.detachedHead false
+
+          TEMP=$(mktemp -d)
+          trap 'rm -rf "$TEMP"' EXIT
+
+          git clone --depth=1 --branch="${{ env.UPSTREAM_BRANCH }}" "https://github.com/${{ env.UPSTREAM_REPO }}.git" "$TEMP"
+
+          rsync -a --delete --exclude='.git' "$TEMP/" "BrightIntosh/"
+
+          git add BrightIntosh/
+
+          if git diff --staged --quiet; then
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+          else
+            UPSTREAM_SHA=$(git -C "$TEMP" rev-parse HEAD)
+            git commit -m "feat(BrightIntosh): bump ${UPSTREAM_SHA:0:7} [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]"
+            git remote set-url origin "https://user:${{ secrets.PAT }}@github.com/${{ github.repository }}.git"
+            git push origin main
+            echo "changes=true" >> "$GITHUB_OUTPUT"
+            echo "upstream_sha=$UPSTREAM_SHA" >> "$GITHUB_ENV"
+          fi
+
+  build-macos:
+    if: contains(needs.plan.outputs.build_types, 'macos') && needs.sync.outputs.changes == 'true'
+    runs-on: macos-15
+    needs: sync
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          submodules: recursive
+
+      - run: |
+          cd BrightIntosh
+          if [ ! -d "BrightIntosh.xcodeproj" ]; then
+            exit 0
+          fi
+
+          if ! command -v create-dmg >/dev/null; then
+            brew install create-dmg zstd gnu-tar
+          fi
+          sudo xcode-select -s /Applications/Xcode_16.4.app
+
+          xcodebuild build -scheme BrightIntosh -configuration Release -destination "generic/platform=macOS" -derivedDataPath ./DD CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO
+
+          APP=$(find ./DD -name "BrightIntosh.app" -type d -print -quit)
+          if [ -z "$APP" ]; then
+            exit 0
+          fi
+
+          VERSION='${{ inputs.version || github.sha }}'
+          DMG="BrightIntosh-$VERSION.dmg"
+
+          create-dmg --volname "BrightIntosh" --app-drop-link 200 200 --skip-jenkins "$DMG" "$APP"
+
+          gtar --zstd -cf "$DMG.tar.zst" "$DMG"
+
+      - uses: actions/upload-artifact@v4.6.2
+        with:
+          name: macos
+          path: BrightIntosh/*.tar.zst
+          retention-days: 7
+          if-no-files-found: ignore

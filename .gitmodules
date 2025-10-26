@@ -1,0 +1,17 @@
+[submodule "Ruleset/parser"]
+	path = Ruleset/parser
+	url = https://github.com/SukkaW/nodelistparser.git
+[submodule "Ruleset/chnroutes"]
+	path = Ruleset/chnroutes
+	url = https://github.com/SukkaW/chnroutes2-optimized.git
+[submodule "sing-box"]
+	path = sing-box
+	url = https://github.com/SagerNet/sing-box.git
+	branch = dev-next
+[submodule "Ruleset/ruleset"]
+	path = Ruleset/ruleset
+	url = https://github.com/SukkaW/Surge.git
+[submodule "BrightIntosh"]
+	path = BrightIntosh
+	url = https://github.com/niklasr22/BrightIntosh.git
+	branch = main

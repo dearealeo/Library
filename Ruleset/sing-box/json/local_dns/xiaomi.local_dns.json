@@ -1,0 +1,25 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain_suffix": [
+        ".mijia.tech",
+        ".gorouter.info",
+        ".xiaomi.net",
+        ".xiaomiyoupin.com",
+        ".xiaomixiaoai.com",
+        ".xiaoaisound.com",
+        ".xiaomiev.com",
+        ".xiaomi.com",
+        ".mi-img.com",
+        ".mi-idc.com",
+        ".mi-fds.com",
+        ".duokan.com",
+        ".miui.com",
+        ".mi.com",
+        ".xiaomi.cn",
+        ".mifile.cn"
+      ]
+    }
+  ]
+}

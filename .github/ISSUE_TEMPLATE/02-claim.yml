@@ -1,0 +1,133 @@
+name: Claim
+description: Submit a notice regarding alleged copyright infringement, trademark issues, or other legal matters pursuant to applicable law (e.g., Copyright Law of the People's Republic of China).
+title: "[Claim] Nature of Claim: Subject Matter"
+labels: ["legal"]
+assignees: ["dearealeo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!NOTE]
+        > This form is exclusively designated for the submission of claims, encompassing, without limitation, notices of alleged copyright infringement pursuant to 112 Stat. 2860 (DMCA) or the Copyright Law of the People's Republic of China, and any use for non-legal purposes is expressly prohibited.
+        ---
+        ### Complainant Information
+
+  - type: input
+    id: contact_name
+    attributes:
+      label: Full Name of Complainant
+      description: Provide the full name of the individual or entity submitting this claim, or the name of the authorized representative.
+      placeholder: e.g., China Central Television (CCTV) Legal Department / General Office of the Standing Committee of the National People's Congress
+    validations:
+      required: true
+
+  - type: input
+    id: contact_organization
+    attributes:
+      label: Represented Organization (if applicable)
+      description: If acting on behalf of an organization, state its full legal name.
+      placeholder: e.g., China Central Television (CCTV) / National People's Congress of the People's Republic of China
+    validations:
+      required: false
+
+  - type: input
+    id: contact_email
+    attributes:
+      label: Contact Email Address
+      description: Provide a valid email address for official correspondence regarding this claim. Ensure this address is actively monitored.
+      placeholder: legal@cctv.com or flk@npc.gov.cn
+    validations:
+      required: true
+
+  - type: input
+    id: contact_phone
+    attributes:
+      label: Contact Telephone Number (Optional)
+      description: Provide a daytime telephone number, including country and area code, for potential contact.
+      placeholder: +86 (XX) XXXX-XXXX
+    validations:
+      required: false
+
+  - type: textarea
+    id: contact_address
+    attributes:
+      label: Physical Mailing Address
+      description: Provide the physical mailing address required for legal correspondence.
+      placeholder: |
+        No. XX, Street Name
+        District, City, Postal Code
+        People's Republic of China
+    validations:
+      required: true
+
+  - type: dropdown
+    id: relationship
+    attributes:
+      label: Relationship to the Rights Holder
+      description: Specify your legal relationship to the owner of the exclusive right that is allegedly infringed or violated.
+      options:
+        - Owner of the exclusive right
+        - Authorized Agent acting pursuant to written authority from the Owner
+        - Legal Counsel retained by the Owner
+        - Government Office or Department
+        - Other
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Claim Details
+
+  - type: textarea
+    id: copyrighted_work
+    attributes:
+      label: Identification of the Protected Work Allegedly Infringed/Violated
+      description: Provide sufficient detail to identify the specific copyrighted work(s), trademark(s), or other legally protected subject matter claimed to be infringed or violated. Include registration numbers, URLs to authorized locations/examples, or other unambiguous identifying information.
+      placeholder: "e.g., CCTV Xinwen Lianbo aired on [date], available at https://tv.cctv.com/[program-link]. OR Official document published by the Standing Committee of the National People's Congress on [date], available at http://www.npc.gov.cn/[document-link]."
+    validations:
+      required: true
+
+  - type: textarea
+    id: infringing_material
+    attributes:
+      label: Identification and Location of the Allegedly Infringing Material
+      description: Identify the specific material within this repository that you allege is infringing the work identified above. Provide precise locations (e.g., specific URLs to files/directories, line numbers within code files, descriptions of images/text) sufficient to permit us to locate and evaluate the material.
+      placeholder: "e.g., The specific document found in `docs/official_text.md` (URL: https://github.com/user/repo/blob/main/docs/official_text.md). OR The specific code implementation found in `src/module/feature.py`, lines 45-80 (URL: https://github.com/user/repo/blob/main/src/module/feature.py#L45-L80)."
+    validations:
+      required: true
+
+  - type: textarea
+    id: legal_basis
+    attributes:
+      label: Stated Legal Basis for Claim (Recommended)
+      description: Briefly state the specific legal basis for your claim (e.g., Copyright Infringement pursuant to the Copyright Law of the People's Republic of China, Trademark Infringement under the Trademark Law of the People's Republic of China).
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Declarations
+
+  - type: checkboxes
+    id: declarations
+    attributes:
+      label: Affirmations
+      description: By submitting this notification, you affirm and declare under the laws of the People's Republic of China (or the relevant jurisdiction) that the following statements are true and correct. **All statements must be affirmed.**
+      options:
+        - label: I have a good faith belief that the use of the material in the manner complained of is not authorized by the copyright owner (or the owner of the right being violated), its agent, or the law.
+          required: true
+        - label: The information provided in this notification is accurate.
+          required: true
+        - label: I am the owner, or an agent authorized to act on behalf of the owner, of an exclusive right that is allegedly infringed (or the right being violated).
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        > [!IMPORTANT]
+        > Submission of this form constitutes your electronic signature, legally binding under applicable law (such as the Civil Code of the People's Republic of China), confirming the veracity of the statements made herein. Be advised that making material misrepresentations in a legal notice may subject the complaining party to liability for damages, including costs and attorneys' fees incurred by the alleged infringer or by the service provider. Further verification, potentially including a physical signature, may be requested based on the specifics and jurisdiction of the claim. Your cooperation is appreciated.

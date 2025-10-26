@@ -1,0 +1,102 @@
+#########################################
+# Sukka's Ruleset - Local DNS Mapping for Mihomo NameServer Policy (ALIBABA)
+# Last Updated: 2025-10-19T12:40:32.241Z
+# Size: 88
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This ruleset is only used for mihomo's nameserver-policy feature, which
+# is similar to the RULE-SET referenced by sukka_local_dns_mapping.sgmodule.
+# Do not use this file in your Rule section, all entries are included in non_ip/domestic.conf already.
+#########################################
+DOMAIN,7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe
+DOMAIN-SUFFIX,taobao.org
+DOMAIN-SUFFIX,aliapp.org
+DOMAIN-SUFFIX,aliyundrive.net
+DOMAIN-SUFFIX,alikunlun.net
+DOMAIN-SUFFIX,cibntv.net
+DOMAIN-SUFFIX,xiami.net
+DOMAIN-SUFFIX,alibabausercontent.com
+DOMAIN-SUFFIX,alibabachengdun.com
+DOMAIN-SUFFIX,cainiaoyizhan.com
+DOMAIN-SUFFIX,alipayobjects.com
+DOMAIN-SUFFIX,taopiaopiao.com
+DOMAIN-SUFFIX,aliyundrive.com
+DOMAIN-SUFFIX,alicloudccp.com
+DOMAIN-SUFFIX,alibaba-inc.com
+DOMAIN-SUFFIX,guoguo-app.com
+DOMAIN-SUFFIX,alibabadns.com
+DOMAIN-SUFFIX,wandoujia.com
+DOMAIN-SUFFIX,taobaocdn.com
+DOMAIN-SUFFIX,npmmirror.com
+DOMAIN-SUFFIX,mxhichina.com
+DOMAIN-SUFFIX,hellobike.com
+DOMAIN-SUFFIX,freshippo.com
+DOMAIN-SUFFIX,freshhema.com
+DOMAIN,upos-sz-mirrorali.bilivideo.com
+DOMAIN,upos-sz-estgoss.bilivideo.com
+DOMAIN-SUFFIX,alipaydev.com
+DOMAIN-SUFFIX,alikunlun.com
+DOMAIN-SUFFIX,shyhhema.com
+DOMAIN-SUFFIX,myalicdn.com
+DOMAIN-SUFFIX,elemecdn.com
+DOMAIN-SUFFIX,dingtalk.com
+DOMAIN-SUFFIX,autonavi.com
+DOMAIN-SUFFIX,aliyuncs.com
+DOMAIN-SUFFIX,aligames.com
+DOMAIN-SUFFIX,alibtrip.com
+DOMAIN-SUFFIX,tbcache.com
+DOMAIN-SUFFIX,ialicdn.com
+DOMAIN-SUFFIX,hichina.com
+DOMAIN-SUFFIX,hemamax.com
+DOMAIN-SUFFIX,goofish.com
+DOMAIN-SUFFIX,cdngslb.com
+DOMAIN-SUFFIX,cainiao.com
+DOMAIN-SUFFIX,alimama.com
+DOMAIN-SUFFIX,alibaba.com
+DOMAIN-SUFFIX,taobao.com
+DOMAIN-SUFFIX,mmstat.com
+DOMAIN-SUFFIX,koubei.com
+DOMAIN-SUFFIX,hemaos.com
+DOMAIN-SUFFIX,fliggy.com
+DOMAIN-SUFFIX,feizhu.com
+DOMAIN-SUFFIX,aliyun.com
+DOMAIN-SUFFIX,alipay.com
+DOMAIN-SUFFIX,alipan.com
+DOMAIN-SUFFIX,aliimg.com
+DOMAIN-SUFFIX,alidns.com
+DOMAIN-SUFFIX,alicdn.com
+DOMAIN-SUFFIX,yuque.com
+DOMAIN-SUFFIX,yunos.com
+DOMAIN-SUFFIX,youku.com
+DOMAIN-SUFFIX,ykimg.com
+DOMAIN-SUFFIX,yitao.com
+DOMAIN-SUFFIX,xiami.com
+DOMAIN-SUFFIX,tudou.com
+DOMAIN-SUFFIX,tmall.com
+DOMAIN-SUFFIX,nlark.com
+DOMAIN-SUFFIX,gaode.com
+DOMAIN-SUFFIX,tanx.com
+DOMAIN-SUFFIX,soku.com
+DOMAIN-SUFFIX,etao.com
+DOMAIN-SUFFIX,amap.com
+DOMAIN-SUFFIX,25pp.com
+DOMAIN-SUFFIX,1688.com
+DOMAIN-SUFFIX,ele.me
+DOMAIN-SUFFIX,hemashare.cn
+DOMAIN-SUFFIX,iconfont.cn
+DOMAIN-SUFFIX,mybank.cn
+DOMAIN-SUFFIX,alipay.cn
+DOMAIN-SUFFIX,uczzd.cn
+DOMAIN-SUFFIX,tbcdn.cn
+DOMAIN-SUFFIX,alios.cn
+DOMAIN,ali-safety-video.acfun.cn
+DOMAIN-SUFFIX,9game.cn
+DOMAIN-SUFFIX,cainiao.com.cn
+DOMAIN-SUFFIX,alipay.com.cn
+DOMAIN-SUFFIX,uc.cn
+DOMAIN-SUFFIX,tb.cn
+DOMAIN-SUFFIX,sm.cn
+################## EOF ##################
+
