@@ -1,0 +1,16 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain_suffix": [
+        ".cdn.hinet.net"
+      ]
+    },
+    {
+      "domain": [
+        "av.jkforum.net",
+        "hanime1.me"
+      ]
+    }
+  ]
+}

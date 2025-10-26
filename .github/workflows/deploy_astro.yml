@@ -1,4 +1,4 @@
-name: Deploy Astro Site
+name: Deploy Static Site
 
 on:
   workflow_run:
@@ -24,19 +24,21 @@ jobs:
     steps:
       - name: Setup Git
         run: git config --global core.longpaths true
+
       - name: Checkout Code
         uses: actions/checkout@v5
         with:
           submodules: "recursive"
           fetch-depth: 1
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
         with:
-          version: 9
           run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
@@ -49,20 +51,12 @@ jobs:
           cd docs
           pnpm install --frozen-lockfile --prefer-offline
 
-      - name: Lint Code
+      - name: Type Check
         run: |
           cd docs
-          pnpm run lint
+          pnpm run typecheck
         continue-on-error: true
-      - name: Sync Content
-        run: |
-          cd docs
-          pnpm run sync
-      - name: Format Code
-        run: |
-          cd docs
-          pnpm run format
-        continue-on-error: true
+
       - name: Build Site
         run: |
           cd docs

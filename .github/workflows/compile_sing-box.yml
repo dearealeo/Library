@@ -1,0 +1,80 @@
+name: Compile sing-box Rules
+
+on:
+  workflow_run:
+    workflows: ["Update Ruleset"]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  SING_BOX_VERSION: 1.12.11
+
+jobs:
+  sync_and_compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install polars orjson httpx pyyaml
+
+      - name: Install sing-box
+        run: |
+          curl -Lo sing-box.tar.gz https://github.com/SagerNet/sing-box/releases/download/v${SING_BOX_VERSION}/sing-box-${SING_BOX_VERSION}-linux-amd64.tar.gz
+          tar -xzf sing-box.tar.gz
+          chmod +x sing-box-${SING_BOX_VERSION}-linux-amd64/sing-box
+          sudo mv sing-box-${SING_BOX_VERSION}-linux-amd64/sing-box /usr/local/bin/sing-box
+          rm -rf sing-box-${SING_BOX_VERSION}-linux-amd64 sing-box.tar.gz
+          sing-box version
+
+      - name: Convert rule sets
+        run: |
+          cd Ruleset
+          python main.py
+
+      - name: Compile JSON to SRS
+        run: |
+          cd Ruleset/sing-box
+          for category in domainset ip non_ip local_dns; do
+            if [ -d "json/$category" ]; then
+              mkdir -p "srs/$category"
+              find "json/$category" -type f -name "*.json" | while read json_file; do
+                filename=$(basename "$json_file")
+                srs_file="srs/$category/${filename%.json}.srs"
+                if ! sing-box rule-set compile --output "$srs_file" "$json_file"; then
+                  exit 1
+                fi
+              done
+            fi
+          done
+
+      - name: Commit and push changes
+        run: |
+          git add Ruleset/sing-box/json/ Ruleset/sing-box/srs/
+
+          if git diff-index --quiet HEAD --; then
+          else
+            git commit -m "feat(ruleset): sing-box [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]"
+            git push
+          fi

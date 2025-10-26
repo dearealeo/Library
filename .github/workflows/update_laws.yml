@@ -1,4 +1,4 @@
-name: Update Laws
+name: Sync Laws
 
 on:
   workflow_dispatch:
@@ -51,7 +51,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add -A
           git diff --staged --quiet || (
-            git commit -m "feat(laws): update [$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')]"
+            git commit -m "feat(laws): bump [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]"
             git pull --rebase --autostash origin ${{ github.ref_name }}
             git push origin ${{ github.ref_name }}
           )

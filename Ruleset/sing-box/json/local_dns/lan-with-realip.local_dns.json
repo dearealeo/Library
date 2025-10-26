@@ -1,0 +1,16 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain_suffix": [
+        ".localdomain",
+        ".internal",
+        ".local",
+        ".home.arpa",
+        ".127.atlas.skk.moe",
+        ".lan",
+        ".127.0.0.1.sslip.io"
+      ]
+    }
+  ]
+}

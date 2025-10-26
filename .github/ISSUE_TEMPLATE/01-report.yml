@@ -92,14 +92,7 @@ body:
     attributes:
       label: Environment & System Context (Highly Recommended for Bugs)
       description: Provide details about the environment where the issue was observed.
-      placeholder: |
-        - OS: [e.g., Ubuntu 22.04.5 LTS, Windows 11 23H2, macOS Sonoma 14.5]
-        - Architecture: [e.g., x64, arm64]
-        - Browser (if applicable): [e.g., Chrome 125, Firefox 126]
-        - Node.js Version (if applicable): [e.g., v18.18.0, v20.11.1]
-        - Relevant Library Versions: [e.g., react@18.2.0]
-        - Deployment Environment: [e.g., Local Development, Staging Server, Production Cloud]
-        - Other relevant configuration or software: "..."
+
     validations:
       required: false
 

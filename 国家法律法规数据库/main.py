@@ -2372,7 +2372,7 @@ if __name__ == "__main__":
         logger.warning("User cancelled")
         _ec = 130
     except SystemExit as e:
-        logger.critical("Exit code %s: %s", e.code, str(e), exc_info=False)
+        logger.critical("Exit code %s: %s", e.code, e, exc_info=False)
         _ec = e.code if isinstance(e.code, int) else 1
     except Exception as e:
         logger.critical("Fatal error: %s", e, exc_info=True)

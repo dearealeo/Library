@@ -1,4 +1,4 @@
-name: Update Ruleset
+name: Sync Ruleset
 
 on:
   schedule:
@@ -102,7 +102,7 @@ jobs:
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           else
             echo "HAS_CHANGES=true" >> $GITHUB_ENV
-            git commit -m "feat(ruleset): update [${{ steps.date.outputs.cst_time }}]"
+            git commit -m "feat(ruleset): bump [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]"
           fi
 
       - name: Push Changes
@@ -134,7 +134,7 @@ jobs:
           path: public
       - name: Generate Diff
         run: |
-          git clone --sparse --filter=tree:0 --depth=1 --no-tags https://github.com/dearealeo/Library.git ./deploy-git 2>/dev/null
+          git clone --sparse --filter=tree:0 --depth=1 --no-tags https://github.com/dearealeo/Bibliotheca.git ./deploy-git 2>/dev/null
           cd ./deploy-git
           git sparse-checkout set "Ruleset/dist"
           git fetch --depth=1 origin main 2>/dev/null
