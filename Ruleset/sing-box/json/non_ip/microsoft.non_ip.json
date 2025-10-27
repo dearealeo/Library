@@ -2,6 +2,13 @@
   "version": 4,
   "rules": [
     {
+      "domain_keyword": [
+        "1drv",
+        "microsoft",
+        "hotmail"
+      ]
+    },
+    {
       "domain_suffix": [
         ".trafficmanager.net",
         ".msftauthimages.net",
@@ -82,13 +89,6 @@
         ".sfx.ms",
         ".gfx.ms",
         ".aka.ms"
-      ]
-    },
-    {
-      "domain_keyword": [
-        "1drv",
-        "microsoft",
-        "hotmail"
       ]
     }
   ]

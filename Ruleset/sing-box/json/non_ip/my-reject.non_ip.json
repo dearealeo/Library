@@ -2,15 +2,6 @@
   "version": 4,
   "rules": [
     {
-      "process_name": [
-        "Tencent Lemon",
-        "LemonMonitor",
-        "LemonDaemon",
-        "LemonAgent",
-        "LemonService"
-      ]
-    },
-    {
       "domain_suffix": [
         ".0.0.198.in-addr.arpa",
         ".mtvod.meituan.net",
@@ -34,6 +25,15 @@
         "bahoom",
         "-flv.meituan.net",
         "-live.meituan.net"
+      ]
+    },
+    {
+      "process_name": [
+        "Tencent Lemon",
+        "LemonMonitor",
+        "LemonDaemon",
+        "LemonAgent",
+        "LemonService"
       ]
     },
     {

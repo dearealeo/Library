@@ -2,6 +2,12 @@
   "version": 4,
   "rules": [
     {
+      "domain_keyword": [
+        "nowtv100",
+        "rthklive"
+      ]
+    },
+    {
       "domain_suffix": [
         ".mytvsuper.com",
         ".hbogoasia.com",
@@ -22,6 +28,15 @@
       ]
     },
     {
+      "process_name": [
+        "com.viu.pad",
+        "com.viu.phone",
+        "com.vuclip.viu",
+        "com.hktve.viutv",
+        "com.bstar.intl"
+      ]
+    },
+    {
       "domain": [
         "d2anahhhmp1ffz.cloudfront.net",
         "d1k2us671qcoau.cloudfront.net",
@@ -34,21 +49,6 @@
         "hbolb.onwardsmg.com",
         "44wilhpljf.execute-api.ap-southeast-1.amazonaws.com",
         "hbounify-prod.evergent.com"
-      ]
-    },
-    {
-      "process_name": [
-        "com.viu.pad",
-        "com.viu.phone",
-        "com.vuclip.viu",
-        "com.hktve.viutv",
-        "com.bstar.intl"
-      ]
-    },
-    {
-      "domain_keyword": [
-        "nowtv100",
-        "rthklive"
       ]
     }
   ]

@@ -2,13 +2,6 @@
   "version": 4,
   "rules": [
     {
-      "process_name": [
-        "SogouInput",
-        "SogouTaskManager",
-        "SogouServices"
-      ]
-    },
-    {
       "domain": [
         "oth.str.mdt.qq.com"
       ]
@@ -23,6 +16,13 @@
         ".get.sogou.com",
         ".sginput.qq.com",
         ".beacon.qq.com"
+      ]
+    },
+    {
+      "process_name": [
+        "SogouInput",
+        "SogouTaskManager",
+        "SogouServices"
       ]
     }
   ]
