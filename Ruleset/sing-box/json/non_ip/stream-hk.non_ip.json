@@ -2,6 +2,26 @@
   "version": 4,
   "rules": [
     {
+      "domain_suffix": [
+        ".mytvsuper.com",
+        ".hbogoasia.com",
+        ".biliintl.com",
+        ".hboasia.com",
+        ".nowe.com",
+        ".viu.com",
+        ".tvb.com",
+        ".viu.now.com",
+        ".hbogoasia.tw",
+        ".bilibili.tv",
+        ".viu.tv",
+        ".hbogoasia.sg",
+        ".hbogoasia.ph",
+        ".hbogoasia.id",
+        ".hbogoasia.hk",
+        ".psg.cdn.hgc.com.hk"
+      ]
+    },
+    {
       "domain": [
         "d2anahhhmp1ffz.cloudfront.net",
         "d1k2us671qcoau.cloudfront.net",
@@ -29,26 +49,6 @@
       "domain_keyword": [
         "nowtv100",
         "rthklive"
-      ]
-    },
-    {
-      "domain_suffix": [
-        ".mytvsuper.com",
-        ".hbogoasia.com",
-        ".biliintl.com",
-        ".hboasia.com",
-        ".nowe.com",
-        ".viu.com",
-        ".tvb.com",
-        ".viu.now.com",
-        ".hbogoasia.tw",
-        ".bilibili.tv",
-        ".viu.tv",
-        ".hbogoasia.sg",
-        ".hbogoasia.ph",
-        ".hbogoasia.id",
-        ".hbogoasia.hk",
-        ".psg.cdn.hgc.com.hk"
       ]
     }
   ]

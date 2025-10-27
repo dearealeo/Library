@@ -2,6 +2,18 @@
   "version": 4,
   "rules": [
     {
+      "process_name": [
+        "SogouInput",
+        "SogouTaskManager",
+        "SogouServices"
+      ]
+    },
+    {
+      "domain": [
+        "oth.str.mdt.qq.com"
+      ]
+    },
+    {
       "domain_suffix": [
         ".account.sogou.com",
         ".shouji.sogou.com",
@@ -11,18 +23,6 @@
         ".get.sogou.com",
         ".sginput.qq.com",
         ".beacon.qq.com"
-      ]
-    },
-    {
-      "domain": [
-        "oth.str.mdt.qq.com"
-      ]
-    },
-    {
-      "process_name": [
-        "SogouInput",
-        "SogouTaskManager",
-        "SogouServices"
       ]
     }
   ]

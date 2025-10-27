@@ -2,6 +2,12 @@
   "version": 4,
   "rules": [
     {
+      "domain_keyword": [
+        "openai",
+        "alkalimakersuite-pa.clients6.google.com"
+      ]
+    },
+    {
       "domain_suffix": [
         ".generativeai.google",
         ".notebooklm.google",
@@ -33,12 +39,6 @@
         ".meta.ai",
         ".dify.ai",
         ".x.ai"
-      ]
-    },
-    {
-      "domain_keyword": [
-        "openai",
-        "alkalimakersuite-pa.clients6.google.com"
       ]
     },
     {

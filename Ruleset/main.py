@@ -1,4 +1,4 @@
-import asyncio  # noqa: CPY001, D100, EXE002, INP001
+import asyncio  # noqa: CPY001, D100, INP001
 import ipaddress
 from typing import Any
 
@@ -55,28 +55,40 @@ unsupported = frozenset({
 async def fetch(asn: str) -> list[str]:  # noqa: D103
     if asn in cache:
         return cache[asn]
+
+    asn_number = asn.replace("AS", "").replace("as", "")
+    cidrs = []
+
     try:
-        response = await client.get(f"https://api.bgpview.io/asn/{asn}/prefixes")
-        if response.status_code != 200:  # noqa: PLR2004
-            return []
-
-        data = orjson.loads(response.content)
-        if data.get("status") != "ok":
-            return []
-
-        prefixes = data.get("data", {})
-        ipv4 = [p["prefix"] for p in prefixes.get("ipv4_prefixes", [])]
-        ipv6 = [p["prefix"] for p in prefixes.get("ipv6_prefixes", [])]
-        cidrs = ipv4 + ipv6
-
-        cache[asn] = cidrs
-        return cidrs
-
-    except httpx.TimeoutException:
-        return []
-    else:
-        cache[asn] = cidrs
-        return cidrs
+        response = await client.get(f"https://api.bgpview.io/asn/{asn_number}/prefixes")
+        if response.status_code == 200:  # noqa: PLR2004
+            data = orjson.loads(response.content)
+            if data.get("status") == "ok":
+                prefixes = data.get("data", {})
+                ipv4 = [p["prefix"] for p in prefixes.get("ipv4_prefixes", [])]
+                ipv6 = [p["prefix"] for p in prefixes.get("ipv6_prefixes", [])]
+                cidrs = ipv4 + ipv6
+                if cidrs:
+                    cache[asn] = cidrs
+                    return cidrs
+    except (httpx.HTTPError, orjson.JSONDecodeError, KeyError):
+        pass
+    try:
+        response = await client.get(
+            f"https://stat.ripe.net/data/announced-prefixes/data.json?resource=AS{asn_number}",
+        )
+        if response.status_code == 200:  # noqa: PLR2004
+            data = orjson.loads(response.content)
+            if data.get("status") == "ok":
+                prefixes = data.get("data", {}).get("prefixes", [])
+                cidrs = [p["prefix"] for p in prefixes if "prefix" in p]
+                if cidrs:
+                    cache[asn] = cidrs
+                    return cidrs
+    except (httpx.HTTPError, orjson.JSONDecodeError, KeyError):
+        pass
+    cache[asn] = cidrs
+    return cidrs
 
 
 async def download(url: str) -> str:  # noqa: D103

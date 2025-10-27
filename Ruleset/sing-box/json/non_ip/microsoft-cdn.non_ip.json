@@ -2,6 +2,12 @@
   "version": 4,
   "rules": [
     {
+      "domain_regex": [
+        "^http://www\\.microsoft\\.com/pki/",
+        "^http://www\\.microsoft\\.com/pkiops/"
+      ]
+    },
+    {
       "domain_suffix": [
         ".download.windowsupdate.com",
         ".ctldl.windowsupdate.com",
@@ -63,12 +69,6 @@
         "statics.teams.cdn.office.net",
         "res-1.cdn.office.net",
         "res.cdn.office.net"
-      ]
-    },
-    {
-      "domain_regex": [
-        "^http://www\\.microsoft\\.com/pki/",
-        "^http://www\\.microsoft\\.com/pkiops/"
       ]
     }
   ]

@@ -2,6 +2,13 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "upos-sz-mirrorali.bilivideo.com",
+        "upos-sz-estgoss.bilivideo.com",
+        "ali-safety-video.acfun.cn"
+      ]
+    },
+    {
       "domain_suffix": [
         ".taobao.org",
         ".aliapp.org",
@@ -87,13 +94,6 @@
         ".uc.cn",
         ".tb.cn",
         ".sm.cn"
-      ]
-    },
-    {
-      "domain": [
-        "upos-sz-mirrorali.bilivideo.com",
-        "upos-sz-estgoss.bilivideo.com",
-        "ali-safety-video.acfun.cn"
       ]
     }
   ]
