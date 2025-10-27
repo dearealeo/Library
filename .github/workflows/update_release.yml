@@ -126,7 +126,7 @@ jobs:
           fi
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.workflow }}
           path: ${{ steps.create_archive.outputs.ARCHIVE_PATH }}
@@ -148,7 +148,7 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: ./artifacts
 
@@ -200,7 +200,7 @@ jobs:
         run: git -c log.showSignature=false log --pretty=format:"* %s (%h)" --since="24 hours ago" --no-merges > release_notes.md
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2.3.3
+        uses: softprops/action-gh-release@v2.4.1
         with:
           tag_name: v${{ needs.prepare.outputs.year }}.${{ needs.prepare.outputs.month }}.${{ needs.prepare.outputs.day }}
           name: ${{ needs.prepare.outputs.date }}

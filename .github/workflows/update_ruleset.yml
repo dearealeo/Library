@@ -43,7 +43,7 @@ jobs:
           version: 9
           run_install: false
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: "Ruleset/ruleset/.node-version"
           cache: "pnpm"
@@ -128,7 +128,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build-artifact-${{ github.sha }}-${{ github.run_number }}
           path: public
