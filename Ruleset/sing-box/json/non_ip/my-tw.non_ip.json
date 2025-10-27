@@ -2,14 +2,14 @@
   "version": 4,
   "rules": [
     {
-      "domain": [
-        "av.jkforum.net",
-        "hanime1.me"
+      "domain_suffix": [
+        ".cdn.hinet.net"
       ]
     },
     {
-      "domain_suffix": [
-        ".cdn.hinet.net"
+      "domain": [
+        "av.jkforum.net",
+        "hanime1.me"
       ]
     }
   ]

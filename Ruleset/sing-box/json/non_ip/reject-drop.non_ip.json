@@ -2,16 +2,16 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "nom.telemetrydeck.com"
+      ]
+    },
+    {
       "domain_suffix": [
         ".undefined",
         ".null",
         ".in.applicationinsights.azure.com",
         ".geo2.adobe.com"
-      ]
-    },
-    {
-      "domain": [
-        "nom.telemetrydeck.com"
       ]
     }
   ]

@@ -14,15 +14,15 @@
       ]
     },
     {
+      "domain": [
+        "oth.str.mdt.qq.com"
+      ]
+    },
+    {
       "process_name": [
         "SogouInput",
         "SogouTaskManager",
         "SogouServices"
-      ]
-    },
-    {
-      "domain": [
-        "oth.str.mdt.qq.com"
       ]
     }
   ]

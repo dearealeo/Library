@@ -2,12 +2,6 @@
   "version": 4,
   "rules": [
     {
-      "domain_keyword": [
-        "nowtv100",
-        "rthklive"
-      ]
-    },
-    {
       "domain_suffix": [
         ".mytvsuper.com",
         ".hbogoasia.com",
@@ -25,6 +19,12 @@
         ".hbogoasia.id",
         ".hbogoasia.hk",
         ".psg.cdn.hgc.com.hk"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "nowtv100",
+        "rthklive"
       ]
     },
     {

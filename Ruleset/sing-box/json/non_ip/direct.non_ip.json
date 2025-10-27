@@ -42,19 +42,6 @@
       ]
     },
     {
-      "domain_keyword": [
-        "cnki.net",
-        "wanfangdata",
-        "pkulaw",
-        "westlawchina",
-        "readcube",
-        "sciencedirect",
-        "elsevier",
-        "deepdyve",
-        "els-cdn"
-      ]
-    },
-    {
       "domain": [
         "mobile.hotspot",
         "unifi",
@@ -71,6 +58,19 @@
         "repeater.asus.com",
         "router.asus.com",
         "aterm.me"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "cnki.net",
+        "wanfangdata",
+        "pkulaw",
+        "westlawchina",
+        "readcube",
+        "sciencedirect",
+        "elsevier",
+        "deepdyve",
+        "els-cdn"
       ]
     },
     {

@@ -2,6 +2,12 @@
   "version": 4,
   "rules": [
     {
+      "domain_regex": [
+        "^http://www\\.microsoft\\.com/pki/",
+        "^http://www\\.microsoft\\.com/pkiops/"
+      ]
+    },
+    {
       "domain_suffix": [
         ".download.windowsupdate.com",
         ".ctldl.windowsupdate.com",
@@ -55,12 +61,6 @@
         ".dl.delivery.mp.microsoft.com",
         ".storeedgefd.dsx.mp.microsoft.com",
         ".fs.microsoft.com"
-      ]
-    },
-    {
-      "domain_regex": [
-        "^http://www\\.microsoft\\.com/pki/",
-        "^http://www\\.microsoft\\.com/pkiops/"
       ]
     },
     {

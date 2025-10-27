@@ -2,20 +2,6 @@
   "version": 4,
   "rules": [
     {
-      "domain": [
-        "news.ycombinator.com",
-        "ees.elsevier.com",
-        "community.oneplus.com",
-        "sgminorshort.wechat.com",
-        "sgshort.wechat.com",
-        "sglong.wechat.com",
-        "ccmdl.adobe.com",
-        "help.ubnt.com",
-        "wego.here.com",
-        "store.ui.com.cn"
-      ]
-    },
-    {
       "domain_suffix": [
         ".community",
         ".network",
@@ -1150,6 +1136,20 @@
         ".at",
         ".ai",
         ".ac"
+      ]
+    },
+    {
+      "domain": [
+        "news.ycombinator.com",
+        "ees.elsevier.com",
+        "community.oneplus.com",
+        "sgminorshort.wechat.com",
+        "sgshort.wechat.com",
+        "sglong.wechat.com",
+        "ccmdl.adobe.com",
+        "help.ubnt.com",
+        "wego.here.com",
+        "store.ui.com.cn"
       ]
     },
     {

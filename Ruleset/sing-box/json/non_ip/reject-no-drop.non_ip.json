@@ -2,9 +2,11 @@
   "version": 4,
   "rules": [
     {
-      "domain_keyword": [
-        "-p2p.pull.yximgs.com",
-        "-p2p-v2.pull.yximgs.com"
+      "domain": [
+        "qn-cdnfile1pcdn.msstatic.com",
+        "livewebbs2pcdn.msstatic.com",
+        "stun1.douyucdn.cn",
+        "stun.douyucdn.cn"
       ]
     },
     {
@@ -37,11 +39,9 @@
       ]
     },
     {
-      "domain": [
-        "qn-cdnfile1pcdn.msstatic.com",
-        "livewebbs2pcdn.msstatic.com",
-        "stun1.douyucdn.cn",
-        "stun.douyucdn.cn"
+      "domain_keyword": [
+        "-p2p.pull.yximgs.com",
+        "-p2p-v2.pull.yximgs.com"
       ]
     }
   ]

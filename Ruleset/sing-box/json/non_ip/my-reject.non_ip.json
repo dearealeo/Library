@@ -2,6 +2,11 @@
   "version": 4,
   "rules": [
     {
+      "port": [
+        7680
+      ]
+    },
+    {
       "domain_keyword": [
         "bahoom",
         "-flv.meituan.net",
@@ -9,8 +14,9 @@
       ]
     },
     {
-      "port": [
-        7680
+      "domain": [
+        "daisydiskapp.com",
+        "userlocation.googleapis.com"
       ]
     },
     {
@@ -34,12 +40,6 @@
         ".httpizza.ele.me",
         ".adobestats.io",
         ".adobe.io"
-      ]
-    },
-    {
-      "domain": [
-        "daisydiskapp.com",
-        "userlocation.googleapis.com"
       ]
     }
   ]
