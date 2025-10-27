@@ -21,6 +21,11 @@
       ]
     },
     {
+      "process_name": [
+        "com.linecorp.linetv"
+      ]
+    },
+    {
       "domain_suffix": [
         ".kk.stream",
         ".hbogoasia.com",
@@ -38,11 +43,6 @@
         ".kktv.me",
         ".hbogoasia.id",
         ".hbogoasia.hk"
-      ]
-    },
-    {
-      "process_name": [
-        "com.linecorp.linetv"
       ]
     }
   ]

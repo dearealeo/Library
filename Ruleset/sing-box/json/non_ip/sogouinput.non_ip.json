@@ -2,11 +2,6 @@
   "version": 4,
   "rules": [
     {
-      "domain": [
-        "oth.str.mdt.qq.com"
-      ]
-    },
-    {
       "domain_suffix": [
         ".account.sogou.com",
         ".shouji.sogou.com",
@@ -23,6 +18,11 @@
         "SogouInput",
         "SogouTaskManager",
         "SogouServices"
+      ]
+    },
+    {
+      "domain": [
+        "oth.str.mdt.qq.com"
       ]
     }
   ]

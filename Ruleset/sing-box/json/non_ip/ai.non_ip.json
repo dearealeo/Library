@@ -2,24 +2,6 @@
   "version": 4,
   "rules": [
     {
-      "domain_keyword": [
-        "openai",
-        "alkalimakersuite-pa.clients6.google.com"
-      ]
-    },
-    {
-      "domain": [
-        "ai.google.dev",
-        "robinfrontend-pa.googleapis.com",
-        "aisandbox-pa.googleapis.com",
-        "gateway.ai.cloudflare.com",
-        "alkalicore-pa.clients6.google.com",
-        "jules.google.com",
-        "api.github.com",
-        "api.jetbrains.ai"
-      ]
-    },
-    {
       "domain_suffix": [
         ".generativeai.google",
         ".notebooklm.google",
@@ -51,6 +33,24 @@
         ".meta.ai",
         ".dify.ai",
         ".x.ai"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "openai",
+        "alkalimakersuite-pa.clients6.google.com"
+      ]
+    },
+    {
+      "domain": [
+        "ai.google.dev",
+        "robinfrontend-pa.googleapis.com",
+        "aisandbox-pa.googleapis.com",
+        "gateway.ai.cloudflare.com",
+        "alkalicore-pa.clients6.google.com",
+        "jules.google.com",
+        "api.github.com",
+        "api.jetbrains.ai"
       ]
     }
   ]
