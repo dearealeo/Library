@@ -2,7 +2,7 @@ name: Sync Release
 
 on:
   workflow_run:
-    workflows: ["Update News"]
+    workflows: ["Sync News"]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -43,9 +43,9 @@ jobs:
         id: check-commits
         run: |
           COMMITS=$(git log --since="24 hours ago" --oneline)
-          HAS_NEWS=$(echo "$COMMITS" | grep -c "feat(news): update" || echo "0")
-          HAS_LAWS=$(echo "$COMMITS" | grep -c "feat(laws): update" || echo "0")
-          HAS_RULESET=$(echo "$COMMITS" | grep -c "feat(ruleset): update" || echo "0")
+          HAS_NEWS=$(echo "$COMMITS" | grep -c "feat(news): bump" || echo "0")
+          HAS_LAWS=$(echo "$COMMITS" | grep -c "feat(laws): bump" || echo "0")
+          HAS_RULESET=$(echo "$COMMITS" | grep -c "feat(ruleset): bump" || echo "0")
           if [[ $HAS_NEWS -gt 0 && $HAS_LAWS -gt 0 && $HAS_RULESET -gt 0 ]]; then
             echo "should_proceed=true" >> $GITHUB_OUTPUT
           else
