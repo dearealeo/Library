@@ -2,8 +2,9 @@
   "version": 4,
   "rules": [
     {
-      "port": [
-        7680
+      "domain": [
+        "daisydiskapp.com",
+        "userlocation.googleapis.com"
       ]
     },
     {
@@ -14,9 +15,8 @@
       ]
     },
     {
-      "domain": [
-        "daisydiskapp.com",
-        "userlocation.googleapis.com"
+      "port": [
+        7680
       ]
     },
     {

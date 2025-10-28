@@ -2,43 +2,16 @@
   "version": 4,
   "rules": [
     {
-      "process_name": [
-        "v2ray",
-        "xray",
-        "ss-local",
-        "clash",
-        "ClashX",
-        "trojan",
-        "trojan-go",
-        "privoxy",
-        "cloudflared",
-        "aria2c",
-        "fdm",
-        "Folx",
-        "NetTransport",
-        "Thunder",
-        "ThunderVIP",
-        "Transmission",
-        "transmission-daemon",
-        "transmission-qt",
-        "BitComet",
-        "uTorrent",
-        "qbittorrent*",
-        "DownloadService",
-        "qBittorrent",
-        "qbittorrent-nox",
-        "WebTorrent",
-        "WebTorrent Helper",
-        "amuled",
-        "LocalSend",
-        "UUBooster",
-        "tailscaled",
-        "parsecd",
-        "SunloginClient_Desktop",
-        "SunloginClient_Helper",
-        "BaiduNetdisk_mac",
-        "Logi Options",
-        "Logi Options Daemon"
+      "domain_keyword": [
+        "cnki.net",
+        "wanfangdata",
+        "pkulaw",
+        "westlawchina",
+        "readcube",
+        "sciencedirect",
+        "elsevier",
+        "deepdyve",
+        "els-cdn"
       ]
     },
     {
@@ -58,19 +31,6 @@
         "repeater.asus.com",
         "router.asus.com",
         "aterm.me"
-      ]
-    },
-    {
-      "domain_keyword": [
-        "cnki.net",
-        "wanfangdata",
-        "pkulaw",
-        "westlawchina",
-        "readcube",
-        "sciencedirect",
-        "elsevier",
-        "deepdyve",
-        "els-cdn"
       ]
     },
     {
@@ -229,6 +189,46 @@
         ".m-team.cc",
         ".ncore.cc",
         ".avgv.cc"
+      ]
+    },
+    {
+      "process_name": [
+        "v2ray",
+        "xray",
+        "ss-local",
+        "clash",
+        "ClashX",
+        "trojan",
+        "trojan-go",
+        "privoxy",
+        "cloudflared",
+        "aria2c",
+        "fdm",
+        "Folx",
+        "NetTransport",
+        "Thunder",
+        "ThunderVIP",
+        "Transmission",
+        "transmission-daemon",
+        "transmission-qt",
+        "BitComet",
+        "uTorrent",
+        "qbittorrent*",
+        "DownloadService",
+        "qBittorrent",
+        "qbittorrent-nox",
+        "WebTorrent",
+        "WebTorrent Helper",
+        "amuled",
+        "LocalSend",
+        "UUBooster",
+        "tailscaled",
+        "parsecd",
+        "SunloginClient_Desktop",
+        "SunloginClient_Helper",
+        "BaiduNetdisk_mac",
+        "Logi Options",
+        "Logi Options Daemon"
       ]
     }
   ]
