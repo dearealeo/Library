@@ -2,11 +2,6 @@
   "version": 4,
   "rules": [
     {
-      "domain_keyword": [
-        "mac-torrent-download"
-      ]
-    },
-    {
       "domain_suffix": [
         ".torrentmac.net",
         ".engage.cloudflareclient.com",
@@ -22,6 +17,11 @@
     {
       "domain": [
         "mirrorbits.lineageos.org"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "mac-torrent-download"
       ]
     }
   ]

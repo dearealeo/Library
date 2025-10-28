@@ -22,6 +22,11 @@
       ]
     },
     {
+      "process_name": [
+        "com.linecorp.linetv"
+      ]
+    },
+    {
       "domain": [
         "d3c7rimkq79yfu.cloudfront.net",
         "players.brightcove.net",
@@ -38,11 +43,6 @@
         "video.friday.tw",
         "ana.video.friday.tw",
         "www.litv.tv"
-      ]
-    },
-    {
-      "process_name": [
-        "com.linecorp.linetv"
       ]
     }
   ]

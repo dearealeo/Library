@@ -15,25 +15,6 @@
       ]
     },
     {
-      "domain": [
-        "mobile.hotspot",
-        "unifi",
-        "ntt.setup",
-        "pi.hole",
-        "injections.adguard.org",
-        "local.adguard.org",
-        "homerouter.cpe",
-        "setmeup.arubanetworks.com",
-        "instant.arubanetworks.com",
-        "console.gl-inet.com",
-        "hotspot.cslwifi.com",
-        "captive.apple.com",
-        "repeater.asus.com",
-        "router.asus.com",
-        "aterm.me"
-      ]
-    },
-    {
       "domain_suffix": [
         ".localdomain",
         ".internal",
@@ -229,6 +210,25 @@
         "BaiduNetdisk_mac",
         "Logi Options",
         "Logi Options Daemon"
+      ]
+    },
+    {
+      "domain": [
+        "mobile.hotspot",
+        "unifi",
+        "ntt.setup",
+        "pi.hole",
+        "injections.adguard.org",
+        "local.adguard.org",
+        "homerouter.cpe",
+        "setmeup.arubanetworks.com",
+        "instant.arubanetworks.com",
+        "console.gl-inet.com",
+        "hotspot.cslwifi.com",
+        "captive.apple.com",
+        "repeater.asus.com",
+        "router.asus.com",
+        "aterm.me"
       ]
     }
   ]

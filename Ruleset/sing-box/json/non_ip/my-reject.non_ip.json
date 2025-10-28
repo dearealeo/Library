@@ -2,30 +2,8 @@
   "version": 4,
   "rules": [
     {
-      "domain": [
-        "daisydiskapp.com",
-        "userlocation.googleapis.com"
-      ]
-    },
-    {
-      "domain_keyword": [
-        "bahoom",
-        "-flv.meituan.net",
-        "-live.meituan.net"
-      ]
-    },
-    {
       "port": [
         7680
-      ]
-    },
-    {
-      "process_name": [
-        "Tencent Lemon",
-        "LemonMonitor",
-        "LemonDaemon",
-        "LemonAgent",
-        "LemonService"
       ]
     },
     {
@@ -40,6 +18,28 @@
         ".httpizza.ele.me",
         ".adobestats.io",
         ".adobe.io"
+      ]
+    },
+    {
+      "process_name": [
+        "Tencent Lemon",
+        "LemonMonitor",
+        "LemonDaemon",
+        "LemonAgent",
+        "LemonService"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "bahoom",
+        "-flv.meituan.net",
+        "-live.meituan.net"
+      ]
+    },
+    {
+      "domain": [
+        "daisydiskapp.com",
+        "userlocation.googleapis.com"
       ]
     }
   ]

@@ -2,6 +2,12 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "tx-safety-video.acfun.cn",
+        "url.cn"
+      ]
+    },
+    {
       "domain_suffix": [
         ".tencent-cloud.net",
         ".smtcdns.net",
@@ -49,12 +55,6 @@
         ".wegame.com.cn",
         ".gtimg.com.cn",
         ".qq.com.cn"
-      ]
-    },
-    {
-      "domain": [
-        "tx-safety-video.acfun.cn",
-        "url.cn"
       ]
     }
   ]
