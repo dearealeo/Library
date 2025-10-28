@@ -22,26 +22,59 @@ mappings = {
     "DOMAIN-KEYWORD": "domain_keyword",
     "DOMAIN-SET": "domain_suffix",
     "URL-REGEX": "domain_regex",
+    "DOMAIN-WILDCARD": "domain_wildcard",
     "IP-CIDR": "ip_cidr",
     "IP-CIDR6": "ip_cidr",
+    "IP6-CIDR": "ip_cidr",
     "SRC-IP": "source_ip_cidr",
     "SRC-IP-CIDR": "source_ip_cidr",
-    "GEOIP": "geoip",
     "IP-ASN": "ip_asn",
     "DEST-PORT": "port",
     "DST-PORT": "port",
     "IN-PORT": "port",
     "SRC-PORT": "source_port",
+    "SOURCE-PORT": "source_port",
     "PROCESS-NAME": "process_name",
-    "PROTOCOL": "protocol",
+    "PROCESS-PATH": "process_path",
+    "PROTOCOL": "network",
+    "NETWORK": "network",
     "HOST": "domain",
     "HOST-SUFFIX": "domain_suffix",
     "HOST-KEYWORD": "domain_keyword",
     "host": "domain",
+    "host-suffix": "domain_suffix",
     "host-keyword": "domain_keyword",
     "ip-cidr": "ip_cidr",
-    "IP6-CIDR": "ip_cidr",
+    "ip-cidr6": "ip_cidr",
 }
+
+RULE_ORDER = [
+    "query_type",
+    "network",
+    "domain",
+    "domain_suffix",
+    "domain_keyword",
+    "domain_regex",
+    "source_ip_cidr",
+    "ip_cidr",
+    "source_port",
+    "source_port_range",
+    "port",
+    "port_range",
+    "process_name",
+    "process_path",
+    "process_path_regex",
+    "package_name",
+    "network_type",
+    "network_is_expensive",
+    "network_is_constrained",
+    "network_interface_address",
+    "default_interface_address",
+    "wifi_ssid",
+    "wifi_bssid",
+    "invert",
+]
+
 
 unsupported = frozenset({
     "USER-AGENT",
@@ -49,6 +82,9 @@ unsupported = frozenset({
     "DEVICE-NAME",
     "MAC-ADDRESS",
     "FINAL",
+    "GEOIP",
+    "GEOSITE",
+    "SOURCE-GEOIP",
 })
 
 
@@ -107,7 +143,7 @@ def parse_yaml(content: str) -> list[dict[str, str]]:  # noqa: D103
     rows = []
 
     for item in data.get("payload", []):
-        address = item.strip("'")
+        address = item.strip("'\"")
         if "," not in item:
             if _is_network(address):
                 pattern = "IP-CIDR"
@@ -120,6 +156,9 @@ def parse_yaml(content: str) -> list[dict[str, str]]:  # noqa: D103
             parts = item.split(",", 2)
             pattern = parts[0].strip()
             address = parts[1].strip()
+
+            if len(parts) >= 3:  # noqa: PLR2004
+                pass
 
         rows.append({"pattern": pattern, "address": address})
 
@@ -135,9 +174,15 @@ def parse_list(content: str) -> list[dict[str, str]]:  # noqa: D103
 
         parts = line.split(",", 2)
         if len(parts) >= 2:  # noqa: PLR2004
+            pattern = parts[0].strip()
+            address = parts[1].strip()
+
+            if len(parts) >= 3 and parts[2].strip().lower() == "no-resolve":  # noqa: PLR2004
+                pass
+
             rows.append({
-                "pattern": parts[0].strip(),
-                "address": parts[1].strip(),
+                "pattern": pattern,
+                "address": address,
             })
         elif len(parts) == 1:
             address = parts[0].strip()
@@ -183,42 +228,162 @@ async def convert(asns: list[str]) -> list[str]:  # noqa: D103
     return cidrs
 
 
-def _build(dataframe: pl.DataFrame, cidrs: list[str]) -> dict[str, Any]:  # noqa: C901
-    rules = {"version": 4, "rules": []}
+def _wildcard_to_regex(wildcard: str) -> str:
+    wildcard = wildcard.lstrip(".")
+    escaped = wildcard.replace(".", r"\.").replace("*", "WILDCARD_PLACEHOLDER")
+    regex = escaped.replace("WILDCARD_PLACEHOLDER", r"[^.]+")
+    return f"^{regex}$"
+
+
+def _normalize_ip_cidr(ip_cidr: str) -> str:
+    if "/" in ip_cidr:
+        return ip_cidr
+    try:
+        addr = ipaddress.ip_address(ip_cidr)
+        if addr.version == 4:  # noqa: PLR2004
+            return f"{ip_cidr}/32"
+    except ValueError:
+        return ip_cidr
+    else:
+        return f"{ip_cidr}/128"
+
+
+def _parse_port_range(port_str: str) -> tuple[str | None, int | None]:
+    if ":" in port_str or "-" in port_str:
+        separator = ":" if ":" in port_str else "-"
+        parts = port_str.split(separator)
+        if len(parts) == 2:  # noqa: PLR2004
+            try:
+                start, end = int(parts[0]), int(parts[1])
+            except ValueError:
+                return None, None
+            else:
+                return f"{start}:{end}", None
+    else:
+        try:
+            return None, int(port_str)
+        except ValueError:
+            return None, None
+    return None
+
+
+def _build(dataframe: pl.DataFrame, cidrs: list[str]) -> dict[str, Any]:  # noqa: C901, PLR0912, PLR0914, PLR0915
+    rules = {"version": 4, "rules": [{}]}
+    rule_dict = rules["rules"][0]
+
     grouped = dataframe.group_by("pattern").agg(pl.col("address"))
 
     for row in grouped.iter_rows(named=True):
         pattern, addresses = row["pattern"], row["address"]
 
-        if pattern == "domain_suffix":
+        if pattern == "domain":
+            rule_dict.setdefault("domain", []).extend(addresses)
+
+        elif pattern == "domain_suffix":
             formatted = [f".{addr}" if not addr.startswith(".") else addr for addr in addresses]
-            rules["rules"].append({pattern: formatted})
-        elif pattern in {"domain", "domain_keyword", "domain_regex", "ip_cidr", "source_ip_cidr"}:
-            rules["rules"].append({pattern: addresses})
-        elif pattern in {"port", "source_port"}:
-            try:
-                ports = [int(p) for p in addresses]
-                rules["rules"].append({pattern: ports})
-            except ValueError:
-                continue
+            rule_dict.setdefault("domain_suffix", []).extend(formatted)
+
+        elif pattern == "domain_keyword":
+            rule_dict.setdefault("domain_keyword", []).extend(addresses)
+
+        elif pattern == "domain_regex":
+            rule_dict.setdefault("domain_regex", []).extend(addresses)
+
+        elif pattern == "domain_wildcard":
+            regexes = [_wildcard_to_regex(addr) for addr in addresses]
+            rule_dict.setdefault("domain_regex", []).extend(regexes)
+
+        elif pattern == "ip_cidr":
+            normalized = [_normalize_ip_cidr(addr) for addr in addresses]
+            rule_dict.setdefault("ip_cidr", []).extend(normalized)
+
+        elif pattern == "source_ip_cidr":
+            normalized = [_normalize_ip_cidr(addr) for addr in addresses]
+            rule_dict.setdefault("source_ip_cidr", []).extend(normalized)
+
+        elif pattern == "port":
+            ports = []
+            port_ranges = []
+            for addr in addresses:
+                range_str, single_port = _parse_port_range(addr)
+                if range_str:
+                    port_ranges.append(range_str)
+                elif single_port is not None:
+                    ports.append(single_port)
+
+            if ports:
+                rule_dict.setdefault("port", []).extend(ports)
+            if port_ranges:
+                rule_dict.setdefault("port_range", []).extend(port_ranges)
+
+        elif pattern == "source_port":
+            ports = []
+            port_ranges = []
+            for addr in addresses:
+                range_str, single_port = _parse_port_range(addr)
+                if range_str:
+                    port_ranges.append(range_str)
+                elif single_port is not None:
+                    ports.append(single_port)
+
+            if ports:
+                rule_dict.setdefault("source_port", []).extend(ports)
+            if port_ranges:
+                rule_dict.setdefault("source_port_range", []).extend(port_ranges)
+
         elif pattern == "process_name":
-            rules["rules"].append({pattern: addresses})
-        elif pattern == "protocol":
-            protocols = [p.lower() for p in addresses]
-            rules["rules"].append({"network": protocols})
-        elif pattern == "geoip":
-            rules["rules"].append({pattern: addresses})
+            rule_dict.setdefault("process_name", []).extend(addresses)
+
+        elif pattern == "process_path":
+            rule_dict.setdefault("process_path", []).extend(addresses)
+
+        elif pattern == "network":
+            protocols = []
+            for p in addresses:
+                p_upper = p.upper()
+                if p_upper in {"TCP", "UDP", "ICMP"}:
+                    protocols.append(p.lower())
+            if protocols:
+                rule_dict.setdefault("network", []).extend(protocols)
 
     if cidrs:
-        exists = False
-        for rule in rules["rules"]:
-            if "ip_cidr" in rule:
-                rule["ip_cidr"].extend(cidrs)
-                exists = True
-                break
+        normalized_cidrs = [_normalize_ip_cidr(cidr) for cidr in cidrs]
+        rule_dict.setdefault("ip_cidr", []).extend(normalized_cidrs)
 
-        if not exists:
-            rules["rules"].append({"ip_cidr": cidrs})
+    for key in rule_dict:
+        if isinstance(rule_dict[key], list):
+            if key in {"port", "source_port"}:
+                rule_dict[key] = sorted(set(rule_dict[key]))
+            elif key in {"port_range", "source_port_range"}:
+                seen = set()
+                unique_list = []
+                for item in rule_dict[key]:
+                    if item not in seen:
+                        seen.add(item)
+                        unique_list.append(item)
+                rule_dict[key] = unique_list
+            else:
+                seen = set()
+                unique_list = []
+                for item in rule_dict[key]:
+                    if item not in seen:
+                        seen.add(item)
+                        unique_list.append(item)
+                rule_dict[key] = unique_list
+
+    ordered_rule = {}
+    for field in RULE_ORDER:
+        if rule_dict.get(field):
+            ordered_rule[field] = rule_dict[field]
+
+    for field in rule_dict:
+        if field not in ordered_rule and rule_dict[field]:
+            ordered_rule[field] = rule_dict[field]
+
+    if not ordered_rule:
+        return {"version": 2, "rules": []}
+
+    rules["rules"][0] = ordered_rule
 
     return rules
 
@@ -240,16 +405,15 @@ async def process(url: str, directory: str, category: str) -> anyio.Path | None:
 
     filtered = dataframe.filter(pl.col("pattern").is_in(list(unsupported)))
     if filtered.height > 0:
-        filtered["pattern"].unique().to_list()
+        unsupported_patterns = filtered["pattern"].unique().to_list()
 
+        deprecated_geo = [p for p in unsupported_patterns if p in {"GEOIP", "GEOSITE", "SOURCE-GEOIP"}]
+        [p for p in unsupported_patterns if p not in deprecated_geo]
     asns = dataframe.filter(pl.col("pattern") == "IP-ASN")
     cidrs = []
     if asns.height > 0:
         asn_list = asns["address"].unique().to_list()
         cidrs = await convert(asn_list)
-        if cidrs:
-            sum(1 for cidr in cidrs if ":" not in cidr)
-
     dataframe = dataframe.with_columns(pl.col("pattern").replace(mappings))
 
     await anyio.Path(directory).mkdir(exist_ok=True, parents=True)
@@ -257,6 +421,12 @@ async def process(url: str, directory: str, category: str) -> anyio.Path | None:
     rules = _build(dataframe, cidrs)
     base_name = anyio.Path(url).stem.replace("_", "-")
     filename = anyio.Path(directory, f"{base_name}.{category}.json")
+
+    rule_stats = {}
+    if rules["rules"] and len(rules["rules"]) > 0:
+        for key, value in rules["rules"][0].items():
+            if isinstance(value, list):
+                rule_stats[key] = len(value)
 
     async with await anyio.Path(filename).open("wb") as f:
         await f.write(orjson.dumps(rules, option=orjson.OPT_INDENT_2))
@@ -299,7 +469,8 @@ async def main() -> None:  # noqa: C901, D103
         modules_dir = anyio.Path("../dist/Modules/Rules/sukka_local_dns_mapping")
 
     if await modules_dir.exists():
-        async for conf_file in modules_dir.glob("*.conf"):
+        local_dns_files = [f async for f in modules_dir.glob("*.conf")]
+        for conf_file in local_dns_files:
             file_url = f"file://{await conf_file.absolute()}"
             output_dir = json_base / "local_dns"
             result = await process(file_url, str(output_dir), "local_dns")
