@@ -2,6 +2,29 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "dot.pub",
+        "doh.pub",
+        "dns.pub",
+        "kms.03k.org",
+        "ocsp2.globalsign.com",
+        "ocsp.globalsign.com",
+        "cdnstatic.tencentcs.com",
+        "media.cdn.queniuqe.com",
+        "www.layuicdn.com",
+        "gstore.val.manlaxy.com",
+        "cn.download.nvidia.com",
+        "config.ubnt.com",
+        "dl.ubnt.com",
+        "i.dell.com",
+        "b23.tv",
+        "acg.tv",
+        "assets2.xboxlive.cn",
+        "assets1.xboxlive.cn",
+        "lv.queniujq.cn",
+        "www.intel.cn",
+        "url.cn"
+      ],
       "domain_suffix": [
         ".c-t.work",
         ".mijia.tech",
@@ -813,31 +836,9 @@
         ".6.cn",
         ".3.cn",
         ".chaoxing.cc"
-      ]
-    },
-    {
-      "domain": [
-        "dot.pub",
-        "doh.pub",
-        "dns.pub",
-        "kms.03k.org",
-        "ocsp2.globalsign.com",
-        "ocsp.globalsign.com",
-        "cdnstatic.tencentcs.com",
-        "media.cdn.queniuqe.com",
-        "www.layuicdn.com",
-        "gstore.val.manlaxy.com",
-        "cn.download.nvidia.com",
-        "config.ubnt.com",
-        "dl.ubnt.com",
-        "i.dell.com",
-        "b23.tv",
-        "acg.tv",
-        "assets2.xboxlive.cn",
-        "assets1.xboxlive.cn",
-        "lv.queniujq.cn",
-        "www.intel.cn",
-        "url.cn"
+      ],
+      "domain_regex": [
+        "^[^.]+\\.qhimgs?\\.com$"
       ]
     }
   ]

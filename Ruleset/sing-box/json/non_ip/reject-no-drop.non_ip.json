@@ -2,6 +2,12 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "qn-cdnfile1pcdn.msstatic.com",
+        "livewebbs2pcdn.msstatic.com",
+        "stun1.douyucdn.cn",
+        "stun.douyucdn.cn"
+      ],
       "domain_suffix": [
         ".ppio.cloud",
         ".yfp2p.net",
@@ -28,20 +34,18 @@
         ".mcdn.bilivideo.cn",
         ".p2perrorlog.douyucdn.cn",
         ".p2plog.douyucdn.cn"
-      ]
-    },
-    {
-      "domain": [
-        "qn-cdnfile1pcdn.msstatic.com",
-        "livewebbs2pcdn.msstatic.com",
-        "stun1.douyucdn.cn",
-        "stun.douyucdn.cn"
-      ]
-    },
-    {
+      ],
       "domain_keyword": [
         "-p2p.pull.yximgs.com",
         "-p2p-v2.pull.yximgs.com"
+      ],
+      "domain_regex": [
+        "^p2p[^.]+\\.qq\\.com$",
+        "^p2p-[^.]+\\.douyucdn\\.cn$",
+        "^p2pchunk-[^.]+\\.douyucdn\\.cn$",
+        "^dyp2p-[^.]+\\.douyucdn\\.cn$",
+        "^p2plive-[^.]+\\.douyucdn\\.cn$",
+        "^stun[^.]+$"
       ]
     }
   ]

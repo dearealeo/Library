@@ -2,6 +2,23 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "d3c7rimkq79yfu.cloudfront.net",
+        "players.brightcove.net",
+        "manifest.prod.boltdns.net",
+        "litvfreemobile-hichannel.cdn.hinet.net",
+        "4gtvfreepcvod-cds.cdn.hinet.net",
+        "ntdfreepc-tgc.cdn.hinet.net",
+        "gamer2-cds.cdn.hinet.net",
+        "gamer-cds.cdn.hinet.net",
+        "hbolb.onwardsmg.com",
+        "44wilhpljf.execute-api.ap-southeast-1.amazonaws.com",
+        "hbounify-prod.evergent.com",
+        "cdi.ofiii.com",
+        "video.friday.tw",
+        "ana.video.friday.tw",
+        "www.litv.tv"
+      ],
       "domain_suffix": [
         ".kk.stream",
         ".hbogoasia.com",
@@ -19,30 +36,9 @@
         ".kktv.me",
         ".hbogoasia.id",
         ".hbogoasia.hk"
-      ]
-    },
-    {
+      ],
       "process_name": [
         "com.linecorp.linetv"
-      ]
-    },
-    {
-      "domain": [
-        "d3c7rimkq79yfu.cloudfront.net",
-        "players.brightcove.net",
-        "manifest.prod.boltdns.net",
-        "litvfreemobile-hichannel.cdn.hinet.net",
-        "4gtvfreepcvod-cds.cdn.hinet.net",
-        "ntdfreepc-tgc.cdn.hinet.net",
-        "gamer2-cds.cdn.hinet.net",
-        "gamer-cds.cdn.hinet.net",
-        "hbolb.onwardsmg.com",
-        "44wilhpljf.execute-api.ap-southeast-1.amazonaws.com",
-        "hbounify-prod.evergent.com",
-        "cdi.ofiii.com",
-        "video.friday.tw",
-        "ana.video.friday.tw",
-        "www.litv.tv"
       ]
     }
   ]

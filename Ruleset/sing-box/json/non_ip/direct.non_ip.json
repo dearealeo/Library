@@ -2,19 +2,23 @@
   "version": 4,
   "rules": [
     {
-      "domain_keyword": [
-        "cnki.net",
-        "wanfangdata",
-        "pkulaw",
-        "westlawchina",
-        "readcube",
-        "sciencedirect",
-        "elsevier",
-        "deepdyve",
-        "els-cdn"
-      ]
-    },
-    {
+      "domain": [
+        "mobile.hotspot",
+        "unifi",
+        "ntt.setup",
+        "pi.hole",
+        "injections.adguard.org",
+        "local.adguard.org",
+        "homerouter.cpe",
+        "setmeup.arubanetworks.com",
+        "instant.arubanetworks.com",
+        "console.gl-inet.com",
+        "hotspot.cslwifi.com",
+        "captive.apple.com",
+        "repeater.asus.com",
+        "router.asus.com",
+        "aterm.me"
+      ],
       "domain_suffix": [
         ".localdomain",
         ".internal",
@@ -170,9 +174,18 @@
         ".m-team.cc",
         ".ncore.cc",
         ".avgv.cc"
-      ]
-    },
-    {
+      ],
+      "domain_keyword": [
+        "cnki.net",
+        "wanfangdata",
+        "pkulaw",
+        "westlawchina",
+        "readcube",
+        "sciencedirect",
+        "elsevier",
+        "deepdyve",
+        "els-cdn"
+      ],
       "process_name": [
         "v2ray",
         "xray",
@@ -210,25 +223,6 @@
         "BaiduNetdisk_mac",
         "Logi Options",
         "Logi Options Daemon"
-      ]
-    },
-    {
-      "domain": [
-        "mobile.hotspot",
-        "unifi",
-        "ntt.setup",
-        "pi.hole",
-        "injections.adguard.org",
-        "local.adguard.org",
-        "homerouter.cpe",
-        "setmeup.arubanetworks.com",
-        "instant.arubanetworks.com",
-        "console.gl-inet.com",
-        "hotspot.cslwifi.com",
-        "captive.apple.com",
-        "repeater.asus.com",
-        "router.asus.com",
-        "aterm.me"
       ]
     }
   ]

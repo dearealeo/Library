@@ -5,11 +5,15 @@
       "domain": [
         "av.jkforum.net",
         "hanime1.me"
-      ]
-    },
-    {
+      ],
       "domain_suffix": [
         ".cdn.hinet.net"
+      ],
+      "domain_regex": [
+        "^[^.]+\\.ffzy-online?\\.com$",
+        "^[^.]+\\.ffzy-play?\\.com$",
+        "^[^.]+\\.lz-cdn?\\.com$",
+        "^[^.]+\\.lz-cdn??\\.com$"
       ]
     }
   ]

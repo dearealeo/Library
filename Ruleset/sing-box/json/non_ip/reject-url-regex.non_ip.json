@@ -177,8 +177,7 @@
         "^https?://api01pbmp\\.zhuishushenqi\\.com/gameAdvert",
         "^https?://api\\.zhuishushenqi\\.com/(notification/shelfMessage|recommend|splashes/ios|user/bookshelf-updated)",
         "^https?://dspsdk\\.abreader\\.com/v\\d/api/ad\\?",
-        "^https?://mi\\.gdt\\.qq\\.com/gdt_mview\\.fcg",
-        "^http://\\d{1"
+        "^https?://mi\\.gdt\\.qq\\.com/gdt_mview\\.fcg"
       ]
     }
   ]

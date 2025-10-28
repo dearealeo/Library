@@ -2,6 +2,11 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "fonts.googleapis.cn",
+        "fonts.gstatic.cn",
+        "ip.cn"
+      ],
       "domain_suffix": [
         ".ipstack.com",
         ".ip-api.com",
@@ -13,13 +18,6 @@
         ".ipregistry.co",
         ".ipdata.co",
         ".services.googleapis.cn"
-      ]
-    },
-    {
-      "domain": [
-        "fonts.googleapis.cn",
-        "fonts.gstatic.cn",
-        "ip.cn"
       ]
     }
   ]

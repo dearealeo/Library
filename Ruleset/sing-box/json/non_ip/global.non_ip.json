@@ -13,22 +13,7 @@
         "help.ubnt.com",
         "wego.here.com",
         "store.ui.com.cn"
-      ]
-    },
-    {
-      "domain_keyword": [
-        "google",
-        "blogspot",
-        "facebook",
-        "whatsapp",
-        "discord",
-        "sci-hub",
-        "browserleaks",
-        "dropbox",
-        "pinterest"
-      ]
-    },
-    {
+      ],
       "domain_suffix": [
         ".community",
         ".network",
@@ -1163,6 +1148,17 @@
         ".at",
         ".ai",
         ".ac"
+      ],
+      "domain_keyword": [
+        "google",
+        "blogspot",
+        "facebook",
+        "whatsapp",
+        "discord",
+        "sci-hub",
+        "browserleaks",
+        "dropbox",
+        "pinterest"
       ]
     }
   ]

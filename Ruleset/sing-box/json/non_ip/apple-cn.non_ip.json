@@ -2,6 +2,10 @@
   "version": 4,
   "rules": [
     {
+      "domain": [
+        "gs-loc-cn.apple.com",
+        "api.smoot.apple.cn"
+      ],
       "domain_suffix": [
         ".gspe19-cn-ssl.ls.apple.com",
         ".cn-ssl.ls.apple.com",
@@ -9,12 +13,6 @@
         ".cn.apple.com",
         ".icloud.com.cn",
         ".apple.com.cn"
-      ]
-    },
-    {
-      "domain": [
-        "gs-loc-cn.apple.com",
-        "api.smoot.apple.cn"
       ]
     }
   ]

@@ -2,11 +2,16 @@
   "version": 4,
   "rules": [
     {
-      "process_name": [
-        "com.hulu.plus"
-      ]
-    },
-    {
+      "domain": [
+        "staticasiafox.akamaized.net",
+        "dashasiafox.akamaized.net",
+        "bcbolt446c5271-a.akamaihd.net",
+        "edge.api.brightcove.com",
+        "cbsplaylistserver.aws.syncbak.com",
+        "cbsservice.aws.syncbak.com",
+        "prod-api.crackle.com",
+        "cbsi.live.ott.irdeto.com"
+      ],
       "domain_suffix": [
         ".paramountplus.com",
         ".discoveryplus.com",
@@ -36,18 +41,9 @@
         ".happyon.jp",
         ".hulu.jp",
         ".discoveryplus.in"
-      ]
-    },
-    {
-      "domain": [
-        "staticasiafox.akamaized.net",
-        "dashasiafox.akamaized.net",
-        "bcbolt446c5271-a.akamaihd.net",
-        "edge.api.brightcove.com",
-        "cbsplaylistserver.aws.syncbak.com",
-        "cbsservice.aws.syncbak.com",
-        "prod-api.crackle.com",
-        "cbsi.live.ott.irdeto.com"
+      ],
+      "process_name": [
+        "com.hulu.plus"
       ]
     }
   ]
