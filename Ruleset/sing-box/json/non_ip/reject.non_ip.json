@@ -300,6 +300,9 @@
         "pangolin-sdk-toutiao"
       ],
       "domain_regex": [
+        "/igd\\.xml",
+        "/\\d+/resolve",
+        "/\\d+/sign_d",
         "^info\\.[^.]+\\.aleragroup\\.com$",
         "^f-log[^.]+\\.grammarly\\.io$",
         "^[^.]+\\.ad\\.[^.]+\\.prod\\.hosts\\.ooklaserver\\.net$",
@@ -313,10 +316,7 @@
         "^ads-[^.]+\\.tiktok\\.com$",
         "^mon-[^.]+\\.byteoversea\\.com$",
         "^pixel[^.]+\\.adswizz\\.com$",
-        "^analytics-[^.]+\\.aasaam\\.com$",
-        "/igd\\.xml",
-        "/\\d+/resolve",
-        "/\\d+/sign_d"
+        "^analytics-[^.]+\\.aasaam\\.com$"
       ],
       "ip_cidr": [
         "39.97.128.148/32",
