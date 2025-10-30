@@ -3,14 +3,14 @@
   "rules": [
     {
       "domain_regex": [
-        "^http://(.+)\\.gvt\\d\\.com/edgedl",
         "^download[^.]+\\.mediafire\\.com$",
         "^ftp\\.??\\.debian\\.org$",
         "^ftp\\.??\\.freebsd\\.org$",
         "^[^.]+\\.s3\\.[^.]+\\.backblazeb2\\.com$",
         "^cdn-[^.]+\\.comaps\\.app$",
         "^cdn-[^.]+\\.comaps\\.tech$",
-        "^cdn-[^.]+\\.organicmaps\\.app$"
+        "^cdn-[^.]+\\.organicmaps\\.app$",
+        "^http://(.+)\\.gvt\\d\\.com/edgedl"
       ]
     }
   ]
