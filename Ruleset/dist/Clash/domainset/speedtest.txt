@@ -1,7 +1,7 @@
 #########################################
 # Sukka's Ruleset - Speedtest Domains
-# Last Updated: 2025-10-30T13:13:04.213Z
-# Size: 1485
+# Last Updated: 2025-10-31T15:34:04.549Z
+# Size: 1489
 # License: AGPL 3.0
 # Homepage: https://ruleset.skk.moe
 # GitHub: https://github.com/SukkaW/Surge
@@ -254,6 +254,7 @@ speedtest-ntt-ldn.as20011.net
 speedtest-ntt-fra.as20011.net
 spt-nyc.as13786.net
 speedtest.anksoft.net
+speedtest.yalniz.net
 spdtst.xenyth.net
 +.speedtest.warian.net
 ookla.ukcell.net
@@ -551,6 +552,7 @@ speedtest.komogoto.com
 +.speedtest.kansuiun.com
 speedtest.us-mi2.kamatera.com
 speedtest.us-tx.kamatera.com
+speedtest.us-se.kamatera.com
 speedtest.us-la.kamatera.com
 speedtest.eu-lo.kamatera.com
 speedtest.eu-fr.kamatera.com
@@ -559,6 +561,7 @@ speedtest.eu.kamatera.com
 speedtest.ixirhost.com
 txg-speedtest.infinirc.com
 speed.inet-isp.com
+tr.hostligo.com
 speedtest.hostimux.com
 sv-ookla.geolinks.com
 la-ookla.geolinks.com
@@ -1351,6 +1354,7 @@ lvconnect.brsserver.com.br
 glconnect.brsserver.com.br
 fwnetwork.brsserver.com.br
 asanet1.brsserver.com.br
+7facile.brsserver.com.br
 asanet.brsserver.com.br
 velocidadestm.amazonett.com.br
 speed.amazonett.com.br
