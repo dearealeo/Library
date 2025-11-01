@@ -114,7 +114,7 @@ jobs:
 
   build-macos:
     if: contains(needs.plan.outputs.build_types, 'macos') && needs.sync.outputs.changes == 'true'
-    runs-on: macos-15
+    runs-on: macos-26
     needs: sync
     steps:
       - uses: actions/checkout@v5
