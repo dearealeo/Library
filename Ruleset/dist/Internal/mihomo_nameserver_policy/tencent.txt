@@ -1,0 +1,63 @@
+#########################################
+# Sukka's Ruleset - Local DNS Mapping for Mihomo NameServer Policy (TENCENT)
+# Last Updated: 2025-10-19T12:40:32.241Z
+# Size: 49
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This ruleset is only used for mihomo's nameserver-policy feature, which
+# is similar to the RULE-SET referenced by sukka_local_dns_mapping.sgmodule.
+# Do not use this file in your Rule section, all entries are included in non_ip/domestic.conf already.
+#########################################
+DOMAIN,7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe
+DOMAIN-SUFFIX,tencent-cloud.net
+DOMAIN-SUFFIX,smtcdns.net
+DOMAIN-SUFFIX,coding.net
+DOMAIN-SUFFIX,anticheatexpert.com
+DOMAIN-SUFFIX,tencent-cloud.com
+DOMAIN-SUFFIX,weixinbridge.com
+DOMAIN-SUFFIX,tencentmusic.com
+DOMAIN-SUFFIX,wegameplus.com
+DOMAIN-SUFFIX,qcloudimg.com
+DOMAIN-SUFFIX,tcdnlive.com
+DOMAIN-SUFFIX,sogoucdn.com
+DOMAIN-SUFFIX,qlivecdn.com
+DOMAIN-SUFFIX,myqcloud.com
+DOMAIN-SUFFIX,udqqimg.com
+DOMAIN-SUFFIX,tencent.com
+DOMAIN-SUFFIX,igamecj.com
+DOMAIN-SUFFIX,idqqimg.com
+DOMAIN-SUFFIX,weiyun.com
+DOMAIN-SUFFIX,weixin.com
+DOMAIN-SUFFIX,wegame.com
+DOMAIN-SUFFIX,qqmail.com
+DOMAIN-SUFFIX,qcloud.com
+DOMAIN-SUFFIX,gdtimg.com
+DOMAIN-SUFFIX,dnspod.com
+DOMAIN-SUFFIX,sogou.com
+DOMAIN-SUFFIX,qzone.com
+DOMAIN-SUFFIX,myapp.com
+DOMAIN-SUFFIX,gtimg.com
+DOMAIN-SUFFIX,dnsv1.com
+DOMAIN-SUFFIX,soso.com
+DOMAIN-SUFFIX,sogo.com
+DOMAIN-SUFFIX,qq.com
+DOMAIN-SUFFIX,tencent-cloud.cn
+DOMAIN-SUFFIX,tencentcs.cn
+DOMAIN-SUFFIX,robloxdev.cn
+DOMAIN-SUFFIX,codehub.cn
+DOMAIN-SUFFIX,roblox.cn
+DOMAIN-SUFFIX,dnspod.cn
+DOMAIN-SUFFIX,cdn-go.cn
+DOMAIN-SUFFIX,qlogo.cn
+DOMAIN-SUFFIX,gtimg.cn
+DOMAIN,tx-safety-video.acfun.cn
+DOMAIN-SUFFIX,qpic.cn
+DOMAIN,url.cn
+DOMAIN-SUFFIX,tencent.com.cn
+DOMAIN-SUFFIX,wegame.com.cn
+DOMAIN-SUFFIX,gtimg.com.cn
+DOMAIN-SUFFIX,qq.com.cn
+################## EOF ##################
+

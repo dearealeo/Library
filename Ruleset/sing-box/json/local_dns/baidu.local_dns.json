@@ -1,0 +1,41 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "upos-sz-mirrorbos.bilivideo.com",
+        "upos-sz-mirrorbdb.bilivideo.com",
+        "upos-sz-mirrorbd.bilivideo.com"
+      ],
+      "domain_suffix": [
+        ".yunjiasu-cdn.net",
+        ".baiducontent.com",
+        ".baidustatic.com",
+        ".zuoyebang.com",
+        ".xiaodutv.com",
+        ".iqiyipic.com",
+        ".bdstatic.com",
+        ".baidupcs.com",
+        ".baidubcr.com",
+        ".baidubce.com",
+        ".jomodns.com",
+        ".bcelive.com",
+        ".antpcdn.com",
+        ".zybang.com",
+        ".shifen.com",
+        ".jomoxc.com",
+        ".hao123.com",
+        ".bdydns.com",
+        ".bcebos.com",
+        ".tieba.com",
+        ".iqiyi.com",
+        ".duapp.com",
+        ".bdimg.com",
+        ".baidu.com",
+        ".91.com",
+        ".baidu.cn",
+        ".dwz.cn"
+      ]
+    }
+  ]
+}

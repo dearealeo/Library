@@ -1,0 +1,24 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "fonts.googleapis.cn",
+        "fonts.gstatic.cn",
+        "ip.cn"
+      ],
+      "domain_suffix": [
+        ".ipstack.com",
+        ".ip-api.com",
+        ".db-ip.com",
+        ".ip.sb",
+        ".ipwho.is",
+        ".ipgeolocation.io",
+        ".nextdns.io",
+        ".ipregistry.co",
+        ".ipdata.co",
+        ".services.googleapis.cn"
+      ]
+    }
+  ]
+}

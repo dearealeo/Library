@@ -1,0 +1,25 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "hv-monster-submit.skk.moe",
+        "simpcraft.com",
+        "api.wakatime.com",
+        "writer-api.mintlify.com"
+      ],
+      "domain_suffix": [
+        ".18comic.vip",
+        ".hentaiverse.org",
+        ".18comic.org",
+        ".akamaized.net",
+        ".akamaihd.net",
+        ".azurefd.net",
+        ".vo.msecnd.net",
+        ".akamai-content-networks.com",
+        ".kxcdn.com",
+        ".sososo.io"
+      ]
+    }
+  ]
+}

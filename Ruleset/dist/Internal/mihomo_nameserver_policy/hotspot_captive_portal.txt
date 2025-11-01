@@ -1,0 +1,18 @@
+#########################################
+# Sukka's Ruleset - Local DNS Mapping for Mihomo NameServer Policy (HOTSPOT_CAPTIVE_PORTAL)
+# Last Updated: 2025-10-19T12:40:32.242Z
+# Size: 4
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This ruleset is only used for mihomo's nameserver-policy feature, which
+# is similar to the RULE-SET referenced by sukka_local_dns_mapping.sgmodule.
+# Do not use this file in your Rule section, all entries are included in non_ip/domestic.conf already.
+#########################################
+DOMAIN,7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe
+DOMAIN,hotspot.cslwifi.com
+DOMAIN,captive.apple.com
+DOMAIN-SUFFIX,securelogin.com.cn
+################## EOF ##################
+

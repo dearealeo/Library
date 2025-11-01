@@ -1,0 +1,59 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "tx-safety-video.acfun.cn",
+        "url.cn"
+      ],
+      "domain_suffix": [
+        ".tencent-cloud.net",
+        ".smtcdns.net",
+        ".coding.net",
+        ".anticheatexpert.com",
+        ".tencent-cloud.com",
+        ".weixinbridge.com",
+        ".tencentmusic.com",
+        ".wegameplus.com",
+        ".qcloudimg.com",
+        ".tcdnlive.com",
+        ".sogoucdn.com",
+        ".qlivecdn.com",
+        ".myqcloud.com",
+        ".udqqimg.com",
+        ".tencent.com",
+        ".igamecj.com",
+        ".idqqimg.com",
+        ".weiyun.com",
+        ".weixin.com",
+        ".wegame.com",
+        ".qqmail.com",
+        ".qcloud.com",
+        ".gdtimg.com",
+        ".dnspod.com",
+        ".sogou.com",
+        ".qzone.com",
+        ".myapp.com",
+        ".gtimg.com",
+        ".dnsv1.com",
+        ".soso.com",
+        ".sogo.com",
+        ".qq.com",
+        ".tencent-cloud.cn",
+        ".tencentcs.cn",
+        ".robloxdev.cn",
+        ".codehub.cn",
+        ".roblox.cn",
+        ".dnspod.cn",
+        ".cdn-go.cn",
+        ".qlogo.cn",
+        ".gtimg.cn",
+        ".qpic.cn",
+        ".tencent.com.cn",
+        ".wegame.com.cn",
+        ".gtimg.com.cn",
+        ".qq.com.cn"
+      ]
+    }
+  ]
+}

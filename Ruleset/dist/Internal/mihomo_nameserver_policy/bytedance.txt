@@ -1,0 +1,80 @@
+#########################################
+# Sukka's Ruleset - Local DNS Mapping for Mihomo NameServer Policy (BYTEDANCE)
+# Last Updated: 2025-10-19T12:40:32.241Z
+# Size: 66
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This ruleset is only used for mihomo's nameserver-policy feature, which
+# is similar to the RULE-SET referenced by sukka_local_dns_mapping.sgmodule.
+# Do not use this file in your Rule section, all entries are included in non_ip/domestic.conf already.
+#########################################
+DOMAIN,7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe
+DOMAIN-SUFFIX,feishu.net
+DOMAIN-SUFFIX,toutiaostatic.com
+DOMAIN-SUFFIX,huoshanstatic.com
+DOMAIN-SUFFIX,byteeffecttos.com
+DOMAIN-SUFFIX,toutiaocloud.com
+DOMAIN-SUFFIX,huoshanzhibo.com
+DOMAIN-SUFFIX,douyinstatic.com
+DOMAIN-SUFFIX,douyinliving.com
+DOMAIN-SUFFIX,byted-static.com
+DOMAIN-SUFFIX,toutiaopage.com
+DOMAIN-SUFFIX,oceanengine.com
+DOMAIN-SUFFIX,ixiguavideo.com
+DOMAIN-SUFFIX,byteacctimg.com
+DOMAIN-SUFFIX,xiaoxiaapi.com
+DOMAIN-SUFFIX,volcengine.com
+DOMAIN-SUFFIX,toutiaovod.com
+DOMAIN-SUFFIX,toutiaoimg.com
+DOMAIN-SUFFIX,edge-byted.com
+DOMAIN-SUFFIX,dcarstatic.com
+DOMAIN-SUFFIX,bytednsdoc.com
+DOMAIN-SUFFIX,volcvideo.com
+DOMAIN-SUFFIX,ppxstatic.com
+DOMAIN-SUFFIX,iesdouyin.com
+DOMAIN-SUFFIX,ibytedapm.com
+DOMAIN-SUFFIX,feishupkg.com
+DOMAIN-SUFFIX,feishucdn.com
+DOMAIN-SUFFIX,douyinvod.com
+DOMAIN-SUFFIX,douyinpic.com
+DOMAIN-SUFFIX,douyincdn.com
+DOMAIN-SUFFIX,dongchedi.com
+DOMAIN-SUFFIX,bytegoofy.com
+DOMAIN-SUFFIX,bytedance.com
+DOMAIN-SUFFIX,bytecdntp.com
+DOMAIN-SUFFIX,zijieapi.com
+DOMAIN-SUFFIX,ixgvideo.com
+DOMAIN-SUFFIX,dcarlive.com
+DOMAIN-SUFFIX,volccdn.com
+DOMAIN-SUFFIX,toutiao.com
+DOMAIN-SUFFIX,huoshan.com
+DOMAIN-SUFFIX,feiliao.com
+DOMAIN-SUFFIX,dcarvod.com
+DOMAIN-SUFFIX,dcarimg.com
+DOMAIN-SUFFIX,dcarapi.com
+DOMAIN-SUFFIX,bytetcc.com
+DOMAIN-SUFFIX,byteimg.com
+DOMAIN-SUFFIX,wukong.com
+DOMAIN-SUFFIX,volces.com
+DOMAIN-SUFFIX,snssdk.com
+DOMAIN-SUFFIX,pstatp.com
+DOMAIN-SUFFIX,ppxvod.com
+DOMAIN-SUFFIX,ppximg.com
+DOMAIN-SUFFIX,ixigua.com
+DOMAIN-SUFFIX,douyin.com
+DOMAIN-SUFFIX,doubao.com
+DOMAIN-SUFFIX,zjcdn.com
+DOMAIN-SUFFIX,pipix.com
+DOMAIN-SUFFIX,baike.com
+DOMAIN-SUFFIX,okr.com
+DOMAIN-SUFFIX,toutiaoimg.cn
+DOMAIN-SUFFIX,feelgood.cn
+DOMAIN-SUFFIX,rsproxy.cn
+DOMAIN-SUFFIX,bytecdn.cn
+DOMAIN-SUFFIX,feishu.cn
+DOMAIN-SUFFIX,zjurl.cn
+DOMAIN-SUFFIX,coze.cn
+################## EOF ##################
+

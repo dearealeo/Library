@@ -1,0 +1,19 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "copymanga.site",
+        "jav.guru",
+        "www.coinbase.com",
+        "javdb.com",
+        "cableav.tv"
+      ],
+      "domain_suffix": [
+        ".crunchyroll.com",
+        ".mandaom.com",
+        ".mangafox.me"
+      ]
+    }
+  ]
+}

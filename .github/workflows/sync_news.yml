@@ -1,0 +1,53 @@
+name: Sync News
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 14 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-news:
+    name: News Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Setup Git
+        run: git config --global core.longpaths true
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: "新闻联播/requirements.txt"
+      - name: Install Dependencies
+        run: pip install -r 新闻联播/requirements.txt
+      - name: Fetch News
+        run: |
+          cd 新闻联播
+          python main.py
+      - name: Lint Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v20.0.0
+        with:
+          globs: "新闻联播/**/*.md"
+          fix: true
+          config: ".markdownlint.json"
+        continue-on-error: true
+      - name: Commit Changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet || (
+            git commit -m "feat(news): bump [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]"
+            git push origin ${{ github.ref_name }}
+          )

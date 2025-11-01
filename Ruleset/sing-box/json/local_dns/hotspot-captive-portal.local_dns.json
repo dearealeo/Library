@@ -1,0 +1,14 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "hotspot.cslwifi.com",
+        "captive.apple.com"
+      ],
+      "domain_suffix": [
+        ".securelogin.com.cn"
+      ]
+    }
+  ]
+}

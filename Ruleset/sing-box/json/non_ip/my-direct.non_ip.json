@@ -1,0 +1,22 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "mirrorbits.lineageos.org"
+      ],
+      "domain_suffix": [
+        ".torrentmac.net",
+        ".engage.cloudflareclient.com",
+        ".download.555mac.com"
+      ],
+      "domain_keyword": [
+        "mac-torrent-download"
+      ],
+      "process_name": [
+        "AdGuardHome",
+        "nmap"
+      ]
+    }
+  ]
+}

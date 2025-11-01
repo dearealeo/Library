@@ -1,0 +1,35 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain_suffix": [
+        ".360.net",
+        ".360webcache.com",
+        ".qhupdate.com",
+        ".qhstatic.com",
+        ".360tpcdn.com",
+        ".qihucdn.com",
+        ".qhimgs",
+        ".baomitu.com",
+        ".360simg.com",
+        ".360safe.com",
+        ".360kuai.com",
+        ".yunpan.com",
+        ".qhres2.com",
+        ".qhimgs.com",
+        ".qh-cdn.com",
+        ".haosou.com",
+        ".qhres.com",
+        ".qhmsg.com",
+        ".qhimg.com",
+        ".360os.com",
+        ".qiku.com",
+        ".360.com",
+        ".so.com",
+        ".yunpan.cn",
+        ".yunpan.com.cn",
+        ".360.cn"
+      ]
+    }
+  ]
+}

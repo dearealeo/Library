@@ -1,0 +1,38 @@
+#########################################
+# Sukka's Ruleset - CDN Domains
+# Last Updated: 2025-10-22T12:47:22.783Z
+# Size: 26
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This file contains object storage and static assets CDN domains.
+#########################################
+DOMAIN,7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe
+DOMAIN,cdn-msp.18comic.vip
+DOMAIN,cdn-msp.18comic.org
+DOMAIN,cdn-msp.jmcomic-zzz.one
+DOMAIN,cdn-msp.jmcomic.me
+DOMAIN-KEYWORD,-files.gitbook.io
+DOMAIN-KEYWORD,vod-adaptive.akamaized.net
+DOMAIN-KEYWORD,web-assets.zendesk
+DOMAIN-KEYWORD,-res.cloudinary.com
+DOMAIN-KEYWORD,dsn.algolia.net
+DOMAIN-KEYWORD,-thumbs.pornhost.com
+DOMAIN-KEYWORD,-cdn.eporner.com
+DOMAIN-KEYWORD,cdn.adultempire.com
+DOMAIN-KEYWORD,static.trustpilot.com
+DOMAIN-KEYWORD,scripts.trustpilot.com
+DOMAIN-KEYWORD,images.trustpilot.com
+DOMAIN-KEYWORD,cdn.trustpilot.net
+DOMAIN-KEYWORD,assets.trustpilot.net
+DOMAIN-KEYWORD,images.trustpilot.net
+DOMAIN-KEYWORD,-assets.worldsex.com
+DOMAIN-KEYWORD,-thumbs.worldsex.com
+DOMAIN-KEYWORD,99avcdn
+DOMAIN-KEYWORD,-images.disco-api.com
+DOMAIN-KEYWORD,vdownload.hanime1
+DOMAIN-KEYWORD,fonts.hanime1
+DOMAIN-KEYWORD,static.grammarly.com
+################## EOF ##################
+

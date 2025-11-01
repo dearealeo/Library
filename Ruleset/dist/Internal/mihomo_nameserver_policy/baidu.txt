@@ -1,0 +1,45 @@
+#########################################
+# Sukka's Ruleset - Local DNS Mapping for Mihomo NameServer Policy (BAIDU)
+# Last Updated: 2025-10-19T12:40:32.241Z
+# Size: 31
+# License: AGPL 3.0
+# Homepage: https://ruleset.skk.moe
+# GitHub: https://github.com/SukkaW/Surge
+#
+# This ruleset is only used for mihomo's nameserver-policy feature, which
+# is similar to the RULE-SET referenced by sukka_local_dns_mapping.sgmodule.
+# Do not use this file in your Rule section, all entries are included in non_ip/domestic.conf already.
+#########################################
+DOMAIN,7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe
+DOMAIN-SUFFIX,yunjiasu-cdn.net
+DOMAIN-SUFFIX,baiducontent.com
+DOMAIN-SUFFIX,baidustatic.com
+DOMAIN-SUFFIX,zuoyebang.com
+DOMAIN,upos-sz-mirrorbos.bilivideo.com
+DOMAIN,upos-sz-mirrorbdb.bilivideo.com
+DOMAIN,upos-sz-mirrorbd.bilivideo.com
+DOMAIN-SUFFIX,xiaodutv.com
+DOMAIN-SUFFIX,iqiyipic.com
+DOMAIN-SUFFIX,bdstatic.com
+DOMAIN-SUFFIX,baidupcs.com
+DOMAIN-SUFFIX,baidubcr.com
+DOMAIN-SUFFIX,baidubce.com
+DOMAIN-SUFFIX,jomodns.com
+DOMAIN-SUFFIX,bcelive.com
+DOMAIN-SUFFIX,antpcdn.com
+DOMAIN-SUFFIX,zybang.com
+DOMAIN-SUFFIX,shifen.com
+DOMAIN-SUFFIX,jomoxc.com
+DOMAIN-SUFFIX,hao123.com
+DOMAIN-SUFFIX,bdydns.com
+DOMAIN-SUFFIX,bcebos.com
+DOMAIN-SUFFIX,tieba.com
+DOMAIN-SUFFIX,iqiyi.com
+DOMAIN-SUFFIX,duapp.com
+DOMAIN-SUFFIX,bdimg.com
+DOMAIN-SUFFIX,baidu.com
+DOMAIN-SUFFIX,91.com
+DOMAIN-SUFFIX,baidu.cn
+DOMAIN-SUFFIX,dwz.cn
+################## EOF ##################
+

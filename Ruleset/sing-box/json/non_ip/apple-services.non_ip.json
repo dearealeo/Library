@@ -1,0 +1,36 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain_suffix": [
+        ".apple.news",
+        ".apple-dns.net",
+        ".push-apple.com.akadns.net",
+        ".organicfruitapps.com",
+        ".icloud-content.com",
+        ".apple-cloudkit.com",
+        ".apple-mapkit.com",
+        ".cdn-apple.com",
+        ".appstore.com",
+        ".aaplimg.com",
+        ".itunes.com",
+        ".icloud.com",
+        ".apple.com",
+        ".me.com",
+        ".appsto.re",
+        ".apple.co"
+      ],
+      "process_name": [
+        "netbiosd",
+        "com.apple.geod",
+        "mapspushd",
+        "com.apple.Maps",
+        "apsd",
+        "fmfd",
+        "findmydevice-user-agent",
+        "CoreLocationAgent",
+        "WeatherWidget"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+name: Report
+description: Submit a report for bugs, feature requests, questions, documentation issues, or other concerns.
+title: "[Report]: Summary of the issue"
+assignees: ["dearealeo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing! Please provide sufficient detail to help us address your issue effectively.
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue Category
+      description: Select the category that best describes your issue.
+      options:
+        - "Bug Report"
+        - "Feature Request"
+        - "Question"
+        - "Documentation Issue"
+        - "Typo"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Provide a clear description of your issue, proposal, or question.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity (Required for Bugs)
+      description: For bugs, estimate the impact. Select "N/A" for other issue types.
+      options:
+        - "N/A"
+        - "Critical – System crash, data loss, or severe security flaw"
+        - "High – Major functionality broken or significantly impaired"
+        - "Medium – Minor functionality impaired with an available workaround"
+        - "Low – Cosmetic issue, typo, or minimal impact"
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce (Required for Bugs)
+      description: Provide numbered steps to reliably reproduce the bug, including configuration, inputs, or minimal code examples. For non-bug reports, enter "N/A".
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior (Required for Bugs/Features)
+      description: Describe the expected outcome. For other issue types, enter "N/A".
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior (Required for Bugs)
+      description: Describe what occurred, including error messages (in code blocks), relevant logs, and links to screenshots or screencasts if applicable. For non-bug reports, enter "N/A".
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Relevant Version(s) or Commit SHA
+      description: Specify the version, branch, or commit hash where the issue occurs.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Environment & System Context
+      description: Provide relevant details about your system and environment (recommended for Bugs).
+
+    validations:
+      required: false
+
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: Proposed Solution (Optional)
+      description: If you have suggestions for resolving the issue or implementing the feature, describe them here. Code snippets are welcome.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information (Optional)
+      description: Include any other relevant details, related issue links, mockups, or supporting context.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to confirm this is not a duplicate.
+          required: true
+        - label: I have provided sufficient information for maintainers to investigate (if applicable).
+          required: false
+        - label: I am willing to contribute a pull request to resolve this issue (if applicable).
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        Thank you for your detailed submission. Maintainers will review it promptly.

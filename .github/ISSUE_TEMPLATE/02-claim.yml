@@ -1,0 +1,122 @@
+name: Claim
+description: Submit a claim regarding copyright infringement, trademark disputes, or other intellectual property matters under applicable law.
+title: "[Claim] Nature of Claim: Subject Matter"
+assignees: ["dearealeo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!NOTE]
+        > This form is exclusively for submitting legal claims, including copyright infringement notices under the DMCA or Copyright Law of the People's Republic of China, and trademark/IP disputes. Use for legal purposes only.
+        ---
+        ### Complainant Information
+
+  - type: input
+    id: contact_name
+    attributes:
+      label: Full Name of Complainant
+      description: Provide the full name of the individual or entity submitting this claim, or the authorized representative.
+    validations:
+      required: true
+
+  - type: input
+    id: contact_organization
+    attributes:
+      label: Organization (if applicable)
+      description: If acting on behalf of an organization, provide its full legal name.
+    validations:
+      required: false
+
+  - type: input
+    id: contact_email
+    attributes:
+      label: Contact Email Address
+      description: Provide a valid email address actively monitored for official correspondence.
+    validations:
+      required: true
+
+  - type: input
+    id: contact_phone
+    attributes:
+      label: Contact Telephone Number (Optional)
+      description: Provide a daytime telephone number with country and area code.
+    validations:
+      required: false
+
+  - type: textarea
+    id: contact_address
+    attributes:
+      label: Physical Mailing Address
+      description: Provide your full mailing address for legal correspondence.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: relationship
+    attributes:
+      label: Relationship to the Rights Holder
+      description: Specify your legal relationship to the owner of the allegedly infringed right.
+      options:
+        - "Owner of the exclusive right"
+        - "Authorized Agent acting under written authority"
+        - "Legal Counsel retained by the owner"
+        - "Government Office or Department"
+        - "Other"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Claim Details
+
+  - type: textarea
+    id: copyrighted_work
+    attributes:
+      label: Identification of Protected Work
+      description: Provide sufficient detail to identify the copyrighted work, trademark, or other protected subject matter. Include registration numbers, authorized URLs, or other identifying information.
+    validations:
+      required: true
+
+  - type: textarea
+    id: infringing_material
+    attributes:
+      label: Location of Allegedly Infringing Material
+      description: Identify the specific infringing content and its precise location, including URLs, file paths, line numbers, or descriptions sufficient for us to locate and evaluate it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: legal_basis
+    attributes:
+      label: Legal Basis (Recommended)
+      description: Briefly state the specific legal basis for your claim.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Declarations
+
+  - type: checkboxes
+    id: declarations
+    attributes:
+      label: Affirmations
+      description: By submitting this claim, you affirm under applicable law that the following statements are true and accurate. All statements must be affirmed.
+      options:
+        - label: I have a good-faith belief that the use of this material is not authorized by the copyright or right holder, its agent, or the law.
+          required: true
+        - label: The information provided in this notification is accurate and complete.
+          required: true
+        - label: I am the owner or an authorized agent of the owner of the allegedly infringed right.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        > [!IMPORTANT]
+        > Submission of this form constitutes an electronic signature legally binding under applicable law and confirms the truthfulness of the statements herein. False or misleading claims may result in liability for damages. Physical signatures or additional verification may be required.

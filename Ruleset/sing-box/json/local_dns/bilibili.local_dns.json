@@ -1,0 +1,29 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "b23.tv",
+        "acg.tv"
+      ],
+      "domain_suffix": [
+        ".bilivideo.net",
+        ".biligame.net",
+        ".biliapi.net",
+        ".bilicomics.com",
+        ".bilivideo.com",
+        ".bilicomic.com",
+        ".bulicdn2.com",
+        ".biligame.com",
+        ".bilicdn1.com",
+        ".bilibili.com",
+        ".acgvideo.com",
+        ".biliimg.com",
+        ".biliapi.com",
+        ".hdslb.com",
+        ".bilivideo.cn",
+        ".bilibili.cn"
+      ]
+    }
+  ]
+}
