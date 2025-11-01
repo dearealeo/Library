@@ -134,9 +134,16 @@ jobs:
           fi
           sudo xcode-select -s /Applications/Xcode_16.4.app
 
-          xcodebuild build -scheme BrightIntosh -configuration Release -destination "generic/platform=macOS" -derivedDataPath ./DD CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO
+          set +e
+          xcodebuild -scheme BrightIntosh -configuration Release -destination "generic/platform=macOS" -derivedDataPath ./DD CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO
+          BUILD_EXIT_CODE=$?
+          set -e
 
-          APP=$(find ./DD -name "BrightIntosh.app" -type d -print -quit)
+          if [ $BUILD_EXIT_CODE -ne 0 ]; then
+            exit 1
+          fi
+
+          APP=$(find ./DD -name "BrightIntosh.app" -type d -print -quit 2>/dev/null)
           if [ -z "$APP" ]; then
             exit 0
           fi
@@ -144,9 +151,13 @@ jobs:
           VERSION='${{ inputs.version || github.sha }}'
           DMG="BrightIntosh-$VERSION.dmg"
 
-          create-dmg --volname "BrightIntosh" --app-drop-link 200 200 --skip-jenkins "$DMG" "$APP"
+          create-dmg --volname "BrightIntosh" --app-drop-link 200 200 --skip-jenkins "$DMG" "$APP" || {
+            hdiutil create -volname "BrightIntosh" -srcfolder "$APP" -ov -format UDZO "$DMG"
+          }
 
-          gtar --zstd -cf "$DMG.tar.zst" "$DMG"
+          if [ -f "$DMG" ]; then
+            gtar --zstd -cf "$DMG.tar.zst" "$DMG"
+          fi
 
       - uses: actions/upload-artifact@v5
         with:
