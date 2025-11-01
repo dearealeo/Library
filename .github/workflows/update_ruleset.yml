@@ -77,7 +77,7 @@ jobs:
           touch "${OUTPUT_DIR}/List/domainset/speedtest.conf"
 
       - name: Build Rules
-        uses: nick-fields/retry-action@v3
+        uses: nick-fields/retry@v3.0.2
         with:
           timeout_minutes: 15
           max_attempts: 3
@@ -86,8 +86,6 @@ jobs:
         env:
           PUBLIC_DIR: ${{ github.workspace }}/${{ steps.paths.outputs.output_dir }}
           NODE_ENV: production
-          NODE_OPTIONS: '--max-old-space-size=4096'
-          FETCH_TIMEOUT: 60000
 
       - name: Validate Build
         run: |
