@@ -12,3 +12,4 @@ The software herein is licensed under the [AGPL-3.0](./LICENSE) by [@dearealeo](
 - [SukkaLab/ruleset.skk.moe](https://github.com/SukkaLab/ruleset.skk.moe) (AGPL-3.0)
 - [SukkaW/nodelistparser](https://github.com/SukkaW/nodelistparser) (MIT)
 - [SukkaW/chnroutes2-optimized](https://github.com/SukkaW/chnroutes2-optimized) (MIT)
+- [CaptainGod/sing-box-rule-set-transform](https://github.com/CaptainGod/sing-box-rule-set-transform)
