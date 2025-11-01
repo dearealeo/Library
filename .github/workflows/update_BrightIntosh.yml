@@ -113,7 +113,7 @@ jobs:
           fi
 
   build-macos:
-    if: contains(needs.plan.outputs.build_types, 'macos') && needs.sync.outputs.changes == 'true'
+    if: contains(needs.plan.outputs.build_types, 'macos') && (needs.sync.outputs.changes == 'true' || github.event_name == 'workflow_dispatch')
     runs-on: macos-26
     needs: sync
     steps:
